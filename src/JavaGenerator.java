@@ -59,27 +59,22 @@ public class JavaGenerator {
 
 
         for (int i = 0; i < methodsPerClass; i++) {
-            if(i == 0) {
-                buff.append("public void foo" + i + "(){\n}\n");
-            }
+
+            buff.append("public void foo" + i + "(){\n");
 
             if (i > 0) {
-                buff.append("public void foo" + i + "() {\n");
-
-                if (classNumber > 0) {
-                    buff.append("new Foo" + (classNumber - 1) + "().foo" + (methodsPerClass - 1) + "();\n");
-                }
-
-                buff.append("\n}\n");
+                buff.append("foo" + (i - 1) + "();\n");
+            } else if (classNumber > 0) {
+                buff.append("new Foo" + (classNumber - 1) + "().foo" + (methodsPerClass - 1) + "();\n");
             }
+
+            buff.append("\n}");
         }
 
         buff.append("\n}");
 
-        // TODO end
-
-        String classPath = mainPackage.getAbsolutePath() + "/" + packageName+
-                "/"+ className + ".java";
+        String classPath = mainPackage.getAbsolutePath() + "/" + packageName +
+                "/" + className + ".java";
 
         try {
             File classFile = new File(classPath);
