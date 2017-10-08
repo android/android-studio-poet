@@ -69,7 +69,6 @@ object JavaPackagesGenerator {
         }
     }
 
-    // TODO do the same for Kotlin, address another Jerome's point, when Koltin is a problem
     private fun generateJavaClass(packageName: String, classNumber: Int,
                                   methodsPerClass: Int, mainPackage: File) {
 
@@ -124,9 +123,9 @@ object JavaPackagesGenerator {
             buff.append("fun foo$i(){\n")
 
             if (i > 0) {
-                buff.append("foo" + (i - 1) + "();\n")
+                buff.append("foo" + (i - 1) + "()\n")
             } else if (classNumber > 0) {
-                buff.append("Foo" + (classNumber - 1) + "().foo" + (methodsPerClass - 1) + "();\n")
+                buff.append("Foo" + (classNumber - 1) + "().foo" + (methodsPerClass - 1) + "()\n")
             }
 
             buff.append("\n}")
