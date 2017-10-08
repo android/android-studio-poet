@@ -10,32 +10,41 @@ object JavaPackagesGenerator {
 
         // directory where generator should put all generated packages
         val mainPackage = File(System.getProperty("user.dir") + "/src/")
-        println(mainPackage.absolutePath)
+        // how many method should be generated all together (!!!)
+        val methodCounter = 4000
 
         // how many java packages should be generated
         val javaPackageCounter = 4
+
+        // how many classes should be generated in each package
+        val javaClassCounter = 50
+
+        // how many method should be generated all together (!!!)
+        val javaMethodCounter = 2000
+
+        val javaMethodsPerClass = javaMethodCounter / (javaClassCounter * javaPackageCounter)
+
+        println(javaPackageCounter.toString() + " packages, " + javaClassCounter + " classes, " +
+                methodCounter + " methods, " + javaMethodsPerClass + " methods per class")
+
+        for (i in 0 until javaPackageCounter) {
+            generateJavaPackage(i, javaClassCounter, javaMethodsPerClass, mainPackage)
+        }
 
         // how many java packages should be generated
         val kotlinPackageCounter = 4
 
         // how many classes should be generated in each package
-        val classCounter = 50
+        val kotlinClassCounter = 50
 
         // how many method should be generated all together (!!!)
-        val methodCounter = 4000
+        val kotlinMethodCounter = methodCounter - javaMethodCounter
 
-        val methodsPerClass = methodCounter / (classCounter * javaPackageCounter)
-
-        println(javaPackageCounter.toString() + " packages, " + classCounter + " classes, " +
-                methodCounter + " methods, " + methodsPerClass + " methods per class")
-
-        for (i in 0 until javaPackageCounter) {
-            generateJavaPackage(i, classCounter, methodsPerClass, mainPackage)
-        }
+        val kotlinMethodsPerClass = kotlinMethodCounter / (kotlinClassCounter * kotlinPackageCounter)
 
         for (i in 0 until kotlinPackageCounter) {
             generateKotlinPackage((i + javaPackageCounter),
-                    classCounter, methodsPerClass, mainPackage)
+                    kotlinClassCounter, kotlinMethodsPerClass, mainPackage)
         }
     }
 
