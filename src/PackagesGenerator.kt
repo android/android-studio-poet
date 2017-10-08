@@ -1,12 +1,24 @@
+
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 
-object JavaPackagesGenerator {
+object PackagesGenerator {
+
+
+
+
+
+
 
     @JvmStatic
     fun main(args: Array<String>) {
+
+
+        //var config = ConfigPOJO()
+
+        //config.mainPackage =
 
         // directory where generator should put all generated packages
         val mainPackage = File(System.getProperty("user.dir") + "/src/")
