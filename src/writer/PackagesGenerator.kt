@@ -1,4 +1,6 @@
+package writer
 
+import json.ConfigPOJO
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -6,62 +8,39 @@ import java.io.IOException
 
 object PackagesGenerator {
 
+    private fun createTestConfig(): ConfigPOJO {
+        var config = ConfigPOJO()
 
+        config.mainPackage = File(System.getProperty("user.dir") + "/src/").toString()
+        config.allMethods = "4000"
+        config.javaPackageCount = "4"
+        config.javaClassCount = "50"
+        config.javaMethodCount = "2000"
+        config.kotlinPackageCount = "4"
+        config.kotlinClassCount = "50"
 
+        return config
+    }
 
+    public fun writePackages(config: ConfigPOJO) {
+        println(config.javaPackageCount + " packages, " + config.javaClassCount.toInt() + " classes, " +
+                config.allMethods + " methods, " + config.javaMethodsPerClass + " methods per class")
 
-
-
-    @JvmStatic
-    fun main(args: Array<String>) {
-
-
-        //var config = ConfigPOJO()
-
-        //config.mainPackage =
-
-        // directory where generator should put all generated packages
-        val mainPackage = File(System.getProperty("user.dir") + "/src/")
-        // how many method should be generated all together (!!!)
-        val methodCounter = 4000
-
-        // how many java packages should be generated
-        val javaPackageCounter = 4
-
-        // how many classes should be generated in each package
-        val javaClassCounter = 50
-
-        // how many method should be generated all together (!!!)
-        val javaMethodCounter = 2000
-
-        val javaMethodsPerClass = javaMethodCounter / (javaClassCounter * javaPackageCounter)
-
-        println(javaPackageCounter.toString() + " packages, " + javaClassCounter + " classes, " +
-                methodCounter + " methods, " + javaMethodsPerClass + " methods per class")
-
-        for (i in 0 until javaPackageCounter) {
-            generateJavaPackage(i, javaClassCounter, javaMethodsPerClass, mainPackage)
+        for (i in 0 until config.javaPackageCount.toInt()) {
+            generateJavaPackage(i, config.javaClassCount.toInt(), config.javaMethodsPerClass,
+                    File(config.mainPackage))
         }
 
-        // how many java packages should be generated
-        val kotlinPackageCounter = 4
+        val kotlinMethodsPerClass = config.kotlinMethodsPerClass
 
-        // how many classes should be generated in each package
-        val kotlinClassCounter = 50
-
-        // how many method should be generated all together (!!!)
-        val kotlinMethodCounter = methodCounter - javaMethodCounter
-
-        val kotlinMethodsPerClass = kotlinMethodCounter / (kotlinClassCounter * kotlinPackageCounter)
-
-        for (i in 0 until kotlinPackageCounter) {
-            generateKotlinPackage((i + javaPackageCounter),
-                    kotlinClassCounter, kotlinMethodsPerClass, mainPackage)
+        for (i in 0 until config.kotlinPackageCount.toInt()) {
+            generateKotlinPackage((i + config.javaPackageCount.toInt()),
+                    config.kotlinPackageCount.toInt(), kotlinMethodsPerClass, File(config.mainPackage))
         }
     }
 
     private fun generateJavaPackage(packageNumber: Int, classCounter: Int,
-                                     methodsPerClass: Int, mainPackage: File) {
+                                    methodsPerClass: Int, mainPackage: File) {
         val packageName = "packageJava" + packageNumber
         val packageFolder = File(mainPackage.toString() + "/" + packageName)
         if (packageFolder.exists()) {
@@ -76,7 +55,7 @@ object PackagesGenerator {
     }
 
     private fun generateKotlinPackage(packageNumber: Int, classCounter: Int,
-                                    methodsPerClass: Int, mainPackage: File) {
+                                      methodsPerClass: Int, mainPackage: File) {
         val packageName = "packageKt" + packageNumber
         val packageFolder = File(mainPackage.toString() + "/" + packageName)
         if (packageFolder.exists()) {
@@ -130,7 +109,7 @@ object PackagesGenerator {
     }
 
     private fun generateKotlinClass(packageName: String, classNumber: Int,
-                                  methodsPerClass: Int, mainPackage: File) {
+                                    methodsPerClass: Int, mainPackage: File) {
 
         val className = "Foo" + classNumber
         val buff = StringBuilder()
@@ -167,4 +146,12 @@ object PackagesGenerator {
             e.printStackTrace()
         }
     }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val config = createTestConfig()
+        writePackages(config)
+    }
+
 }
+

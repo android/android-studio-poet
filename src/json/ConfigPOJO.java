@@ -1,19 +1,29 @@
 package json;
 
-public class ConfigPOJO {
-    private String javaMethodCount;
+import com.google.gson.Gson;
 
+public class ConfigPOJO {
+
+    // directory where generator should put all generated packages
     private String mainPackage;
 
+    // how many method should be generated all together (!!!)
     private String allMethods;
 
+    // how many java methods should be generated all together
+    private String javaMethodCount;
+
+    // how many java packages should be generated
+    private String javaPackageCount;
+
+    // how many kotlin packages should be generated
     private String kotlinPackageCount;
 
+    // how many classes should be generated in each Java package
     private String javaClassCount;
 
+    // how many classes should be generated in each Kotlin package
     private String kotlinClassCount;
-
-    private String javaPackageCount;
 
     public String getJavaMethodCount ()
     {
@@ -91,8 +101,34 @@ public class ConfigPOJO {
         return "ClassPojo [javaMethodCount = "+javaMethodCount+", mainPackage = "+mainPackage+", allMethods = "+allMethods+", kotlinPackageCount = "+kotlinPackageCount+", javaClassCount = "+javaClassCount+", kotlinClassCount = "+kotlinClassCount+", javaPackageCount = "+javaPackageCount+"]";
     }
 
+    public boolean validate() {
+        // TODO check the types of all members be strings
+        return true;
+    }
 
+    public int getJavaMethodsPerClass() {
+        // TODO call validate
+        int javaMethodsPerClass = Integer.parseInt(javaMethodCount) / (Integer.parseInt(javaClassCount)
+                * Integer.parseInt(javaPackageCount));
 
+        return javaMethodsPerClass;
+    }
 
+    public int getAllKotlinMethods() {
+
+        return Integer.parseInt(allMethods) - Integer.parseInt(javaMethodCount);
+    }
+
+    public int getKotlinMethodsPerClass() {
+        return getAllKotlinMethods() /
+                (Integer.parseInt(kotlinClassCount) * Integer.parseInt(kotlinPackageCount));
+    }
+
+    public String toJson() {
+        Gson gson = new Gson();
+        String json = gson.toJson(this);
+
+        return  json;
+    }
 
 }

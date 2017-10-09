@@ -28,5 +28,8 @@ public class Converter {
 
         System.out.println(obj2);
 
+        System.out.println(obj2.toJson());
+
+
     }
 }

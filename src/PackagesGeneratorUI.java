@@ -13,12 +13,14 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+
 public class PackagesGeneratorUI extends JFrame {
 
     private JPanel contentPane;
 
 
     public static void main(String[] args) {
+
         EventQueue.invokeLater(() -> {
             try {
                 PackagesGeneratorUI frame = new PackagesGeneratorUI();
@@ -40,13 +42,23 @@ public class PackagesGeneratorUI extends JFrame {
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
-        JLabel lblTextLineExample = new JLabel("Packages Generator");
+        JLabel lblTextLineExample = new JLabel("Packages Writer");
         lblTextLineExample.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblTextLineExample, BorderLayout.NORTH);
+
+
+
+
 
         JButton btnGenerate = new JButton("Generate");
         btnGenerate.addActionListener(e -> {
             // TODO -- generate
+            // TODO -- add controller object --> that checks that validate of config, and generate packages
+
+
+            writer.PackagesWriter ddfdf = new writer.PackagesWriter();
+
+
         });
         contentPane.add(btnGenerate, BorderLayout.SOUTH);
 
