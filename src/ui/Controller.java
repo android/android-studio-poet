@@ -16,14 +16,7 @@ public class Controller {
             "}";
 
     public Controller(PackagesGeneratorUI packagesGeneratorUI) {
-        /*
-        *  Gson gson = new Gson();
-        ConfigPOJO obj2 = gson.fromJson(SAMPLE_CONFIG, ConfigPOJO.class);
 
-
-        System.out.println(obj2);
-
-        System.out.println(obj2.toJson());*/
     }
 
     public void generate(String configStr) {
@@ -33,10 +26,6 @@ public class Controller {
 
         PackagesGenerator packagesGenerator = new PackagesGenerator();
         packagesGenerator.writePackages(obj2);
-
-        System.out.println(obj2);
-
-        System.out.println(obj2.toJson());
 
     }
 }

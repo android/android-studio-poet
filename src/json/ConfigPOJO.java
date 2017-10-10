@@ -25,80 +25,69 @@ public class ConfigPOJO {
     // how many classes should be generated in each Kotlin package
     private String kotlinClassCount;
 
-    public String getJavaMethodCount ()
-    {
+    public String getJavaMethodCount() {
         return javaMethodCount;
     }
 
-    public void setJavaMethodCount (String javaMethodCount)
-    {
+    public void setJavaMethodCount(String javaMethodCount) {
         this.javaMethodCount = javaMethodCount;
     }
 
-    public String getMainPackage ()
-    {
+    public String getMainPackage() {
         return mainPackage;
     }
 
-    public void setMainPackage (String mainPackage)
-    {
+    public void setMainPackage(String mainPackage) {
         this.mainPackage = mainPackage;
     }
 
-    public String getAllMethods ()
-    {
+    public String getAllMethods() {
         return allMethods;
     }
 
-    public void setAllMethods (String allMethods)
-    {
+    public void setAllMethods(String allMethods) {
         this.allMethods = allMethods;
     }
 
-    public String getKotlinPackageCount ()
-    {
+    public String getKotlinPackageCount() {
         return kotlinPackageCount;
     }
 
-    public void setKotlinPackageCount (String kotlinPackageCount)
-    {
+    public void setKotlinPackageCount(String kotlinPackageCount) {
         this.kotlinPackageCount = kotlinPackageCount;
     }
 
-    public String getJavaClassCount ()
-    {
+    public String getJavaClassCount() {
         return javaClassCount;
     }
 
-    public void setJavaClassCount (String javaClassCount)
-    {
+    public void setJavaClassCount(String javaClassCount) {
         this.javaClassCount = javaClassCount;
     }
 
-    public String getKotlinClassCount ()
-    {
+    public String getKotlinClassCount() {
         return kotlinClassCount;
     }
 
-    public void setKotlinClassCount (String kotlinClassCount)
-    {
+    public void setKotlinClassCount(String kotlinClassCount) {
         this.kotlinClassCount = kotlinClassCount;
     }
 
-    public String getJavaPackageCount ()
-    {
+    public String getJavaPackageCount() {
         return javaPackageCount;
     }
 
-    public void setJavaPackageCount (String javaPackageCount)
-    {
+    public void setJavaPackageCount(String javaPackageCount) {
         this.javaPackageCount = javaPackageCount;
     }
 
     @Override
-    public String toString()
-    {
-        return "ClassPojo [javaMethodCount = "+javaMethodCount+", mainPackage = "+mainPackage+", allMethods = "+allMethods+", kotlinPackageCount = "+kotlinPackageCount+", javaClassCount = "+javaClassCount+", kotlinClassCount = "+kotlinClassCount+", javaPackageCount = "+javaPackageCount+"]";
+    public String toString() {
+        return "ClassPojo [javaMethodCount = " + javaMethodCount +
+                ", mainPackage = " + mainPackage + ", allMethods = " + allMethods +
+                ", kotlinPackageCount = " + kotlinPackageCount + ", javaClassCount = " +
+                javaClassCount + ", kotlinClassCount = " + kotlinClassCount +
+                ", javaPackageCount = " + javaPackageCount + "]";
     }
 
     public boolean validate() {
@@ -128,7 +117,6 @@ public class ConfigPOJO {
         Gson gson = new Gson();
         String json = gson.toJson(this);
 
-        return  json;
+        return json;
     }
-
 }

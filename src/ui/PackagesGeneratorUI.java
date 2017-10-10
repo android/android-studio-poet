@@ -19,21 +19,6 @@ public class PackagesGeneratorUI extends JFrame {
     private  Controller controller;
     private JTextArea textArea;
 
-    public static void main(String[] args) {
-
-        EventQueue.invokeLater(() -> {
-            try {
-                PackagesGeneratorUI frame = new PackagesGeneratorUI();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    /**
-     * Create the frame.
-     */
     public PackagesGeneratorUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -62,7 +47,6 @@ public class PackagesGeneratorUI extends JFrame {
         textArea.setCaretPosition(textArea.getText().length());
         textArea.setCaretColor(Color.YELLOW);
 
-
         JScrollPane scrollPane = new JScrollPane(textArea,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -73,5 +57,17 @@ public class PackagesGeneratorUI extends JFrame {
         pack();
 
         controller = new Controller(this);
+    }
+
+    public static void main(String[] args) {
+
+        EventQueue.invokeLater(() -> {
+            try {
+                PackagesGeneratorUI frame = new PackagesGeneratorUI();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
