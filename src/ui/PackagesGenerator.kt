@@ -1,4 +1,6 @@
-package writer
+
+
+package ui
 
 import json.ConfigPOJO
 import java.io.BufferedWriter
@@ -6,7 +8,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 
-object PackagesGenerator {
+public class PackagesGenerator {
 
     private fun createTestConfig(): ConfigPOJO {
         var config = ConfigPOJO()
@@ -147,11 +149,12 @@ object PackagesGenerator {
         }
     }
 
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val config = createTestConfig()
-        writePackages(config)
+    companion object {
+        @JvmStatic fun main(args: Array<String>) {
+            val packagesGenerator = PackagesGenerator()
+            val config = packagesGenerator.createTestConfig()
+            packagesGenerator.writePackages(config)
+        }
     }
-
 }
 

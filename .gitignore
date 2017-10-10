@@ -24,3 +24,5 @@ hs_err_pid*
 *.xml
 
 src/pack*/*
+
+out/production/java-generator/json/sample.json

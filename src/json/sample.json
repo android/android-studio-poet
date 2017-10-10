@@ -1,9 +1,9 @@
 {
   "mainPackage": "/Users/bfarber/Development/java-generator/src",
   "allMethods": "4000",
-  "javaPackageCount": "20",
+  "javaPackageCount": "4",
   "javaClassCount": "8",
   "javaMethodCount": "2000",
-  "kotlinPackageCount": "20",
+  "kotlinPackageCount": "4",
   "kotlinClassCount": "8"
 }

@@ -1,8 +1,9 @@
-package json;
+package ui;
 
 import com.google.gson.Gson;
+import json.ConfigPOJO;
 
-public class Converter {
+public class Controller {
 
     public static final String SAMPLE_CONFIG = "{\n" +
             "  \"mainPackage\": \"/Users/bfarber/Development/java-generator/src\",\n" +
@@ -14,22 +15,28 @@ public class Converter {
             "  \"kotlinClassCount\": \"8\"\n" +
             "}";
 
-
-    public static void main(String[] args) {
-
-
-
-
-
-
-        Gson gson = new Gson();
+    public Controller(PackagesGeneratorUI packagesGeneratorUI) {
+        /*
+        *  Gson gson = new Gson();
         ConfigPOJO obj2 = gson.fromJson(SAMPLE_CONFIG, ConfigPOJO.class);
 
 
         System.out.println(obj2);
 
-        System.out.println(obj2.toJson());
+        System.out.println(obj2.toJson());*/
+    }
 
+    public void generate(String configStr) {
+
+        Gson gson = new Gson();
+        ConfigPOJO obj2 = gson.fromJson(configStr, ConfigPOJO.class);
+
+        PackagesGenerator packagesGenerator = new PackagesGenerator();
+        packagesGenerator.writePackages(obj2);
+
+        System.out.println(obj2);
+
+        System.out.println(obj2.toJson());
 
     }
 }

@@ -1,4 +1,4 @@
-package json;
+package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,11 +13,11 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-
 public class PackagesGeneratorUI extends JFrame {
 
     private JPanel contentPane;
-
+    private  Controller controller;
+    private JTextArea textArea;
 
     public static void main(String[] args) {
 
@@ -46,29 +46,19 @@ public class PackagesGeneratorUI extends JFrame {
         lblTextLineExample.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblTextLineExample, BorderLayout.NORTH);
 
-
-
-
-
         JButton btnGenerate = new JButton("Generate");
         btnGenerate.addActionListener(e -> {
-            // TODO -- generate
-            // TODO -- add controller object --> that checks that validate of config, and generate packages
-
-
-            writer.PackagesWriter ddfdf = new writer.PackagesWriter();
-
-
+            controller.generate(textArea.getText());
         });
         contentPane.add(btnGenerate, BorderLayout.SOUTH);
 
-        JTextArea textArea = new JTextArea();
+        textArea = new JTextArea();
 
         textArea.setBackground(new Color(46, 48, 50));
         textArea.setForeground(Color.CYAN);
         textArea.setFont(new Font("Menlo", Font.PLAIN, 18));
 
-        textArea.setText(Converter.SAMPLE_CONFIG);
+        textArea.setText(Controller.SAMPLE_CONFIG);
         textArea.setCaretPosition(textArea.getText().length());
         textArea.setCaretColor(Color.YELLOW);
 
@@ -81,6 +71,7 @@ public class PackagesGeneratorUI extends JFrame {
 
         contentPane.add(scrollPane, BorderLayout.CENTER);
         pack();
-    }
 
+        controller = new Controller(this);
+    }
 }
