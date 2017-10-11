@@ -2,7 +2,6 @@
 
 package ui
 
-import json.ConfigPOJO
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter

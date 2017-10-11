@@ -33,6 +33,7 @@ public class PackagesGeneratorUI extends JFrame {
 
         JButton btnGenerate = new JButton("Generate");
         btnGenerate.addActionListener(e -> {
+            System.out.println(textArea.getText());
             controller.generate(textArea.getText());
         });
         contentPane.add(btnGenerate, BorderLayout.SOUTH);

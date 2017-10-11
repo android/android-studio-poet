@@ -1,7 +1,6 @@
 package ui;
 
 import com.google.gson.Gson;
-import json.ConfigPOJO;
 
 public class Controller {
 
