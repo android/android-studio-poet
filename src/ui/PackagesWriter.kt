@@ -7,12 +7,12 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 
-public class PackagesGenerator {
+public class PackagesWriter {
 
     private fun createTestConfig(): ConfigPOJO {
         var config = ConfigPOJO()
 
-        config.mainPackage = File(System.getProperty("user.dir") + "/src/").toString()
+        config.root = File(System.getProperty("user.dir") + "/src/").toString()
         config.allMethods = "4000"
         config.javaPackageCount = "4"
         config.javaClassCount = "50"
@@ -23,21 +23,28 @@ public class PackagesGenerator {
         return config
     }
 
-    public fun writePackages(config: ConfigPOJO) {
+    public fun writePackages(config: ConfigPOJO, where: String = config.root) {
+
+        var packagesRoot = File(where)
+        packagesRoot.mkdirs()
+
+
         println(config.javaPackageCount + " packages, " + config.javaClassCount.toInt() + " classes, " +
                 config.allMethods + " methods, " + config.javaMethodsPerClass + " methods per class")
 
         for (i in 0 until config.javaPackageCount.toInt()) {
             generateJavaPackage(i, config.javaClassCount.toInt(), config.javaMethodsPerClass,
-                    File(config.mainPackage))
+                    packagesRoot)
         }
 
         val kotlinMethodsPerClass = config.kotlinMethodsPerClass
 
         for (i in 0 until config.kotlinPackageCount.toInt()) {
             generateKotlinPackage((i + config.javaPackageCount.toInt()),
-                    config.kotlinPackageCount.toInt(), kotlinMethodsPerClass, File(config.mainPackage))
+                    config.kotlinPackageCount.toInt(), kotlinMethodsPerClass, packagesRoot)
         }
+
+        println("Done")
     }
 
     private fun generateJavaPackage(packageNumber: Int, classCounter: Int,
@@ -53,6 +60,8 @@ public class PackagesGenerator {
         for (i in 0 until classCounter) {
             generateJavaClass(packageName, i, methodsPerClass, mainPackage)
         }
+
+
     }
 
     private fun generateKotlinPackage(packageNumber: Int, classCounter: Int,
@@ -150,9 +159,9 @@ public class PackagesGenerator {
 
     companion object {
         @JvmStatic fun main(args: Array<String>) {
-            val packagesGenerator = PackagesGenerator()
+            val packagesGenerator = PackagesWriter()
             val config = packagesGenerator.createTestConfig()
-            packagesGenerator.writePackages(config)
+            packagesGenerator.writePackages(config, "sadasdsd")
         }
     }
 }

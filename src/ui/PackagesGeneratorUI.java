@@ -15,8 +15,21 @@ import javax.swing.border.EmptyBorder;
 
 public class PackagesGeneratorUI extends JFrame {
 
+
+    public static final String SAMPLE_CONFIG = "{\n" +
+            "  \"root\": \"/Users/bfarber/Desktop/module1/\",\n" +
+            "  \"allMethods\": \"4000\",\n" +
+            "  \"javaPackageCount\": \"20\",\n" +
+            "  \"javaClassCount\": \"8\",\n" +
+            "  \"javaMethodCount\": \"2000\",\n" +
+            "  \"kotlinPackageCount\": \"20\",\n" +
+            "  \"kotlinClassCount\": \"8\"\n" +
+            "}";
+
+
     private JPanel contentPane;
-    private  Controller controller;
+    // TODO may be to do a decorator with PakagesGenerator
+    private ModuleWriter moduleGenerator;
     private JTextArea textArea;
 
     public PackagesGeneratorUI() {
@@ -34,7 +47,7 @@ public class PackagesGeneratorUI extends JFrame {
         JButton btnGenerate = new JButton("Generate");
         btnGenerate.addActionListener(e -> {
             System.out.println(textArea.getText());
-            controller.generate(textArea.getText());
+            moduleGenerator.generate(textArea.getText());
         });
         contentPane.add(btnGenerate, BorderLayout.SOUTH);
 
@@ -44,7 +57,7 @@ public class PackagesGeneratorUI extends JFrame {
         textArea.setForeground(Color.CYAN);
         textArea.setFont(new Font("Menlo", Font.PLAIN, 18));
 
-        textArea.setText(Controller.SAMPLE_CONFIG);
+        textArea.setText(SAMPLE_CONFIG);
         textArea.setCaretPosition(textArea.getText().length());
         textArea.setCaretColor(Color.YELLOW);
 
@@ -57,7 +70,7 @@ public class PackagesGeneratorUI extends JFrame {
         contentPane.add(scrollPane, BorderLayout.CENTER);
         pack();
 
-        controller = new Controller(this);
+        moduleGenerator = new ModuleWriter(this);
     }
 
     public static void main(String[] args) {
