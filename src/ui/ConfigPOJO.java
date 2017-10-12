@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 public class ConfigPOJO {
 
     // directory where generator should put all generated packages
-    private String mainPackage;
+    private String root;
 
     // how many method should be generated all together (!!!)
     private String allMethods;
@@ -33,12 +33,12 @@ public class ConfigPOJO {
         this.javaMethodCount = javaMethodCount;
     }
 
-    public String getMainPackage() {
-        return mainPackage;
+    public String getRoot() {
+        return root;
     }
 
-    public void setMainPackage(String mainPackage) {
-        this.mainPackage = mainPackage;
+    public void setRoot(String root) {
+        this.root = root;
     }
 
     public String getAllMethods() {
@@ -84,7 +84,7 @@ public class ConfigPOJO {
     @Override
     public String toString() {
         return "ClassPojo [javaMethodCount = " + javaMethodCount +
-                ", mainPackage = " + mainPackage + ", allMethods = " + allMethods +
+                ", root = " + root + ", allMethods = " + allMethods +
                 ", kotlinPackageCount = " + kotlinPackageCount + ", javaClassCount = " +
                 javaClassCount + ", kotlinClassCount = " + kotlinClassCount +
                 ", javaPackageCount = " + javaPackageCount + "]";
