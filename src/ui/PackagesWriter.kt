@@ -23,10 +23,13 @@ public class PackagesWriter {
         return config
     }
 
+    var packagesRoot: File = File("")
+    var moduleRoot: File = File("")
     public fun writePackages(config: ConfigPOJO, where: String = config.root) {
 
-        var packagesRoot = File(where)
+        packagesRoot = File(where)
         packagesRoot.mkdirs()
+        moduleRoot = File(config.root)
 
 
         println(config.javaPackageCount + " packages, " + config.javaClassCount.toInt() + " classes, " +
@@ -49,7 +52,7 @@ public class PackagesWriter {
 
     private fun generateJavaPackage(packageNumber: Int, classCounter: Int,
                                     methodsPerClass: Int, mainPackage: File) {
-        val packageName = "packageJava" + packageNumber
+        val packageName = "packageJava" + moduleRoot.name + packageNumber
         val packageFolder = File(mainPackage.toString() + "/" + packageName)
         if (packageFolder.exists()) {
             packageFolder.delete()
@@ -66,7 +69,7 @@ public class PackagesWriter {
 
     private fun generateKotlinPackage(packageNumber: Int, classCounter: Int,
                                       methodsPerClass: Int, mainPackage: File) {
-        val packageName = "packageKt" + packageNumber
+        val packageName = "packageKt" + moduleRoot.name +  packageNumber
         val packageFolder = File(mainPackage.toString() + "/" + packageName)
         if (packageFolder.exists()) {
             packageFolder.delete()

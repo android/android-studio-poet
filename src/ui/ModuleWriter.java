@@ -23,7 +23,6 @@ public class ModuleWriter {
         PackagesWriter packagesWriter = new PackagesWriter();
         packagesWriter.writePackages(configPOJO,
                 configPOJO.getRoot() + "/src/main/java/");
-
     }
 
     private void writeBuildGradle(ConfigPOJO configPOJO) {
