@@ -7,6 +7,9 @@ public class ConfigPOJO {
     // directory where generator should put all generated packages
     private String root;
 
+    // how many modules
+    private String numModules;
+
     // how many method should be generated all together (!!!)
     private String allMethods;
 
@@ -84,7 +87,8 @@ public class ConfigPOJO {
     @Override
     public String toString() {
         return "ClassPojo [javaMethodCount = " + javaMethodCount +
-                ", root = " + root + ", allMethods = " + allMethods +
+                ", root = " + root + ", numModules = " + numModules
+                + ", allMethods = " + allMethods +
                 ", kotlinPackageCount = " + kotlinPackageCount + ", javaClassCount = " +
                 javaClassCount + ", kotlinClassCount = " + kotlinClassCount +
                 ", javaPackageCount = " + javaPackageCount + "]";
@@ -118,5 +122,13 @@ public class ConfigPOJO {
         String json = gson.toJson(this);
 
         return json;
+    }
+
+    public String getNumModules() {
+        return numModules;
+    }
+
+    public void setNumModules(String numModules) {
+        this.numModules = numModules;
     }
 }

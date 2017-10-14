@@ -25,7 +25,7 @@ public class PackagesWriter {
 
     var packagesRoot: File = File("")
     var moduleRoot: File = File("")
-    public fun writePackages(config: ConfigPOJO, where: String = config.root) {
+    public fun writePackages(config: ConfigPOJO, where: String) {
 
         packagesRoot = File(where)
         packagesRoot.mkdirs()

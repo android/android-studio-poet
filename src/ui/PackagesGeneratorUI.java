@@ -17,7 +17,8 @@ public class PackagesGeneratorUI extends JFrame {
 
 
     public static final String SAMPLE_CONFIG = "{\n" +
-            "  \"root\": \"/Users/bfarber/Desktop/module1/\",\n" +
+            "  \"root\": \"/Users/bfarber/Desktop/modules/\",\n" +
+            "  \"numModules\": \"2\",\n" +
             "  \"allMethods\": \"4000\",\n" +
             "  \"javaPackageCount\": \"20\",\n" +
             "  \"javaClassCount\": \"8\",\n" +
@@ -29,7 +30,7 @@ public class PackagesGeneratorUI extends JFrame {
 
     private JPanel contentPane;
     // TODO may be to do a decorator with PakagesGenerator
-    private ModuleWriter moduleGenerator;
+    private ModulesWriter moduleGenerator;
     private JTextArea textArea;
 
     public PackagesGeneratorUI() {
@@ -70,7 +71,7 @@ public class PackagesGeneratorUI extends JFrame {
         contentPane.add(scrollPane, BorderLayout.CENTER);
         pack();
 
-        moduleGenerator = new ModuleWriter(this);
+        moduleGenerator = new ModulesWriter(this);
     }
 
     public static void main(String[] args) {

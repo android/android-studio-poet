@@ -6,9 +6,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ModuleWriter {
+public class ModulesWriter {
 
-    public ModuleWriter(PackagesGeneratorUI packagesGeneratorUI) {
+    public ModulesWriter(PackagesGeneratorUI packagesGeneratorUI) {
     }
 
     public void generate(String configStr) {
@@ -17,17 +17,28 @@ public class ModuleWriter {
         ConfigPOJO configPOJO = gson.fromJson(configStr, ConfigPOJO.class);
 
         writeRootFolder(configPOJO);
-        writeLibsFolder(configPOJO);
-        writeBuildGradle(configPOJO);
 
+        for (int i = 0; i < Integer.parseInt(configPOJO.getNumModules()); i++) {
+            writeModule(i, configPOJO);
+        }
+    }
+
+    private void writeModule(int index, ConfigPOJO configPOJO) {
+        String moduleRoot = configPOJO.getRoot() + "/module" + index +"/";
+        File moduleRootFile = new File(moduleRoot);
+        moduleRootFile.mkdir();
+
+        writeLibsFolder(moduleRootFile, configPOJO);
+        writeBuildGradle(moduleRootFile,configPOJO);
 
         PackagesWriter packagesWriter = new PackagesWriter();
         packagesWriter.writePackages(configPOJO,
-                configPOJO.getRoot() + "/src/main/java/");
+                moduleRoot + "/src/main/java/");
+
     }
 
-    private void writeBuildGradle(ConfigPOJO configPOJO) {
-        String libRoot = configPOJO.getRoot() + "/build.gradle/";
+    private void writeBuildGradle(File moduleRootFile, ConfigPOJO configPOJO) {
+        String libRoot = moduleRootFile + "/build.gradle/";
         BufferedWriter writer = null;
         try {
             File buildGradle = new File(libRoot);
@@ -47,9 +58,9 @@ public class ModuleWriter {
         }
     }
 
-    private void writeLibsFolder(ConfigPOJO configPOJO) {
+    private void writeLibsFolder(File moduleRootFile, ConfigPOJO configPOJO) {
         // write libs
-        String libRoot = configPOJO.getRoot() + "/libs/";
+        String libRoot = moduleRootFile + "/libs/";
         new File(libRoot).mkdir();
     }
 
