@@ -1,14 +1,14 @@
-package ui;
+package ui
 
-public class BuildGradle {
+object BuildGradle {
 
-    public static final String TEXT = "" +
+    val TEXT = "" +
             "apply plugin: 'java-library'\n" +
             "apply plugin: 'kotlin'\n" +
             "\n" +
             "dependencies {\n" +
             "    implementation fileTree(dir: 'libs', include: ['*.jar'])\n" +
-            "    compile \"org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version\"\n" +
+            "    compile \"org.jetbrains.kotlin:kotlin-stdlib-jre8:\$kotlin_version\"\n" +
             "}\n" +
             "\n" +
             "sourceCompatibility = \"1.7\"\n" +
@@ -19,7 +19,7 @@ public class BuildGradle {
             "        mavenCentral()\n" +
             "    }\n" +
             "    dependencies {\n" +
-            "        classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version\"\n" +
+            "        classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:\$kotlin_version\"\n" +
             "    }\n" +
             "}\n" +
             "repositories {\n" +
@@ -34,6 +34,6 @@ public class BuildGradle {
             "    kotlinOptions {\n" +
             "        jvmTarget = \"1.8\"\n" +
             "    }\n" +
-            "}\n";
+            "}\n"
 
 }

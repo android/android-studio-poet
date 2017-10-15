@@ -29,8 +29,7 @@ public class PackagesGeneratorUI extends JFrame {
 
 
     private JPanel contentPane;
-    // TODO may be to do a decorator with PakagesGenerator
-    private ModulesWriter moduleGenerator;
+    private ModulesWriter modulesWriter;
     private JTextArea textArea;
 
     public PackagesGeneratorUI() {
@@ -48,7 +47,7 @@ public class PackagesGeneratorUI extends JFrame {
         JButton btnGenerate = new JButton("Generate");
         btnGenerate.addActionListener(e -> {
             System.out.println(textArea.getText());
-            moduleGenerator.generate(textArea.getText());
+            modulesWriter.generate(textArea.getText());
         });
         contentPane.add(btnGenerate, BorderLayout.SOUTH);
 
@@ -71,7 +70,7 @@ public class PackagesGeneratorUI extends JFrame {
         contentPane.add(scrollPane, BorderLayout.CENTER);
         pack();
 
-        moduleGenerator = new ModulesWriter(this);
+        modulesWriter = new ModulesWriter();
     }
 
     public static void main(String[] args) {
