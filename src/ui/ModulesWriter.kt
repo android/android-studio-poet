@@ -31,6 +31,7 @@ class ModulesWriter {
 
         for (i in 0 until Integer.parseInt(configPOJO.numModules!!)) {
             writeModule(i, configPOJO)
+            println("Done writing module " + i)
         }
     }
 
