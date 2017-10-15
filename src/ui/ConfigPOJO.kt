@@ -1,3 +1,17 @@
+/*
+ *  Copyright 2017 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package ui
 
 import com.google.gson.Gson
@@ -10,7 +24,7 @@ class ConfigPOJO {
     // how many modules
     var numModules: String? = null
 
-    // how many method should be generated all together (!!!)
+    // how many methods should be generated all together (!!!)
     var allMethods: String? = null
 
     // how many java methods should be generated all together
@@ -28,7 +42,6 @@ class ConfigPOJO {
     // how many classes should be generated in each Kotlin package
     var kotlinClassCount: String? = null
 
-    // TODO call validate
     val javaMethodsPerClass: Int
         get() = Integer.parseInt(javaMethodCount!!) / (Integer.parseInt(javaClassCount!!) * Integer.parseInt(javaPackageCount!!))
 
@@ -38,21 +51,9 @@ class ConfigPOJO {
     val kotlinMethodsPerClass: Int
         get() = allKotlinMethods / (Integer.parseInt(kotlinClassCount!!) * Integer.parseInt(kotlinPackageCount!!))
 
-    override fun toString(): String {
-        return ("ClassPojo [javaMethodCount = " + javaMethodCount +
-                ", root = " + root + ", numModules = " + numModules
-                + ", allMethods = " + allMethods +
-                ", kotlinPackageCount = " + kotlinPackageCount + ", javaClassCount = " +
-                javaClassCount + ", kotlinClassCount = " + kotlinClassCount +
-                ", javaPackageCount = " + javaPackageCount + "]")
-    }
+    override fun toString(): String = toJson()
 
-    fun validate(): Boolean {
-        // TODO check the types of all members be strings
-        return true
-    }
-
-    fun toJson(): String {
+    private fun toJson(): String {
         val gson = Gson()
 
         return gson.toJson(this)
