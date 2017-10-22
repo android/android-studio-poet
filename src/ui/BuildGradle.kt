@@ -14,6 +14,9 @@
 
 package ui
 
+annotation class Fancy
+
+@Fancy
 object BuildGradle {
 
     val TEXT = "" +

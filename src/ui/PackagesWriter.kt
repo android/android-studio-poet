@@ -109,6 +109,11 @@ class PackagesWriter {
         val buff = StringBuilder()
 
         buff.append("package $packageName;\n")
+        
+        var annotName = className + "Fancy"
+        buff.append("annotation class " + annotName + "\n")
+        buff.append("@" + annotName + "\n")
+
         buff.append("public class $className {\n")
 
         for (i in 0 until methodsPerClass) {
