@@ -23,28 +23,29 @@ class PackagesWriter {
 
     private var packagesRoot: File = File("")
     private var moduleRoot: File = File("")
-    fun writePackages(config: ConfigPOJO, where: String) {
+    fun writePackages(config: ConfigPOJO, moduleIndex: Int, where: String) {
 
         packagesRoot = File(where)
         packagesRoot.mkdirs()
         moduleRoot = File(config.root)
 
-        for (i in 0 until config.javaPackageCount!!.toInt()) {
-            generateJavaPackage(i, config.javaClassCount!!.toInt(), config.javaMethodsPerClass,
-                    packagesRoot)
+        for (packageIndex in 0 until config.javaPackageCount!!.toInt()) {
+            generateJavaPackage(packageIndex, moduleIndex, config.javaClassCount!!.toInt(),
+                    config.javaMethodsPerClass, packagesRoot)
         }
 
         val kotlinMethodsPerClass = config.kotlinMethodsPerClass
 
-        for (i in 0 until config.kotlinPackageCount!!.toInt()) {
-            generateKotlinPackage((i + config.javaPackageCount!!.toInt()),
+        for (packageIndex in 0 until config.kotlinPackageCount!!.toInt()) {
+            var kotlinPackageIndex = (packageIndex + config.javaPackageCount!!.toInt())
+            generateKotlinPackage(kotlinPackageIndex, moduleIndex,
                     config.kotlinPackageCount!!.toInt(), kotlinMethodsPerClass, packagesRoot)
         }
     }
 
-    private fun generateJavaPackage(packageNumber: Int, classCounter: Int,
+    private fun generateJavaPackage(packageIndex: Int, moduleIndex: Int, classesPerPackage: Int,
                                     methodsPerClass: Int, mainPackage: File) {
-        val packageName = "packageJava" + moduleRoot.name + packageNumber
+        val packageName = moduleRoot.name + moduleIndex +"packageJava" + packageIndex
         val packageFolder = File(mainPackage.toString() + "/" + packageName)
         if (packageFolder.exists()) {
             packageFolder.delete()
@@ -52,14 +53,15 @@ class PackagesWriter {
 
         packageFolder.mkdir()
 
-        for (i in 0 until classCounter) {
-            generateJavaClass(packageName, i, methodsPerClass, mainPackage)
+        for (classIndex in 0 until classesPerPackage) {
+            generateJavaClass(packageName, classIndex, methodsPerClass, mainPackage)
         }
     }
 
-    private fun generateKotlinPackage(packageNumber: Int, classCounter: Int,
+    private fun generateKotlinPackage(packageIndex: Int, moduleIndex: Int, classesPerPackage: Int,
                                       methodsPerClass: Int, mainPackage: File) {
-        val packageName = "packageKt" + moduleRoot.name + packageNumber
+        // TODO add module index
+        val packageName = moduleRoot.name + moduleIndex + "packageKt" + packageIndex
         val packageFolder = File(mainPackage.toString() + "/" + packageName)
         if (packageFolder.exists()) {
             packageFolder.delete()
@@ -67,7 +69,7 @@ class PackagesWriter {
 
         packageFolder.mkdir()
 
-        for (i in 0 until classCounter) {
+        for (i in 0 until classesPerPackage) {
             generateKotlinClass(packageName, i, methodsPerClass, mainPackage)
         }
     }
@@ -91,6 +93,10 @@ class PackagesWriter {
                 buff.append("new Foo" + (classNumber - 1) + "().foo" + (methodsPerClass - 1) + "();\n")
             }
 
+            // adding lambda
+            val lambda = "final Runnable anything = () -> System.out.println(\"anything\");"
+            buff.append(lambda + "\n")
+
             buff.append("\n}")
         }
 
@@ -109,6 +115,11 @@ class PackagesWriter {
         val buff = StringBuilder()
 
         buff.append("package $packageName;\n")
+
+        var annotName = className + "Fancy"
+        buff.append("annotation class " + annotName + "\n")
+        buff.append("@" + annotName + "\n")
+
         buff.append("public class $className {\n")
 
         for (i in 0 until methodsPerClass) {
@@ -141,29 +152,6 @@ class PackagesWriter {
             writer.close()
         } catch (e: IOException) {
             e.printStackTrace()
-        }
-    }
-
-    companion object {
-        private fun createTestConfig(): ConfigPOJO {
-            var config = ConfigPOJO()
-
-            config.root = File(System.getProperty("user.dir") + "/src/").toString()
-            config.allMethods = "4000"
-            config.javaPackageCount = "4"
-            config.javaClassCount = "50"
-            config.javaMethodCount = "2000"
-            config.kotlinPackageCount = "4"
-            config.kotlinClassCount = "50"
-
-            return config
-        }
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val packagesGenerator = PackagesWriter()
-            val config = createTestConfig()
-            packagesGenerator.writePackages(config, "sadasdsd")
         }
     }
 }

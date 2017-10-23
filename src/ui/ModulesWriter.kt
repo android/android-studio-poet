@@ -44,7 +44,9 @@ class ModulesWriter {
         writeBuildGradle(moduleRootFile)
 
         val packagesWriter = PackagesWriter()
-        packagesWriter.writePackages(configPOJO,
+
+        // TODO stopped here add index
+        packagesWriter.writePackages(configPOJO, index,
                 moduleRoot + "/src/main/java/")
     }
 
