@@ -28,8 +28,8 @@ object BuildGradle {
             "    compile \"org.jetbrains.kotlin:kotlin-stdlib-jre8:\$kotlin_version\"\n" +
             "}\n" +
             "\n" +
-            "sourceCompatibility = \"1.7\"\n" +
-            "targetCompatibility = \"1.7\"\n" +
+            "sourceCompatibility = \"1.8\"\n" +
+            "targetCompatibility = \"1.8\"\n" +
             "buildscript {\n" +
             "    ext.kotlin_version = '1.1.51'\n" +
             "    repositories {\n" +
