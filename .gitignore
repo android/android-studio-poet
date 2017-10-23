@@ -26,3 +26,7 @@ hs_err_pid*
 src/pack*/*
 
 out/production/java-generator/json/sample.json
+
+out/production/java-generator/META-INF/MANIFEST.MF
+
+src/META-INF/MANIFEST.MF
