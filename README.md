@@ -3,7 +3,7 @@
 
 ![alt text](https://github.com/borisf/java-generator/blob/master/img/generator.png)  
   
-Inpsired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate big Java and Kotlin based modules for analyzing big Android apps, and looking for ways to improve build times.
+Inpsired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate big Java and Kotlin based modules for analyzing big Android apps, to improve build times.
 
 ## Download & Run
 To run, grab the [latest JAR](https://github.com/borisf/java-generator/releases)
