@@ -19,6 +19,7 @@ import ui.generators.BuildGradleGenerator
 import ui.generators.PackagesGenerator
 import ui.generators.packages.JavaGenerator
 import ui.generators.packages.KotlinGenerator
+import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.GradlewGenerator
 import ui.models.ConfigPOJO
 import ui.models.ModuleBlueprint
@@ -28,6 +29,7 @@ import java.io.File
 class ModulesWriter(private val dependencyValidator: DependencyValidator,
                     private val blueprintFactory: ModuleBlueprintFactory,
                     private val buildGradleGenerator: BuildGradleGenerator,
+                    private val gradleSettingsGenerator: GradleSettingsGenerator,
                     private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
@@ -41,18 +43,26 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
 
         val projectRoot = configPOJO.root.joinPath(configPOJO.projectName)
 
+        writeRootFolder(configPOJO.root)
         writeRootFolder(projectRoot)
         GradlewGenerator.generateGradleW(projectRoot)
 
-        for (i in 0 until configPOJO.numModules) {
-            writeModule(blueprintFactory.create(i, configPOJO, projectRoot), configPOJO)
-            println("Done writing module " + i)
+        val moduleBlueprints = (0 until configPOJO.numModules).map { i ->
+            blueprintFactory.create(i, configPOJO, projectRoot)
         }
+
+        gradleSettingsGenerator.generate(configPOJO.projectName, moduleBlueprints, projectRoot)
+
+        moduleBlueprints.forEach{ blueprint ->
+            writeModule(blueprint, configPOJO)
+            println("Done writing module " + blueprint.index)
+        }
+
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
         val moduleRootPath = moduleBlueprint.root
-        val moduleRoot = moduleRootPath + "/module" + moduleBlueprint.index + "/"
+        val moduleRoot = moduleRootPath.joinPath(moduleBlueprint.name)
         val moduleRootFile = File(moduleRoot)
         moduleRootFile.mkdir()
 

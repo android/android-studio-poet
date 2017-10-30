@@ -8,6 +8,6 @@ class ModuleBlueprintFactory {
         val dependencies = config.dependencies
                 ?.filter { it.from == index}
                 ?.map { it.to } ?: listOf()
-        return ModuleBlueprint(index, projectRoot, dependencies)
+        return ModuleBlueprint(index, "module" + index, projectRoot, dependencies)
     }
 }
