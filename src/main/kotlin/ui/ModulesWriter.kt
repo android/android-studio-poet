@@ -18,12 +18,16 @@ import com.google.gson.Gson
 import ui.models.ConfigPOJO
 import java.io.File
 
-class ModulesWriter(private val fileWriter: FileWriter) {
+class ModulesWriter(private val dependencyValidator: DependencyValidator, private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
 
         val gson = Gson()
         val configPOJO = gson.fromJson(configStr, ConfigPOJO::class.java)
+
+        if (!dependencyValidator.isValid(configPOJO)) {
+            throw IllegalStateException("Incorrect dependencies")
+        }
 
         writeRootFolder(configPOJO)
 

@@ -84,7 +84,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
 
             EventQueue.invokeLater {
                 try {
-                    val frame = PackagesGeneratorUI(ModulesWriter(FileWriter()))
+                    val frame = PackagesGeneratorUI(ModulesWriter(DependencyValidator(), FileWriter()))
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
