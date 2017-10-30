@@ -15,12 +15,9 @@
 package ui
 
 import com.google.gson.Gson
-import java.io.BufferedWriter
 import java.io.File
-import java.io.FileWriter
-import java.io.IOException
 
-class ModulesWriter {
+class ModulesWriter(private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
 
@@ -52,23 +49,8 @@ class ModulesWriter {
 
     private fun writeBuildGradle(moduleRootFile: File) {
         val libRoot = moduleRootFile.toString() + "/build.gradle/"
-        var writer: BufferedWriter? = null
-        try {
-            val buildGradle = File(libRoot)
-            buildGradle.createNewFile()
-
-            writer = BufferedWriter(FileWriter(buildGradle))
-            writer.write(BuildGradle.TEXT)
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                writer!!.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
+        val content = BuildGradle.TEXT
+        fileWriter.writeToFile(content, libRoot)
     }
 
     private fun writeLibsFolder(moduleRootFile: File) {

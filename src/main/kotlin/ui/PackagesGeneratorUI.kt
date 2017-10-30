@@ -21,10 +21,9 @@ import java.awt.Font
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class PackagesGeneratorUI : JFrame() {
+class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
 
     private val contentPane: JPanel
-    private val modulesWriter: ModulesWriter
     private val textArea: JTextArea
 
     init {
@@ -57,7 +56,6 @@ class PackagesGeneratorUI : JFrame() {
 
         contentPane.add(scrollPane, BorderLayout.CENTER)
 
-        modulesWriter = ModulesWriter()
         val btnGenerate = JButton("Generate")
         btnGenerate.addActionListener {
             println(textArea.text)
@@ -86,7 +84,7 @@ class PackagesGeneratorUI : JFrame() {
 
             EventQueue.invokeLater {
                 try {
-                    val frame = PackagesGeneratorUI()
+                    val frame = PackagesGeneratorUI(ModulesWriter(FileWriter()))
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
