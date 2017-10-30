@@ -24,7 +24,7 @@ dependencies {
 
 }
 
-task runExample(type: JavaExec) {
+task runGenerator(type: JavaExec) {
     main = 'ui.PackagesGeneratorUI'
     classpath = sourceSets.main.runtimeClasspath
 }
