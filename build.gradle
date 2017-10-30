@@ -22,6 +22,9 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'com.google.code.gson:gson:2.8.2'
 
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-inline:2.10.0"
+    testCompile "com.nhaarman:mockito-kotlin:1.5.0"
 }
 
 task runGenerator(type: JavaExec) {

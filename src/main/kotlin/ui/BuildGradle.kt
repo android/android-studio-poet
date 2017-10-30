@@ -19,7 +19,7 @@ annotation class Fancy
 @Fancy
 object BuildGradle {
 
-    val TEXT = "" +
+    fun print(dependencies: String) = "" +
             "apply plugin: 'java-library'\n" +
             "apply plugin: 'kotlin'\n" +
             "\n" +
@@ -37,6 +37,7 @@ object BuildGradle {
             "    }\n" +
             "    dependencies {\n" +
             "        classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:\$kotlin_version\"\n" +
+            dependencies +
             "    }\n" +
             "}\n" +
             "repositories {\n" +

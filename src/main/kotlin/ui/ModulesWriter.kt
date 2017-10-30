@@ -15,60 +15,51 @@
 package ui
 
 import com.google.gson.Gson
-import java.io.BufferedWriter
+import ui.models.ConfigPOJO
+import ui.models.ModuleBlueprint
 import java.io.File
-import java.io.FileWriter
-import java.io.IOException
 
-class ModulesWriter {
+class ModulesWriter(private val dependencyValidator: DependencyValidator,
+                    private val blueprintFactory: ModuleBlueprintFactory,
+                    private val buildGradleCreator: BuildGradleCreator,
+                    private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
 
         val gson = Gson()
         val configPOJO = gson.fromJson(configStr, ConfigPOJO::class.java)
 
+        if (!dependencyValidator.isValid(configPOJO)) {
+            throw IllegalStateException("Incorrect dependencies")
+        }
+
         writeRootFolder(configPOJO)
 
-        for (i in 0 until Integer.parseInt(configPOJO.numModules!!)) {
-            writeModule(i, configPOJO)
+        for (i in 0 until configPOJO.numModules) {
+            writeModule(blueprintFactory.create(i, configPOJO), configPOJO)
             println("Done writing module " + i)
         }
     }
 
-    private fun writeModule(index: Int, configPOJO: ConfigPOJO) {
-        val moduleRoot = configPOJO.root + "/module" + index + "/"
+    private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
+        val moduleRoot = configPOJO.root + "/module" + moduleBlueprint.index + "/"
         val moduleRootFile = File(moduleRoot)
         moduleRootFile.mkdir()
 
         writeLibsFolder(moduleRootFile)
-        writeBuildGradle(moduleRootFile)
+        writeBuildGradle(moduleRootFile, moduleBlueprint)
 
         val packagesWriter = PackagesWriter()
 
         // TODO stopped here add index
-        packagesWriter.writePackages(configPOJO, index,
+        packagesWriter.writePackages(configPOJO, moduleBlueprint.index,
                 moduleRoot + "/src/main/java/")
     }
 
-    private fun writeBuildGradle(moduleRootFile: File) {
+    private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {
         val libRoot = moduleRootFile.toString() + "/build.gradle/"
-        var writer: BufferedWriter? = null
-        try {
-            val buildGradle = File(libRoot)
-            buildGradle.createNewFile()
-
-            writer = BufferedWriter(FileWriter(buildGradle))
-            writer.write(BuildGradle.TEXT)
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                writer!!.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
+        val content = buildGradleCreator.create(moduleBlueprint)
+        fileWriter.writeToFile(content, libRoot)
     }
 
     private fun writeLibsFolder(moduleRootFile: File) {
