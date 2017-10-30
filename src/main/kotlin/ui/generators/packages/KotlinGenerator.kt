@@ -9,7 +9,7 @@ class KotlinGenerator constructor(fileWriter: FileWriter): PackageGenerator(file
         val className = "Foo" + classNumber
         val buff = StringBuilder()
 
-        buff.append("packages $packageName;\n")
+        buff.append("package $packageName;\n")
 
         var annotName = className + "Fancy"
         buff.append("annotation class " + annotName + "\n")
