@@ -41,7 +41,7 @@ class JavaGenerator constructor(fileWriter: FileWriter): PackageGenerator(fileWr
         }
 
         // adding lambda
-        method.addStatement("final Runnable anything = () -> System.out.println(\"anything\").run()")
+        method.addStatement("final Runnable anything = () -> System.out.println(\"anything\")")
 
         return method.build()
     }

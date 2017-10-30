@@ -21,11 +21,10 @@ import java.io.File
 
 class PackagesGenerator(private val javaGenerator: JavaGenerator, private val kotlinGenerator: KotlinGenerator) {
 
-    fun writePackages(config: ConfigPOJO, moduleIndex: Int, where: String) {
+    fun writePackages(config: ConfigPOJO, moduleIndex: Int, where: String, moduleRoot: File) {
 
         val packagesRoot = File(where)
         packagesRoot.mkdirs()
-        val moduleRoot = File(config.root)
 
         for (packageIndex in 0 until config.javaPackageCount!!.toInt()) {
             javaGenerator.generatePackage(packageIndex, moduleIndex, config.javaClassCount!!.toInt(),

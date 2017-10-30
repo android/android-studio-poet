@@ -16,6 +16,7 @@ package ui
 
 import org.intellij.lang.annotations.Language
 import ui.generators.BuildGradleGenerator
+import ui.generators.project.GradleSettingsGenerator
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.EventQueue
@@ -71,6 +72,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
     companion object {
 
         @Language("JSON") val SAMPLE_CONFIG = "{\n" +
+                "  \"projectName\": \"genny\",\n" +
                 "  \"root\": \"/Users/bfarber/Desktop/modules/\",\n" +
                 "  \"numModules\": \"5\",\n" +
                 "  \"allMethods\": \"4000\",\n" +
@@ -88,10 +90,12 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
 
             EventQueue.invokeLater {
                 try {
+                    val fileWriter = FileWriter()
                     val frame = PackagesGeneratorUI(ModulesWriter(DependencyValidator(),
                             ModuleBlueprintFactory(),
                             BuildGradleGenerator(),
-                            FileWriter()))
+                            GradleSettingsGenerator(fileWriter),
+                            fileWriter))
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()

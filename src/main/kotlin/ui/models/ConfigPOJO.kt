@@ -18,8 +18,11 @@ import com.google.gson.Gson
 
 class ConfigPOJO {
 
-    // directory where generator should put all generated packages
-    var root: String? = null
+    // name of the new project
+    lateinit var projectName: String
+
+    // directory where generator should put generated project
+    lateinit var root: String
 
     // how many modules
     var numModules: Int = 0

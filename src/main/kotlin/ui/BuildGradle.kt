@@ -26,6 +26,7 @@ object BuildGradle {
             "dependencies {\n" +
             "    implementation fileTree(dir: 'libs', include: ['*.jar'])\n" +
             "    compile \"org.jetbrains.kotlin:kotlin-stdlib-jre8:\$kotlin_version\"\n" +
+            dependencies +
             "}\n" +
             "\n" +
             "sourceCompatibility = \"1.8\"\n" +
@@ -37,7 +38,6 @@ object BuildGradle {
             "    }\n" +
             "    dependencies {\n" +
             "        classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:\$kotlin_version\"\n" +
-            dependencies +
             "    }\n" +
             "}\n" +
             "repositories {\n" +
