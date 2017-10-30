@@ -27,7 +27,7 @@ class ModulesWriter(private val fileWriter: FileWriter) {
 
         writeRootFolder(configPOJO)
 
-        for (i in 0 until Integer.parseInt(configPOJO.numModules!!)) {
+        for (i in 0 until configPOJO.numModules) {
             writeModule(i, configPOJO)
             println("Done writing module " + i)
         }

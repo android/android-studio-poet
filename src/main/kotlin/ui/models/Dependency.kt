@@ -1,3 +1,3 @@
 package ui.models
 
-data class Dependency(val from: ModuleIndex, val to: ModuleIndex)
+data class Dependency(val from: Int, val to: Int)

@@ -22,7 +22,7 @@ class ConfigPOJO {
     var root: String? = null
 
     // how many modules
-    var numModules: String? = null
+    var numModules: Int = 0
 
     // how many methods should be generated all together (!!!)
     var allMethods: String? = null
@@ -51,7 +51,7 @@ class ConfigPOJO {
     val kotlinMethodsPerClass: Int
         get() = allKotlinMethods / (Integer.parseInt(kotlinClassCount!!) * Integer.parseInt(kotlinPackageCount!!))
 
-    val dependencies: List<Dependency>? = null
+    var dependencies: List<Dependency>? = null
 
     override fun toString(): String = toJson()
 

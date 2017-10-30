@@ -23,6 +23,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
 
     testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-inline:2.10.0"
 }
 
 task runGenerator(type: JavaExec) {
