@@ -30,3 +30,7 @@ out/production/java-generator/json/sample.json
 out/production/java-generator/META-INF/MANIFEST.MF
 
 src/META-INF/MANIFEST.MF
+
+*.iml
+.gradle/
+/build

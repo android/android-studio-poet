@@ -1,0 +1,30 @@
+group 'com.google.java-generator'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.1.2'
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile 'com.google.code.gson:gson:2.8.2'
+
+}
+
+task runGenerator(type: JavaExec) {
+    main = 'ui.PackagesGeneratorUI'
+    classpath = sourceSets.main.runtimeClasspath
+}
