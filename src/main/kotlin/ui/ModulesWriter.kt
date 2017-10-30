@@ -16,9 +16,13 @@ package ui
 
 import com.google.gson.Gson
 import ui.models.ConfigPOJO
+import ui.models.ModuleBlueprint
 import java.io.File
 
-class ModulesWriter(private val dependencyValidator: DependencyValidator, private val fileWriter: FileWriter) {
+class ModulesWriter(private val dependencyValidator: DependencyValidator,
+                    private val blueprintFactory: ModuleBlueprintFactory,
+                    private val buildGradleCreator: BuildGradleCreator,
+                    private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
 
@@ -32,29 +36,29 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator, privat
         writeRootFolder(configPOJO)
 
         for (i in 0 until configPOJO.numModules) {
-            writeModule(i, configPOJO)
+            writeModule(blueprintFactory.create(i, configPOJO), configPOJO)
             println("Done writing module " + i)
         }
     }
 
-    private fun writeModule(index: Int, configPOJO: ConfigPOJO) {
-        val moduleRoot = configPOJO.root + "/module" + index + "/"
+    private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
+        val moduleRoot = configPOJO.root + "/module" + moduleBlueprint.index + "/"
         val moduleRootFile = File(moduleRoot)
         moduleRootFile.mkdir()
 
         writeLibsFolder(moduleRootFile)
-        writeBuildGradle(moduleRootFile)
+        writeBuildGradle(moduleRootFile, moduleBlueprint)
 
         val packagesWriter = PackagesWriter()
 
         // TODO stopped here add index
-        packagesWriter.writePackages(configPOJO, index,
+        packagesWriter.writePackages(configPOJO, moduleBlueprint.index,
                 moduleRoot + "/src/main/java/")
     }
 
-    private fun writeBuildGradle(moduleRootFile: File) {
+    private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {
         val libRoot = moduleRootFile.toString() + "/build.gradle/"
-        val content = BuildGradle.TEXT
+        val content = buildGradleCreator.create(moduleBlueprint)
         fileWriter.writeToFile(content, libRoot)
     }
 

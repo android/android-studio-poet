@@ -14,6 +14,7 @@
 
 package ui
 
+import org.intellij.lang.annotations.Language
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.EventQueue
@@ -68,23 +69,29 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
 
     companion object {
 
-        val SAMPLE_CONFIG = "{\n" +
+        @Language("JSON") val SAMPLE_CONFIG = "{\n" +
                 "  \"root\": \"/Users/bfarber/Desktop/modules/\",\n" +
-                "  \"numModules\": \"2\",\n" +
+                "  \"numModules\": \"5\",\n" +
                 "  \"allMethods\": \"4000\",\n" +
                 "  \"javaPackageCount\": \"20\",\n" +
                 "  \"javaClassCount\": \"8\",\n" +
                 "  \"javaMethodCount\": \"2000\",\n" +
                 "  \"kotlinPackageCount\": \"20\",\n" +
-                "  \"kotlinClassCount\": \"8\"\n" +
+                "  \"kotlinClassCount\": \"8\",\n" +
+                "  \"dependencies\": [{\"from\": 3, \"to\": 2},\n" +
+                "    {\"from\": 4, \"to\": 2}, {\"from\": 4, \"to\": 3}]\n" +
                 "}"
+
 
         @JvmStatic
         fun main(args: Array<String>) {
 
             EventQueue.invokeLater {
                 try {
-                    val frame = PackagesGeneratorUI(ModulesWriter(DependencyValidator(), FileWriter()))
+                    val frame = PackagesGeneratorUI(ModulesWriter(DependencyValidator(),
+                            ModuleBlueprintFactory(),
+                            BuildGradleCreator(),
+                            FileWriter()))
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
