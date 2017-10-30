@@ -71,6 +71,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
     companion object {
 
         @Language("JSON") val SAMPLE_CONFIG = "{\n" +
+                "  \"projectName\": \"genny\",\n" +
                 "  \"root\": \"/Users/bfarber/Desktop/modules/\",\n" +
                 "  \"numModules\": \"5\",\n" +
                 "  \"allMethods\": \"4000\",\n" +

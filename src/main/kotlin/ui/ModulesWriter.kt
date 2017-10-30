@@ -19,8 +19,10 @@ import ui.generators.BuildGradleGenerator
 import ui.generators.PackagesGenerator
 import ui.generators.packages.JavaGenerator
 import ui.generators.packages.KotlinGenerator
+import ui.generators.project.GradlewGenerator
 import ui.models.ConfigPOJO
 import ui.models.ModuleBlueprint
+import utils.joinPath
 import java.io.File
 
 class ModulesWriter(private val dependencyValidator: DependencyValidator,
@@ -37,16 +39,20 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
             throw IllegalStateException("Incorrect dependencies")
         }
 
-        writeRootFolder(configPOJO)
+        val projectRoot = configPOJO.root.joinPath(configPOJO.projectName)
+
+        writeRootFolder(projectRoot)
+        GradlewGenerator.generateGradleW(projectRoot)
 
         for (i in 0 until configPOJO.numModules) {
-            writeModule(blueprintFactory.create(i, configPOJO), configPOJO)
+            writeModule(blueprintFactory.create(i, configPOJO, projectRoot), configPOJO)
             println("Done writing module " + i)
         }
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
-        val moduleRoot = configPOJO.root + "/module" + moduleBlueprint.index + "/"
+        val moduleRootPath = moduleBlueprint.root
+        val moduleRoot = moduleRootPath + "/module" + moduleBlueprint.index + "/"
         val moduleRootFile = File(moduleRoot)
         moduleRootFile.mkdir()
 
@@ -57,7 +63,7 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
 
         // TODO stopped here add index
         packagesWriter.writePackages(configPOJO, moduleBlueprint.index,
-                moduleRoot + "/src/main/java/")
+                moduleRoot + "/src/main/java/", File(moduleRootPath))
     }
 
     private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {
@@ -72,8 +78,8 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
         File(libRoot).mkdir()
     }
 
-    private fun writeRootFolder(configPOJO: ConfigPOJO) {
-        val root = File(configPOJO.root!!)
+    private fun writeRootFolder(projectRoot: String) {
+        val root = File(projectRoot)
 
         if (!root.exists()) {
             root.mkdir()
