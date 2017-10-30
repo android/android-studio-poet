@@ -15,13 +15,17 @@
 package ui
 
 import com.google.gson.Gson
+import ui.generators.BuildGradleGenerator
+import ui.generators.PackagesGenerator
+import ui.generators.packages.JavaGenerator
+import ui.generators.packages.KotlinGenerator
 import ui.models.ConfigPOJO
 import ui.models.ModuleBlueprint
 import java.io.File
 
 class ModulesWriter(private val dependencyValidator: DependencyValidator,
                     private val blueprintFactory: ModuleBlueprintFactory,
-                    private val buildGradleCreator: BuildGradleCreator,
+                    private val buildGradleGenerator: BuildGradleGenerator,
                     private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
@@ -49,7 +53,7 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
         writeLibsFolder(moduleRootFile)
         writeBuildGradle(moduleRootFile, moduleBlueprint)
 
-        val packagesWriter = PackagesWriter()
+        val packagesWriter = PackagesGenerator(JavaGenerator(fileWriter), KotlinGenerator(fileWriter))
 
         // TODO stopped here add index
         packagesWriter.writePackages(configPOJO, moduleBlueprint.index,
@@ -58,7 +62,7 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
 
     private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {
         val libRoot = moduleRootFile.toString() + "/build.gradle/"
-        val content = buildGradleCreator.create(moduleBlueprint)
+        val content = buildGradleGenerator.create(moduleBlueprint)
         fileWriter.writeToFile(content, libRoot)
     }
 

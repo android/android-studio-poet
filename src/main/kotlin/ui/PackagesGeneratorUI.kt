@@ -15,6 +15,7 @@
 package ui
 
 import org.intellij.lang.annotations.Language
+import ui.generators.BuildGradleGenerator
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.EventQueue
@@ -82,7 +83,6 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
                 "    {\"from\": 4, \"to\": 2}, {\"from\": 4, \"to\": 3}]\n" +
                 "}"
 
-
         @JvmStatic
         fun main(args: Array<String>) {
 
@@ -90,7 +90,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
                 try {
                     val frame = PackagesGeneratorUI(ModulesWriter(DependencyValidator(),
                             ModuleBlueprintFactory(),
-                            BuildGradleCreator(),
+                            BuildGradleGenerator(),
                             FileWriter()))
                     frame.isVisible = true
                 } catch (e: Exception) {

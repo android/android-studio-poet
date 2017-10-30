@@ -36,10 +36,10 @@ class ConfigPOJO {
     // how many kotlin packages should be generated
     var kotlinPackageCount: String? = null
 
-    // how many classes should be generated in each Java package
+    // how many classes should be generated in each Java packages
     var javaClassCount: String? = null
 
-    // how many classes should be generated in each Kotlin package
+    // how many classes should be generated in each Kotlin packages
     var kotlinClassCount: String? = null
 
     val javaMethodsPerClass: Int
