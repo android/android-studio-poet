@@ -12,7 +12,7 @@
  * permissions and limitations under the License.
  */
 
-package ui
+package ui.models
 
 import com.google.gson.Gson
 
@@ -51,6 +51,8 @@ class ConfigPOJO {
     val kotlinMethodsPerClass: Int
         get() = allKotlinMethods / (Integer.parseInt(kotlinClassCount!!) * Integer.parseInt(kotlinPackageCount!!))
 
+    val dependencies: List<Dependency>? = null
+
     override fun toString(): String = toJson()
 
     private fun toJson(): String {
@@ -59,3 +61,4 @@ class ConfigPOJO {
         return gson.toJson(this)
     }
 }
+

@@ -15,6 +15,7 @@
 package ui
 
 import com.google.gson.Gson
+import ui.models.ConfigPOJO
 import java.io.File
 
 class ModulesWriter(private val fileWriter: FileWriter) {
