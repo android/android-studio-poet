@@ -3,7 +3,7 @@
 
 ![alt text](https://github.com/borisf/java-generator/blob/master/img/generator.png)  
   
-Inpsired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate real life Java and Kotlin Android based projects to analyze and improve build times.
+Inspired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate real life Java and Kotlin Android project to analyze and improve build times.
 
 Create a real life complexity Android project that mimics your own and observe the build times. If the build times of the generated project are way smaller than yours, it might be worth inspecting deeply your build configs and optimize.
 
