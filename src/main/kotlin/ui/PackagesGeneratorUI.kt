@@ -81,6 +81,8 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
                 "  \"javaMethodCount\": \"2000\",\n" +
                 "  \"kotlinPackageCount\": \"20\",\n" +
                 "  \"kotlinClassCount\": \"8\",\n" +
+                "  \"androidModules\": \"1\",\n" +
+                "  \"numActivitiesPerAndroidModule\": \"8\",\n" +
                 "  \"dependencies\": [{\"from\": 3, \"to\": 2},\n" +
                 "    {\"from\": 4, \"to\": 2}, {\"from\": 4, \"to\": 3}]\n" +
                 "}"

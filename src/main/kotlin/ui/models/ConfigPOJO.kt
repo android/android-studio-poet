@@ -56,6 +56,10 @@ class ConfigPOJO {
 
     var dependencies: List<Dependency>? = null
 
+    val androidModules: String? = null
+
+    val numActivitiesPerAndroidModule: String? = null
+
     override fun toString(): String = toJson()
 
     private fun toJson(): String {
