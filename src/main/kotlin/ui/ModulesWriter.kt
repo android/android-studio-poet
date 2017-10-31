@@ -22,6 +22,7 @@ import ui.generators.packages.KotlinGenerator
 import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.GradlewGenerator
 import ui.generators.project.ProjectBuildGradleGenerator
+import ui.models.AndroidModuleBlueprint
 import ui.models.ConfigPOJO
 import ui.models.ModuleBlueprint
 import utils.joinPath
@@ -61,7 +62,18 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
             println("Done writing module " + blueprint.index)
         }
 
+        val androidModuleBlueprints =
+                (0 until configPOJO.androidModules!!.toInt()).map { i ->
+            blueprintFactory.createAndroidModule(i, configPOJO, projectRoot)
+        }
+
+        androidModuleBlueprints.forEach{ blueprint ->
+            writeAndroidModule(blueprint, configPOJO)
+            println("Done writing Android module " + blueprint.index)
+        }
     }
+
+    private fun writeAndroidModule(blueprint: AndroidModuleBlueprint, configPOJO: ConfigPOJO?) {}
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
         val moduleRootPath = moduleBlueprint.root
