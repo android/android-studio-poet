@@ -37,7 +37,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
         contentPane.layout = BorderLayout(0, 0)
         setContentPane(contentPane)
 
-        val lblTextLineExample = JLabel("Packages Writer")
+        val lblTextLineExample = JLabel("Android Project Generator")
         lblTextLineExample.horizontalAlignment = SwingConstants.CENTER
         contentPane.add(lblTextLineExample, BorderLayout.NORTH)
 
