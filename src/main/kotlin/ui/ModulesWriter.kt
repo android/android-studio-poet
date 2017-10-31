@@ -21,6 +21,7 @@ import ui.generators.packages.JavaGenerator
 import ui.generators.packages.KotlinGenerator
 import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.GradlewGenerator
+import ui.generators.project.ProjectBuildGradleGenerator
 import ui.models.ConfigPOJO
 import ui.models.ModuleBlueprint
 import utils.joinPath
@@ -30,6 +31,7 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
                     private val blueprintFactory: ModuleBlueprintFactory,
                     private val buildGradleGenerator: BuildGradleGenerator,
                     private val gradleSettingsGenerator: GradleSettingsGenerator,
+                    private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
                     private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
@@ -52,6 +54,7 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
         }
 
         gradleSettingsGenerator.generate(configPOJO.projectName, moduleBlueprints, projectRoot)
+        projectBuildGradleGenerator.generate(projectRoot)
 
         moduleBlueprints.forEach{ blueprint ->
             writeModule(blueprint, configPOJO)
