@@ -13,8 +13,8 @@ object GradlewGenerator {
         val gradlewbat = "gradlew.bat"
 
         val gradleWFile = File(root, gradlew).toPath()
-        Files.copy(FileInputStream(File(gradlew)), gradleWFile, StandardCopyOption.REPLACE_EXISTING)
-        Files.copy(FileInputStream(File(gradlewbat)), File(root, gradlewbat).toPath(), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy(FileInputStream(File(ASSETS_PATH, gradlew)), gradleWFile, StandardCopyOption.REPLACE_EXISTING)
+        Files.copy(FileInputStream(File(ASSETS_PATH, gradlewbat)), File(root, gradlewbat).toPath(), StandardCopyOption.REPLACE_EXISTING)
 
         Runtime.getRuntime().exec("chmod u+x " + gradleWFile)
 
@@ -23,7 +23,7 @@ object GradlewGenerator {
         val gradleWrapperFolder = File(gradleFolder, "wrapper")
         gradleWrapperFolder.mkdir()
 
-        val sourceFolder = File("gradle", "wrapper")
+        val sourceFolder = File(ASSETS_PATH, "gradle/wrapper")
 
         val gradleWrapperJar = "gradle-wrapper.jar"
         val gradleWrapperProperties = "gradle-wrapper.properties"

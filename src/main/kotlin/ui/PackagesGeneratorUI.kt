@@ -17,6 +17,7 @@ package ui
 import org.intellij.lang.annotations.Language
 import ui.generators.BuildGradleGenerator
 import ui.generators.project.GradleSettingsGenerator
+import ui.generators.project.ProjectBuildGradleGenerator
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.EventQueue
@@ -97,6 +98,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
                             ModuleBlueprintFactory(),
                             BuildGradleGenerator(),
                             GradleSettingsGenerator(fileWriter),
+                            ProjectBuildGradleGenerator(),
                             fileWriter))
                     frame.isVisible = true
                 } catch (e: Exception) {
