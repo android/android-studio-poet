@@ -32,3 +32,15 @@ task runGenerator(type: JavaExec) {
     main = 'ui.PackagesGeneratorUI'
     classpath = sourceSets.main.runtimeClasspath
 }
+
+// java -jar build/libs/java-generator-all-1.0-SNAPSHOT.jar
+task fatJar(type: Jar) {
+    manifest {
+        attributes (
+                'Main-Class': 'ui.PackagesGeneratorUI',
+        )
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
