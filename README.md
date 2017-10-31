@@ -1,18 +1,25 @@
-# java-generator
+# Java-Generator
 
 
 ![alt text](https://github.com/borisf/java-generator/blob/master/img/generator.png)  
   
-Inpsired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate big Java and Kotlin based modules for analyzing big Android apps, to improve build times.
+Inpsired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate real life Java and Kotlin Android based projects to analyze and improve build times.
+
+Create a real life complexity Android project that mimics your own and observe the build times. If the build times of the generated project are way smaller than yours, it might be worth inspecting deeply your build configs and optimize.
+
+## Feautures
+* Configurable number of modules
+* Configurable number of packages
+* Configurable number of classes
+* Configurable number of inter module dependencies
+* Work in process - resources
 
 ## Download & Run
 To run, grab the [latest JAR](https://github.com/borisf/java-generator/releases)
 and run `java -jar java-generator.jar`.
 
-## Why
-Assess build performance by generating Android Studio modules with a configurable number of classes, methods and packages. Then creat and running Android build.
 ## How
-The generated sources will incude the basic fucntionality of method calling both in class itself and between the generated classes, both in Java and Kotlin
+The generated sources will incude the basic functionality of method calling both in class itself and between the generated classes, both in Java and Kotlin
 
 This is not an official Google product.
 
