@@ -15,9 +15,9 @@
 package ui
 
 import com.google.gson.Gson
-import ui.generators.AndroidPackagesGenerator
 import ui.generators.BuildGradleGenerator
 import ui.generators.PackagesGenerator
+import ui.generators.android_modules.*
 import ui.generators.packages.JavaGenerator
 import ui.generators.packages.KotlinGenerator
 import ui.generators.project.GradleSettingsGenerator
@@ -87,11 +87,24 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
         //writeBuildGradle(moduleRootFile, androidModuleBlueprint)
         writeProguard()
 
-        // TODO add ones for Android
-        val packagesWriter = AndroidPackagesGenerator(JavaGenerator(fileWriter), KotlinGenerator(fileWriter))
-        packagesWriter.writePackages(configPOJO!!, androidModuleBlueprint.index,
-                        moduleRoot + "/src/main/java/", File(moduleRootPath))
+        val stringResourcesGenerator: StringResourcesGenerator = StringResourcesGenerator()
+        val imageResourcesGenerator: ImageResourcesGenerator = ImageResourcesGenerator()
+        val layoutResourcesGenerator: LayoutResourcesGenerator = LayoutResourcesGenerator()
+        val javaGenerator: JavaGenerator = JavaGenerator(fileWriter)
+        val kotlinGenerator: KotlinGenerator = KotlinGenerator(fileWriter)
+        val activityGenerator: ActivityGenerator = ActivityGenerator()
+        val manifestGenerator: ManifestGenerator = ManifestGenerator()
 
+        val packagesWriter = AndroidModuleGenerator(
+                stringResourcesGenerator,
+                imageResourcesGenerator,
+                layoutResourcesGenerator,
+                javaGenerator,
+                kotlinGenerator,
+                activityGenerator,
+                manifestGenerator)
+
+        packagesWriter.generate(androidModuleBlueprint)
     }
 
     private fun writeProguard() {
