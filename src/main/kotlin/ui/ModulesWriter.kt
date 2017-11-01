@@ -15,6 +15,7 @@
 package ui
 
 import com.google.gson.Gson
+import ui.generators.AndroidPackagesGenerator
 import ui.generators.BuildGradleGenerator
 import ui.generators.PackagesGenerator
 import ui.generators.packages.JavaGenerator
@@ -68,12 +69,34 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
         }
 
         androidModuleBlueprints.forEach{ blueprint ->
-            writeAndroidModule(blueprint, configPOJO)
+            writeAndroidModule(blueprint, configPOJO, projectRoot)
             println("Done writing Android module " + blueprint.index)
         }
     }
 
-    private fun writeAndroidModule(blueprint: AndroidModuleBlueprint, configPOJO: ConfigPOJO?) {}
+    private fun writeAndroidModule(androidModuleBlueprint: AndroidModuleBlueprint, configPOJO: ConfigPOJO?, projectRoot: String) {
+        val moduleRootPath = projectRoot
+        val moduleRoot = moduleRootPath.joinPath(androidModuleBlueprint.getName())
+
+        val moduleRootFile = File(moduleRoot)
+        moduleRootFile.mkdir()
+
+        writeLibsFolder(moduleRootFile)
+
+        // TODO add one for Android package,
+        //writeBuildGradle(moduleRootFile, androidModuleBlueprint)
+        writeProguard()
+
+        // TODO add ones for Android
+        val packagesWriter = AndroidPackagesGenerator(JavaGenerator(fileWriter), KotlinGenerator(fileWriter))
+        packagesWriter.writePackages(configPOJO!!, androidModuleBlueprint.index,
+                        moduleRoot + "/src/main/java/", File(moduleRootPath))
+
+    }
+
+    private fun writeProguard() {
+
+    }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
         val moduleRootPath = moduleBlueprint.root
@@ -86,7 +109,6 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
 
         val packagesWriter = PackagesGenerator(JavaGenerator(fileWriter), KotlinGenerator(fileWriter))
 
-        // TODO stopped here add index
         packagesWriter.writePackages(configPOJO, moduleBlueprint.index,
                 moduleRoot + "/src/main/java/", File(moduleRootPath))
     }

@@ -19,7 +19,8 @@ import ui.generators.packages.KotlinGenerator
 import ui.models.ConfigPOJO
 import java.io.File
 
-class PackagesGenerator(private val javaGenerator: JavaGenerator, private val kotlinGenerator: KotlinGenerator) {
+class PackagesGenerator(private val javaGenerator: JavaGenerator,
+                        private val kotlinGenerator: KotlinGenerator) {
 
     fun writePackages(config: ConfigPOJO, moduleIndex: Int, where: String, moduleRoot: File) {
 
