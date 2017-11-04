@@ -1,6 +1,6 @@
 package ui.generators.packages
 
-import ui.FileWriter
+import ui.writers.FileWriter
 import java.io.File
 
 abstract class PackageGenerator(private val fileWriter: FileWriter, private val postfix: String) {

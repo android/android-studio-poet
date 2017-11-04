@@ -1,4 +1,4 @@
-package ui
+package ui.writers
 
 import java.io.BufferedWriter
 import java.io.File

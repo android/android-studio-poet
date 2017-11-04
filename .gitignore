@@ -30,3 +30,5 @@ src/META-INF/MANIFEST.MF
 out/production/classes/META-INF/java-generator_main.kotlin_module
 
 out/test/classes/META-INF/java-generator_main.kotlin_module
+
+modules/**

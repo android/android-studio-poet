@@ -1,6 +1,6 @@
 package ui.generators.packages
 
-import ui.FileWriter
+import ui.writers.FileWriter
 import java.io.File
 
 class KotlinGenerator constructor(fileWriter: FileWriter): PackageGenerator(fileWriter, "Kt") {

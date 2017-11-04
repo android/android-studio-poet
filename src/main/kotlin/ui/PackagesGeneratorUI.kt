@@ -15,9 +15,7 @@
 package ui
 
 import org.intellij.lang.annotations.Language
-import ui.generators.BuildGradleGenerator
-import ui.generators.project.GradleSettingsGenerator
-import ui.generators.project.ProjectBuildGradleGenerator
+import ui.writers.ModulesWriter
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.EventQueue

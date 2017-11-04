@@ -1,6 +1,6 @@
 package ui.generators.project
 
-import ui.FileWriter
+import ui.writers.FileWriter
 import ui.models.ModuleBlueprint
 import utils.joinPath
 

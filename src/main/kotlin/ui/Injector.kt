@@ -7,6 +7,9 @@ import ui.generators.packages.JavaGenerator
 import ui.generators.packages.KotlinGenerator
 import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.ProjectBuildGradleGenerator
+import ui.writers.AndroidModuleGenerator
+import ui.writers.FileWriter
+import ui.writers.ModulesWriter
 
 object Injector {
 
@@ -23,9 +26,12 @@ object Injector {
     private val kotlinGenerator: KotlinGenerator = KotlinGenerator(fileWriter)
     private val activityGenerator: ActivityGenerator = ActivityGenerator()
     private val manifestGenerator: ManifestGenerator = ManifestGenerator()
+    private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
 
-    private val androidModuleGenerator = AndroidModuleGenerator(stringResourcesGenerator, imageResourcesGenerator,
-            layoutResourcesGenerator, javaGenerator, kotlinGenerator, activityGenerator, manifestGenerator, fileWriter)
+    private val androidModuleGenerator = AndroidModuleGenerator(stringResourcesGenerator,
+            imageResourcesGenerator, layoutResourcesGenerator, javaGenerator,
+            kotlinGenerator, activityGenerator, manifestGenerator, proguardGenerator,
+            fileWriter)
 
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
 

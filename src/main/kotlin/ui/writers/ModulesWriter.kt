@@ -12,14 +12,13 @@
  * permissions and limitations under the License.
  */
 
-package ui
+package ui.writers
 
 import com.google.gson.Gson
+import ui.DependencyValidator
+import ui.ModuleBlueprintFactory
 import ui.generators.BuildGradleGenerator
 import ui.generators.PackagesGenerator
-import ui.generators.android_modules.*
-import ui.generators.packages.JavaGenerator
-import ui.generators.packages.KotlinGenerator
 import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.GradlewGenerator
 import ui.generators.project.ProjectBuildGradleGenerator

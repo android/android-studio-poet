@@ -1,6 +1,6 @@
 package ui.generators.android_modules
 
-import ui.FileWriter
+import ui.writers.FileWriter
 import ui.models.AndroidModuleBlueprint
 import utils.joinPath
 

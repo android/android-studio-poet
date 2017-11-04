@@ -7,6 +7,8 @@ import ui.generators.BuildGradleGenerator
 import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.ProjectBuildGradleGenerator
 import ui.test_utils.mock
+import ui.writers.FileWriter
+import ui.writers.ModulesWriter
 
 class ModulesWriterTest {
 
@@ -19,7 +21,7 @@ class ModulesWriterTest {
     val modulesWriter = ModulesWriter(dependencyValidator,
             moduleBlueprinFactory,
             buildGradleGenerator, gradleSettingsGenerator,
-            projectBuildGradleGenerator,fileWriter)
+            projectBuildGradleGenerator, fileWriter)
 
     @Test(expected = IllegalStateException::class)
     fun `generate throws ISE when input is invalid`() {
