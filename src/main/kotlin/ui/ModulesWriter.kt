@@ -23,7 +23,6 @@ import ui.generators.packages.KotlinGenerator
 import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.GradlewGenerator
 import ui.generators.project.ProjectBuildGradleGenerator
-import ui.models.AndroidModuleBlueprint
 import ui.models.ConfigPOJO
 import ui.models.ModuleBlueprint
 import utils.joinPath
@@ -34,6 +33,8 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
                     private val buildGradleGenerator: BuildGradleGenerator,
                     private val gradleSettingsGenerator: GradleSettingsGenerator,
                     private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
+                    private val androidModuleGenerator: AndroidModuleGenerator,
+                    private val packagesGenerator: PackagesGenerator,
                     private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
@@ -69,46 +70,9 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
         }
 
         androidModuleBlueprints.forEach{ blueprint ->
-            writeAndroidModule(blueprint, configPOJO, projectRoot)
+            androidModuleGenerator.generate(blueprint)
             println("Done writing Android module " + blueprint.index)
         }
-    }
-
-    private fun writeAndroidModule(androidModuleBlueprint: AndroidModuleBlueprint, configPOJO: ConfigPOJO?, projectRoot: String) {
-        val moduleRootPath = projectRoot
-        val moduleRoot = moduleRootPath.joinPath(androidModuleBlueprint.getName())
-
-        val moduleRootFile = File(moduleRoot)
-        moduleRootFile.mkdir()
-
-        writeLibsFolder(moduleRootFile)
-
-        // TODO add one for Android package,
-        //writeBuildGradle(moduleRootFile, androidModuleBlueprint)
-        writeProguard()
-
-        val stringResourcesGenerator: StringResourcesGenerator = StringResourcesGenerator()
-        val imageResourcesGenerator: ImageResourcesGenerator = ImageResourcesGenerator()
-        val layoutResourcesGenerator: LayoutResourcesGenerator = LayoutResourcesGenerator()
-        val javaGenerator: JavaGenerator = JavaGenerator(fileWriter)
-        val kotlinGenerator: KotlinGenerator = KotlinGenerator(fileWriter)
-        val activityGenerator: ActivityGenerator = ActivityGenerator()
-        val manifestGenerator: ManifestGenerator = ManifestGenerator()
-
-        val packagesWriter = AndroidModuleGenerator(
-                stringResourcesGenerator,
-                imageResourcesGenerator,
-                layoutResourcesGenerator,
-                javaGenerator,
-                kotlinGenerator,
-                activityGenerator,
-                manifestGenerator)
-
-        packagesWriter.generate(androidModuleBlueprint)
-    }
-
-    private fun writeProguard() {
-
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
@@ -120,9 +84,7 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
         writeLibsFolder(moduleRootFile)
         writeBuildGradle(moduleRootFile, moduleBlueprint)
 
-        val packagesWriter = PackagesGenerator(JavaGenerator(fileWriter), KotlinGenerator(fileWriter))
-
-        packagesWriter.writePackages(configPOJO, moduleBlueprint.index,
+        packagesGenerator.writePackages(configPOJO, moduleBlueprint.index,
                 moduleRoot + "/src/main/java/", File(moduleRootPath))
     }
 

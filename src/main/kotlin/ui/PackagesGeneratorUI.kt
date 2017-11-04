@@ -93,13 +93,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
 
             EventQueue.invokeLater {
                 try {
-                    val fileWriter = FileWriter()
-                    val frame = PackagesGeneratorUI(ModulesWriter(DependencyValidator(),
-                            ModuleBlueprintFactory(),
-                            BuildGradleGenerator(),
-                            GradleSettingsGenerator(fileWriter),
-                            ProjectBuildGradleGenerator(),
-                            fileWriter))
+                    val frame = PackagesGeneratorUI(Injector.modulesWriter)
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
