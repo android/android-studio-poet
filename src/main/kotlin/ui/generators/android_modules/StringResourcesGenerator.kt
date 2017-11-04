@@ -14,7 +14,7 @@ class StringResourcesGenerator(private val fileWriter: FileWriter) {
         val valuesDirPath = blueprint.resDirPath.joinPath("values")
         fileWriter.mkdir(valuesDirPath)
 
-        val stringNames = (0..blueprint.numOfStrings).map { "${blueprint.name}string{$it}" }
+        val stringNames = (0..blueprint.numOfStrings).map { "${blueprint.name}string$it" }
         val stringsFileContent = getFileContent(stringNames)
 
         fileWriter.writeToFile(stringsFileContent, valuesDirPath.joinPath("strings.xml"))
