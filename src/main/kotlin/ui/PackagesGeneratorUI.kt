@@ -74,7 +74,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
 
         @Language("JSON") val SAMPLE_CONFIG = "{\n" +
                 "  \"projectName\": \"genny\",\n" +
-                "  \"root\": \"/Users/bfarber/Desktop/modules/\",\n" +
+                "  \"root\": \"./modules/\",\n" +
                 "  \"numModules\": \"5\",\n" +
                 "  \"allMethods\": \"4000\",\n" +
                 "  \"javaPackageCount\": \"20\",\n" +
@@ -93,13 +93,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
 
             EventQueue.invokeLater {
                 try {
-                    val fileWriter = FileWriter()
-                    val frame = PackagesGeneratorUI(ModulesWriter(DependencyValidator(),
-                            ModuleBlueprintFactory(),
-                            BuildGradleGenerator(),
-                            GradleSettingsGenerator(fileWriter),
-                            ProjectBuildGradleGenerator(),
-                            fileWriter))
+                    val frame = PackagesGeneratorUI(Injector.modulesWriter)
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
