@@ -10,4 +10,8 @@ data class AndroidModuleBlueprint(val index: Int,
 
     val name = "androidAppModule" + index
     val moduleRoot = projectRoot.joinPath(name)
+    val srcPath = moduleRoot.joinPath("src")
+    val mainPath = srcPath.joinPath("main")
+    val resDirPath = mainPath.joinPath("res")
+    val codePath = mainPath.joinPath("java")
 }

@@ -41,14 +41,10 @@ class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourc
         val moduleRoot = blueprint.moduleRoot
         fileWriter.mkdir(moduleRoot)
         fileWriter.mkdir(moduleRoot.joinPath("libs"))
-        val srcPath = moduleRoot.joinPath("src")
-        fileWriter.mkdir(srcPath)
-        val mainPath = srcPath.joinPath("main")
-        fileWriter.mkdir(mainPath)
-        val codePath = mainPath.joinPath("java")
-        val resPath = mainPath.joinPath("res")
-        fileWriter.mkdir(codePath)
-        fileWriter.mkdir(resPath)
+        fileWriter.mkdir(blueprint.srcPath)
+        fileWriter.mkdir(blueprint.mainPath)
+        fileWriter.mkdir(blueprint.codePath)
+        fileWriter.mkdir(blueprint.resDirPath)
     }
 
     //TODO Write a generator for it and build.gradle, to keep this class concise

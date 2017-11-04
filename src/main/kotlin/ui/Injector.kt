@@ -16,7 +16,7 @@ object Injector {
     private val buildGradleGenerator = BuildGradleGenerator()
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator()
-    private val stringResourcesGenerator: StringResourcesGenerator = StringResourcesGenerator()
+    private val stringResourcesGenerator: StringResourcesGenerator = StringResourcesGenerator(fileWriter)
     private val imageResourcesGenerator: ImageResourcesGenerator = ImageResourcesGenerator()
     private val layoutResourcesGenerator: LayoutResourcesGenerator = LayoutResourcesGenerator()
     private val javaGenerator: JavaGenerator = JavaGenerator(fileWriter)
