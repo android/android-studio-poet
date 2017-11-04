@@ -74,7 +74,7 @@ class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
 
         @Language("JSON") val SAMPLE_CONFIG = "{\n" +
                 "  \"projectName\": \"genny\",\n" +
-                "  \"root\": \"/Users/bfarber/Desktop/modules/\",\n" +
+                "  \"root\": \"./modules/\",\n" +
                 "  \"numModules\": \"5\",\n" +
                 "  \"allMethods\": \"4000\",\n" +
                 "  \"javaPackageCount\": \"20\",\n" +

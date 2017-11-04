@@ -26,4 +26,8 @@ class FileWriter() {
             }
         }
     }
+
+    fun mkdir(path: String) {
+        File(path).mkdir()
+    }
 }

@@ -25,7 +25,7 @@ object Injector {
     private val manifestGenerator: ManifestGenerator = ManifestGenerator()
 
     private val androidModuleGenerator = AndroidModuleGenerator(stringResourcesGenerator, imageResourcesGenerator,
-            layoutResourcesGenerator, javaGenerator, kotlinGenerator, activityGenerator, manifestGenerator)
+            layoutResourcesGenerator, javaGenerator, kotlinGenerator, activityGenerator, manifestGenerator, fileWriter)
 
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
 
