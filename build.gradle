@@ -29,7 +29,7 @@ dependencies {
 }
 
 task runGenerator(type: JavaExec) {
-    main = 'ui.PackagesGeneratorUI'
+    main = 'main.PackagesGeneratorUI'
     classpath = sourceSets.main.runtimeClasspath
 }
 
@@ -37,7 +37,7 @@ task runGenerator(type: JavaExec) {
 task fatJar(type: Jar) {
     manifest {
         attributes (
-                'Main-Class': 'ui.PackagesGeneratorUI',
+                'Main-Class': 'main.PackagesGeneratorUI',
         )
     }
     baseName = project.name + '-all'
