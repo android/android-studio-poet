@@ -7,7 +7,7 @@ import ui.models.AndroidModuleBlueprint
 import utils.joinPath
 
 class AndroidModuleWriter(private val stringResourcesGenerator: StringResourcesGenerator,
-                          private val imageResourcesGenerator: ImageResourcesGenerator,
+                          private val imageResourcesGenerator: ImagesGenerator,
                           private val layoutResourcesGenerator: LayoutResourcesGenerator,
                           private val javaGenerator: JavaGenerator,
                           private val kotlinGenerator: KotlinGenerator,
