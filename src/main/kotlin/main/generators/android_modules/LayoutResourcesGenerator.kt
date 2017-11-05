@@ -7,7 +7,7 @@ class LayoutResourcesGenerator {
     /**
      * generates layout resources by blueprint and other resources, returns list of layout names to refer later.
      */
-    fun generate(blueprint: AndroidModuleBlueprint, stringResources: List<String>, imageResources: List<String>): List<String> {
+    fun generate(blueprint: AndroidModuleBlueprint, stringResources: StringResourceGenerationResult, imageResources: List<String>): List<String> {
         return listOf()
     }
 }
