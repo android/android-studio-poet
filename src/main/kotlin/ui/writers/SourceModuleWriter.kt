@@ -27,14 +27,14 @@ import ui.models.ModuleBlueprint
 import utils.joinPath
 import java.io.File
 
-class ModulesWriter(private val dependencyValidator: DependencyValidator,
-                    private val blueprintFactory: ModuleBlueprintFactory,
-                    private val buildGradleGenerator: BuildGradleGenerator,
-                    private val gradleSettingsGenerator: GradleSettingsGenerator,
-                    private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
-                    private val androidModuleGenerator: AndroidModuleGenerator,
-                    private val packagesGenerator: PackagesGenerator,
-                    private val fileWriter: FileWriter) {
+class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
+                         private val blueprintFactory: ModuleBlueprintFactory,
+                         private val buildGradleGenerator: BuildGradleGenerator,
+                         private val gradleSettingsGenerator: GradleSettingsGenerator,
+                         private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
+                         private val androidModuleGenerator: AndroidModuleWriter,
+                         private val packagesGenerator: PackagesGenerator,
+                         private val fileWriter: FileWriter) {
 
     fun generate(configStr: String) {
 

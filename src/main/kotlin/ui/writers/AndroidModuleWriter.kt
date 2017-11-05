@@ -6,15 +6,16 @@ import ui.generators.packages.KotlinGenerator
 import ui.models.AndroidModuleBlueprint
 import utils.joinPath
 
-class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourcesGenerator,
-                             private val imageResourcesGenerator: ImageResourcesGenerator,
-                             private val layoutResourcesGenerator: LayoutResourcesGenerator,
-                             private val javaGenerator: JavaGenerator,
-                             private val kotlinGenerator: KotlinGenerator,
-                             private val activityGenerator: ActivityGenerator,
-                             private val manifestGenerator: ManifestGenerator,
-                             private val proguardGenerator: ProguardGenerator,
-                             private val fileWriter: FileWriter) {
+class AndroidModuleWriter(private val stringResourcesGenerator: StringResourcesGenerator,
+                          private val imageResourcesGenerator: ImageResourcesGenerator,
+                          private val layoutResourcesGenerator: LayoutResourcesGenerator,
+                          private val javaGenerator: JavaGenerator,
+                          private val kotlinGenerator: KotlinGenerator,
+                          private val activityGenerator: ActivityGenerator,
+                          private val manifestGenerator: ManifestGenerator,
+                          private val proguardGenerator: ProguardGenerator,
+                          private val buildGradleGenerator: AndroidModuleBuildGradleGenerator,
+                          private val fileWriter: FileWriter) {
 
     /**
      *  Generate android module, including module folder
@@ -23,9 +24,8 @@ class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourc
 
         generateMainFolders(blueprint)
 
-        // TODO add one for Android package,
-        //writeBuildGradle(moduleRootFile, androidModuleBlueprint)
         proguardGenerator.generate(blueprint)
+        buildGradleGenerator.generate(blueprint)
 
         val stringResources = stringResourcesGenerator.generate(blueprint)
         val imageResources = imageResourcesGenerator.generate(blueprint)

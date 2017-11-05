@@ -8,9 +8,9 @@ import ui.generators.PackagesGenerator
 import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.ProjectBuildGradleGenerator
 import ui.test_utils.mock
-import ui.writers.AndroidModuleGenerator
+import ui.writers.AndroidModuleWriter
 import ui.writers.FileWriter
-import ui.writers.ModulesWriter
+import ui.writers.SourceModuleWriter
 
 class ModulesWriterTest {
 
@@ -20,9 +20,9 @@ class ModulesWriterTest {
     val dependencyValidator: DependencyValidator = mock()
     val moduleBlueprinFactory: ModuleBlueprintFactory = mock()
     val buildGradleGenerator: BuildGradleGenerator = mock()
-    val androidModuleGenerator: AndroidModuleGenerator = mock()
+    val androidModuleGenerator: AndroidModuleWriter = mock()
     val packagesGenerator: PackagesGenerator = mock()
-    val modulesWriter = ModulesWriter(dependencyValidator,
+    val modulesWriter = SourceModuleWriter(dependencyValidator,
             moduleBlueprinFactory,
             buildGradleGenerator,
             gradleSettingsGenerator,

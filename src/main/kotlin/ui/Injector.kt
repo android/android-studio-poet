@@ -7,15 +7,16 @@ import ui.generators.packages.JavaGenerator
 import ui.generators.packages.KotlinGenerator
 import ui.generators.project.GradleSettingsGenerator
 import ui.generators.project.ProjectBuildGradleGenerator
-import ui.writers.AndroidModuleGenerator
+import ui.writers.AndroidModuleWriter
 import ui.writers.FileWriter
-import ui.writers.ModulesWriter
+import ui.writers.SourceModuleWriter
 
 object Injector {
 
     private val fileWriter = FileWriter()
     private val dependencyValidator = DependencyValidator()
     private val moduleBlueprintFactory = ModuleBlueprintFactory()
+    private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
     private val buildGradleGenerator = BuildGradleGenerator()
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator()
@@ -28,13 +29,22 @@ object Injector {
     private val manifestGenerator: ManifestGenerator = ManifestGenerator()
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
 
-    private val androidModuleGenerator = AndroidModuleGenerator(stringResourcesGenerator,
-            imageResourcesGenerator, layoutResourcesGenerator, javaGenerator,
-            kotlinGenerator, activityGenerator, manifestGenerator, proguardGenerator,
-            fileWriter)
+    private val androidModuleGenerator =
+            AndroidModuleWriter(
+                    stringResourcesGenerator,
+                    imageResourcesGenerator,
+                    layoutResourcesGenerator,
+                    javaGenerator,
+                    kotlinGenerator,
+                    activityGenerator,
+                    manifestGenerator, proguardGenerator,
+                    amBuildGradleGenerator,
+                    fileWriter)
 
-    private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
+    private val packagesGenerator =
+            PackagesGenerator(javaGenerator, kotlinGenerator)
 
-    val modulesWriter = ModulesWriter(dependencyValidator, moduleBlueprintFactory, buildGradleGenerator,
+    val modulesWriter =
+            SourceModuleWriter(dependencyValidator, moduleBlueprintFactory, buildGradleGenerator,
             gradleSettingsGenerator, projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator, fileWriter)
 }

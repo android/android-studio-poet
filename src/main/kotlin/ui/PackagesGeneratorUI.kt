@@ -15,7 +15,7 @@
 package ui
 
 import org.intellij.lang.annotations.Language
-import ui.writers.ModulesWriter
+import ui.writers.SourceModuleWriter
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.EventQueue
@@ -23,7 +23,7 @@ import java.awt.Font
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class PackagesGeneratorUI(private val modulesWriter: ModulesWriter) : JFrame() {
+class PackagesGeneratorUI(private val modulesWriter: SourceModuleWriter) : JFrame() {
 
     private val contentPane: JPanel
     private val textArea: JTextArea
