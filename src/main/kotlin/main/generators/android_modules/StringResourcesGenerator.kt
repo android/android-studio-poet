@@ -5,6 +5,7 @@ import main.Generator
 import main.writers.FileWriter
 import main.models.AndroidModuleBlueprint
 import main.utils.joinPath
+import main.utils.fold
 
 class StringResourcesGenerator(private val fileWriter: FileWriter): Generator<AndroidModuleBlueprint, StringResourceGenerationResult> {
 
@@ -25,7 +26,7 @@ class StringResourcesGenerator(private val fileWriter: FileWriter): Generator<An
 
     private fun getFileContent(stringNames: List<String>): String {
         val stringsFileContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><resources>" +
-                stringNames.map { "<string name=\"$it\">$it</string>\n" }.fold("") { acc, next -> acc + next } +
+                stringNames.map { "<string name=\"$it\">$it</string>\n" }.fold() +
                 "</resources>"
         return stringsFileContent
     }
