@@ -26,7 +26,7 @@ object Injector {
     private val javaGenerator: JavaGenerator = JavaGenerator(fileWriter)
     private val kotlinGenerator: KotlinGenerator = KotlinGenerator(fileWriter)
     private val activityGenerator: ActivityGenerator = ActivityGenerator()
-    private val manifestGenerator: ManifestGenerator = ManifestGenerator()
+    private val manifestGenerator: ManifestGenerator = ManifestGenerator(fileWriter)
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
 
     private val androidModuleGenerator =

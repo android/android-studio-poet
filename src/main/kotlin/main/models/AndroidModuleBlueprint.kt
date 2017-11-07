@@ -7,7 +7,8 @@ data class AndroidModuleBlueprint(val index: Int,
                                   val numOfActivities: Int,
                                   val numOfStrings: Int,
                                   val numOfImages: Int,
-                                  val projectRoot: String): Blueprint {
+                                  val projectRoot: String,
+                                  val hasLaunchActivity: Boolean): Blueprint {
 
     val name = "androidAppModule" + index
     val moduleRoot = projectRoot.joinPath(name)
@@ -15,4 +16,5 @@ data class AndroidModuleBlueprint(val index: Int,
     val mainPath = srcPath.joinPath("main")
     val resDirPath = mainPath.joinPath("res")
     val codePath = mainPath.joinPath("java")
+    val packageName = name
 }

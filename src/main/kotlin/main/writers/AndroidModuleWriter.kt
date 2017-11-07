@@ -29,7 +29,7 @@ class AndroidModuleWriter(private val stringResourcesGenerator: StringResourcesG
 
         val stringResources = stringResourcesGenerator.generate(blueprint)
         val imageResources = imageResourcesGenerator.generate(blueprint)
-        val layouts = layoutResourcesGenerator.generate(blueprint, stringResources, imageResources)
+        val layouts = layoutResourcesGenerator.generate(blueprint, stringResources.stringNames, imageResources)
 //        val javaMethodsToCall = javaGenerator.generatePackage() after packageBlueprint is created use it here
 //        val kotlinMethodsToCall = kotlinGenerator.generatePackage() after packageBlueprint is created use it here
         val methodsToCall: List<String> = listOf()
