@@ -5,14 +5,14 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 
-class FileWriter() {
+class FileWriter {
     fun writeToFile(content: String, path: String) {
         var writer: BufferedWriter? = null
         try {
-            val buildGradle = File(path)
-            buildGradle.createNewFile()
+            val file = File(path)
+            file.createNewFile()
 
-            writer = BufferedWriter(FileWriter(buildGradle))
+            writer = BufferedWriter(FileWriter(file))
 
             writer.write(content)
 

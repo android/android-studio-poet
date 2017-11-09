@@ -45,7 +45,7 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
                     "</android.support.constraint.ConstraintLayout>"
             var fileName = "activity_main$i.xml"
             fileWriter.writeToFile(layoutText, layoutsDir.joinPath(fileName))
-            result.add(fileName)
+            result.add("activity_main$i")
         }
 
         return result
