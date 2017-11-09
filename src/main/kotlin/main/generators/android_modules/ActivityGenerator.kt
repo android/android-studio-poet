@@ -23,7 +23,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         File(where).mkdirs()
 
         while (index < blueprint.numOfActivities) {
-            generateClass(index, layouts[index], where,  "com." + blueprint.packageName)
+            generateClass(index, layouts[index], where,  blueprint.packageName)
             index++
         }
 
@@ -39,13 +39,14 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         // TODO add methods
         // TODO move to java poet
         var classText =
-                "package " + packageName +";\n" + 
+                "package com." + packageName +";\n" +
                 "import android.app.Activity;\n" +
                 "import android.os.Bundle;\n" +
+                "import $packageName.R;\n" +
                 "\n" +
                 "\n" +
                 "public class " + className + " extends Activity {\n" +
-                "    public HelloActivity() {\n" +
+                "    public $className() {\n" +
                 "    }\n" +
                 "\n" +
                 "    /**\n" +

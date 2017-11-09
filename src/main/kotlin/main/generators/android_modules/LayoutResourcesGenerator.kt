@@ -25,8 +25,7 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
                     "    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n" +
                     "    xmlns:tools=\"http://schemas.android.com/tools\"\n" +
                     "    android:layout_width=\"match_parent\"\n" +
-                    "    android:layout_height=\"match_parent\"\n" +
-                    "    tools:context=\"app.test.myapplication.MainActivity\">\n" +
+                    "    android:layout_height=\"match_parent\">\n" +
                     "\n" +
                     "    <TextView\n" +
                     "        android:layout_width=\"wrap_content\"\n" +
@@ -40,8 +39,8 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
                     " <ImageView\n" +
                     "         android:layout_width=\"wrap_content\"\n" +
                     "         android:layout_height=\"wrap_content\"\n" +
-                    "         android:src=\"@drawable/" + imageResources[i] + "\n"+
-            "         />" +
+                    "         android:src=\"@drawable/" + imageResources[i] + "\"\n"+
+            "         />\n" +
                     "</android.support.constraint.ConstraintLayout>"
             var fileName = "activity_main$i.xml"
             fileWriter.writeToFile(layoutText, layoutsDir.joinPath(fileName))

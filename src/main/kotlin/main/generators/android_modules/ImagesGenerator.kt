@@ -36,11 +36,11 @@ class ImagesGenerator(val fileWriter: FileWriter) {
 
         for (i in 0 until blueprint.numOfImages) {
             var image = generateRandomImage()
-            var imageName:String = "image$i.jpg"
+            var imageName:String = "image$i"
 
             ImageIO.write(image,
                     "jpg",
-                    File(imagesDir + "/" + imageName))
+                    File(imagesDir,imageName + ".jpg"))
 
             result.add(imageName)
         }

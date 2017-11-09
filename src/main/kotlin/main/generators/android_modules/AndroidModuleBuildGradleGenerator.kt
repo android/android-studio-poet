@@ -17,7 +17,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                 compileSdkVersion 26
 
                 defaultConfig {
-                    applicationId "app.test.myapplication"
+                    applicationId "${"com." + blueprint.packageName}"
                     minSdkVersion 19
                     targetSdkVersion 26
                     versionCode 1
@@ -38,7 +38,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
             dependencies {
                 implementation fileTree(dir: 'libs', include: ['*.jar'])
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.8"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${'$'}kotlin_version"
                 implementation 'com.android.support:appcompat-v7:26.1.0'
                 implementation 'com.android.support.constraint:constraint-layout:1.0.2'
                 testImplementation 'junit:junit:4.12'
