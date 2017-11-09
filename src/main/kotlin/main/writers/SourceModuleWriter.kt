@@ -55,7 +55,7 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
             blueprintFactory.create(i, configPOJO, projectRoot)
         }
 
-        gradleSettingsGenerator.generate(configPOJO.projectName, moduleBlueprints, projectRoot)
+
         projectBuildGradleGenerator.generate(projectRoot)
 
         moduleBlueprints.forEach{ blueprint ->
@@ -72,6 +72,8 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
             androidModuleGenerator.generate(blueprint)
             println("Done writing Android module " + blueprint.index)
         }
+
+        gradleSettingsGenerator.generate(configPOJO.projectName, moduleBlueprints, androidModuleBlueprints, projectRoot)
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
