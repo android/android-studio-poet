@@ -38,9 +38,8 @@ class ActivityGenerator(var fileWriter: FileWriter) {
 
         // TODO add methods
         // TODO move to java poet
-        var classText = "package com.example.android.helloactivity;\n" +
-                "\n" +
-                "package " + packageName +";\n"
+        var classText =
+                "package " + packageName +";\n" + 
                 "import android.app.Activity;\n" +
                 "import android.os.Bundle;\n" +
                 "\n" +
