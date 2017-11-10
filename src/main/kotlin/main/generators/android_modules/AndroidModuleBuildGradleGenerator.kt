@@ -8,16 +8,18 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     fun generate(blueprint: AndroidModuleBlueprint) {
         val moduleRoot = blueprint.moduleRoot
 
-        // TODO parameters for the package name ?
+        val androidPlugin = if (blueprint.hasLaunchActivity) "application" else "library"
+        val applicationId = if (blueprint.hasLaunchActivity) "applicationId \"${blueprint.packageName}\"" else ""
+
         val gradleText = """
-            apply plugin: 'com.android.application'
+            apply plugin: 'com.android.$androidPlugin'
             apply plugin: 'kotlin-android'
             apply plugin: 'kotlin-android-extensions'
             android {
                 compileSdkVersion 26
 
                 defaultConfig {
-                    applicationId "${"com." + blueprint.packageName}"
+                    $applicationId
                     minSdkVersion 19
                     targetSdkVersion 26
                     versionCode 1
@@ -32,6 +34,10 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                         minifyEnabled false
                         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                     }
+                }
+                compileOptions {
+                    targetCompatibility 1.8
+                    sourceCompatibility 1.8
                 }
 
             }

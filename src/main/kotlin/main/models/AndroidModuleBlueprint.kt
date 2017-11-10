@@ -9,7 +9,8 @@ data class AndroidModuleBlueprint(val index: Int,
                                   val numOfStrings: Int,
                                   val numOfImages: Int,
                                   val projectRoot: String,
-                                  val hasLaunchActivity: Boolean): Blueprint {
+                                  val hasLaunchActivity: Boolean,
+                                  val dependencies: List<String>): Blueprint {
 
     val name = "androidAppModule" + index
     val packageName = "com.$name"

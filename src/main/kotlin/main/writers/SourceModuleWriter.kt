@@ -65,7 +65,7 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
 
         val androidModuleBlueprints =
                 (0 until configPOJO.androidModules!!.toInt()).map { i ->
-            blueprintFactory.createAndroidModule(i, configPOJO, projectRoot)
+            blueprintFactory.createAndroidModule(i, configPOJO, projectRoot, listOf())
         }
 
         androidModuleBlueprints.forEach{ blueprint ->
