@@ -2,6 +2,7 @@ package main.models
 
 import main.Blueprint
 import main.utils.joinPath
+import main.utils.joinPaths
 
 data class AndroidModuleBlueprint(val index: Int,
                                   val numOfActivities: Int,
@@ -11,10 +12,11 @@ data class AndroidModuleBlueprint(val index: Int,
                                   val hasLaunchActivity: Boolean): Blueprint {
 
     val name = "androidAppModule" + index
+    val packageName = "com.$name"
     val moduleRoot = projectRoot.joinPath(name)
     val srcPath = moduleRoot.joinPath("src")
     val mainPath = srcPath.joinPath("main")
     val resDirPath = mainPath.joinPath("res")
     val codePath = mainPath.joinPath("java")
-    val packageName = name
+    val packagePath = codePath.joinPaths(packageName.split("."))
 }
