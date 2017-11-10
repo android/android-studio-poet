@@ -53,6 +53,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                 testImplementation 'junit:junit:4.12'
                 androidTestImplementation 'com.android.support.test:runner:1.0.1'
                 androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+                implementation "com.android.support:multidex:1.0.1"
                 $moduleDependencies
             }
             """.trim()
