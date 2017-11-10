@@ -15,6 +15,9 @@
 package ui
 
 import com.google.gson.Gson
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import ui.generators.BuildGradleGenerator
 import ui.generators.PackagesGenerator
 import ui.generators.packages.JavaGenerator
@@ -34,7 +37,7 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
                     private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
                     private val fileWriter: FileWriter) {
 
-    fun generate(configStr: String) {
+    fun generate(configStr: String) = runBlocking {
 
         val gson = Gson()
         val configPOJO = gson.fromJson(configStr, ConfigPOJO::class.java)
@@ -56,11 +59,17 @@ class ModulesWriter(private val dependencyValidator: DependencyValidator,
         gradleSettingsGenerator.generate(configPOJO.projectName, moduleBlueprints, projectRoot)
         projectBuildGradleGenerator.generate(projectRoot)
 
+        val allJobs = mutableListOf<Job>()
         moduleBlueprints.forEach{ blueprint ->
-            writeModule(blueprint, configPOJO)
-            println("Done writing module " + blueprint.index)
+            val job = launch {
+                writeModule(blueprint, configPOJO)
+            }
+            allJobs.add(job)
         }
-
+        for ((index, job) in allJobs.withIndex()) {
+            println("Done writing module " + index)
+            job.join()
+        }
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
