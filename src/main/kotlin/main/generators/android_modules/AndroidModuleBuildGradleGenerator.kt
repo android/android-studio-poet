@@ -1,6 +1,7 @@
 package main.generators.android_modules
 
 import main.models.AndroidModuleBlueprint
+import main.utils.fold
 import main.writers.FileWriter
 import main.utils.joinPath
 
@@ -8,16 +9,20 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     fun generate(blueprint: AndroidModuleBlueprint) {
         val moduleRoot = blueprint.moduleRoot
 
-        // TODO parameters for the package name ?
+        val androidPlugin = if (blueprint.hasLaunchActivity) "application" else "library"
+        val applicationId = if (blueprint.hasLaunchActivity) "applicationId \"${blueprint.packageName}\"" else ""
+
+        val moduleDependencies = blueprint.dependencies.map { "implementation project(':$it')\n" }.fold()
+
         val gradleText = """
-            apply plugin: 'com.android.application'
+            apply plugin: 'com.android.$androidPlugin'
             apply plugin: 'kotlin-android'
             apply plugin: 'kotlin-android-extensions'
             android {
                 compileSdkVersion 26
 
                 defaultConfig {
-                    applicationId "${"com." + blueprint.packageName}"
+                    $applicationId
                     minSdkVersion 19
                     targetSdkVersion 26
                     versionCode 1
@@ -33,6 +38,10 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                     }
                 }
+                compileOptions {
+                    targetCompatibility 1.8
+                    sourceCompatibility 1.8
+                }
 
             }
 
@@ -44,6 +53,8 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                 testImplementation 'junit:junit:4.12'
                 androidTestImplementation 'com.android.support.test:runner:1.0.1'
                 androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+                implementation "com.android.support:multidex:1.0.1"
+                $moduleDependencies
             }
             """.trim()
 

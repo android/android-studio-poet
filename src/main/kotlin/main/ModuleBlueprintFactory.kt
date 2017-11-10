@@ -12,12 +12,12 @@ class ModuleBlueprintFactory {
         return ModuleBlueprint(index, "module" + index, projectRoot, dependencies)
     }
 
-    fun createAndroidModule(i: Int, configPOJO: ConfigPOJO?, projectRoot: String):
+    fun createAndroidModule(i: Int, configPOJO: ConfigPOJO?, projectRoot: String, dependencies: List<String>):
             AndroidModuleBlueprint {
 
          return AndroidModuleBlueprint(i,
                 configPOJO!!.numActivitiesPerAndroidModule!!.toInt(),
                 configPOJO!!.numActivitiesPerAndroidModule!!.toInt(),
-                configPOJO!!.numActivitiesPerAndroidModule!!.toInt(), projectRoot, i == 0)
+                configPOJO!!.numActivitiesPerAndroidModule!!.toInt(), projectRoot, i == 0, dependencies)
     }
 }
