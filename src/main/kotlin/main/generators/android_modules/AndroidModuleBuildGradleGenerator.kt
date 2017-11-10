@@ -1,6 +1,7 @@
 package main.generators.android_modules
 
 import main.models.AndroidModuleBlueprint
+import main.utils.fold
 import main.writers.FileWriter
 import main.utils.joinPath
 
@@ -10,6 +11,8 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val androidPlugin = if (blueprint.hasLaunchActivity) "application" else "library"
         val applicationId = if (blueprint.hasLaunchActivity) "applicationId \"${blueprint.packageName}\"" else ""
+
+        val moduleDependencies = blueprint.dependencies.map { "implementation project(':$it')\n" }.fold()
 
         val gradleText = """
             apply plugin: 'com.android.$androidPlugin'
@@ -50,6 +53,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                 testImplementation 'junit:junit:4.12'
                 androidTestImplementation 'com.android.support.test:runner:1.0.1'
                 androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+                $moduleDependencies
             }
             """.trim()
 
