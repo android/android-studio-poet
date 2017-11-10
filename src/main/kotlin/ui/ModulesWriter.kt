@@ -16,7 +16,6 @@ package ui
 
 import com.google.gson.Gson
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import ui.generators.BuildGradleGenerator
