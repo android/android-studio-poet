@@ -2,8 +2,8 @@ package main.generators.android_modules
 
 import main.models.AndroidModuleBlueprint
 import main.utils.fold
-import main.writers.FileWriter
 import main.utils.joinPath
+import main.writers.FileWriter
 
 class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     fun generate(blueprint: AndroidModuleBlueprint) {
@@ -27,6 +27,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                     targetSdkVersion 26
                     versionCode 1
                     versionName "1.0"
+                    multiDexEnabled true
 
                     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
