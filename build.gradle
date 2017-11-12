@@ -22,6 +22,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.squareup:javapoet:1.9.0'
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.2"
 
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-inline:2.10.0"
@@ -43,4 +44,9 @@ task fatJar(type: Jar) {
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }

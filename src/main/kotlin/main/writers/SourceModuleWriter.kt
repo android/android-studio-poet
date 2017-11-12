@@ -15,6 +15,7 @@
 package main.writers
 
 import com.google.gson.Gson
+<<<<<<< HEAD:src/main/kotlin/main/writers/SourceModuleWriter.kt
 import main.DependencyValidator
 import main.ModuleBlueprintFactory
 import main.generators.BuildGradleGenerator
@@ -25,6 +26,21 @@ import main.generators.project.ProjectBuildGradleGenerator
 import main.models.ConfigPOJO
 import main.models.ModuleBlueprint
 import main.utils.joinPath
+=======
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
+import ui.generators.BuildGradleGenerator
+import ui.generators.PackagesGenerator
+import ui.generators.packages.JavaGenerator
+import ui.generators.packages.KotlinGenerator
+import ui.generators.project.GradleSettingsGenerator
+import ui.generators.project.GradlewGenerator
+import ui.generators.project.ProjectBuildGradleGenerator
+import ui.models.ConfigPOJO
+import ui.models.ModuleBlueprint
+import utils.joinPath
+>>>>>>> master:src/main/kotlin/ui/ModulesWriter.kt
 import java.io.File
 
 class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
@@ -36,7 +52,7 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
                          private val packagesGenerator: PackagesGenerator,
                          private val fileWriter: FileWriter) {
 
-    fun generate(configStr: String) {
+    fun generate(configStr: String) = runBlocking {
 
         val gson = Gson()
         val configPOJO = gson.fromJson(configStr, ConfigPOJO::class.java)
@@ -58,10 +74,18 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
 
         projectBuildGradleGenerator.generate(projectRoot)
 
+        val allJobs = mutableListOf<Job>()
         moduleBlueprints.forEach{ blueprint ->
-            writeModule(blueprint, configPOJO)
-            println("Done writing module " + blueprint.index)
+            val job = launch {
+                writeModule(blueprint, configPOJO)
+            }
+            allJobs.add(job)
         }
+        for ((index, job) in allJobs.withIndex()) {
+            println("Done writing module " + index)
+            job.join()
+        }
+<<<<<<< HEAD:src/main/kotlin/main/writers/SourceModuleWriter.kt
 
         val androidModuleBlueprints =
                 (0 until configPOJO.androidModules!!.toInt()).map { i ->
@@ -74,6 +98,8 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
         }
 
         gradleSettingsGenerator.generate(configPOJO.projectName, moduleBlueprints, androidModuleBlueprints, projectRoot)
+=======
+>>>>>>> master:src/main/kotlin/ui/ModulesWriter.kt
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
