@@ -29,4 +29,9 @@ src/META-INF/MANIFEST.MF
 /build
 out/production/classes/META-INF/java-generator_main.kotlin_module
 
+<<<<<<< HEAD
+out/test/classes/META-INF/java-generator_main.kotlin_module
+
+=======
+>>>>>>> master
 modules/**
