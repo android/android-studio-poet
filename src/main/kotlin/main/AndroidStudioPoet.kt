@@ -23,7 +23,7 @@ import java.awt.Font
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class PackagesGeneratorUI(private val modulesWriter: SourceModuleWriter) : JFrame() {
+class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter) : JFrame() {
 
     private val contentPane: JPanel
     private val textArea: JTextArea
@@ -36,7 +36,7 @@ class PackagesGeneratorUI(private val modulesWriter: SourceModuleWriter) : JFram
         contentPane.layout = BorderLayout(0, 0)
         setContentPane(contentPane)
 
-        val lblTextLineExample = JLabel("Android Project Generator")
+        val lblTextLineExample = JLabel("Android Studio Poet")
         lblTextLineExample.horizontalAlignment = SwingConstants.CENTER
         contentPane.add(lblTextLineExample, BorderLayout.NORTH)
 
@@ -91,7 +91,7 @@ class PackagesGeneratorUI(private val modulesWriter: SourceModuleWriter) : JFram
 
             EventQueue.invokeLater {
                 try {
-                    val frame = PackagesGeneratorUI(Injector.modulesWriter)
+                    val frame = AndroidStudioPoet(Injector.modulesWriter)
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
