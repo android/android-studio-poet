@@ -35,3 +35,5 @@ out/test/classes/META-INF/java-generator_main.kotlin_module
 =======
 >>>>>>> master
 modules/**
+
+out/production/classes/META-INF/android-studio-poet_main.kotlin_module

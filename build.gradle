@@ -1,4 +1,4 @@
-group 'com.google.java-generator'
+group 'com.google.androidstudio.poet'
 version '1.0-SNAPSHOT'
 
 buildscript {
