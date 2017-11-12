@@ -17,7 +17,7 @@ class ModuleBlueprintFactory {
 
          return AndroidModuleBlueprint(i,
                 configPOJO!!.numActivitiesPerAndroidModule!!.toInt(),
-                configPOJO!!.numActivitiesPerAndroidModule!!.toInt(),
-                configPOJO!!.numActivitiesPerAndroidModule!!.toInt(), projectRoot, i == 0, dependencies)
+                configPOJO.numActivitiesPerAndroidModule!!.toInt(),
+                configPOJO.numActivitiesPerAndroidModule.toInt(), projectRoot, i == 0, dependencies)
     }
 }
