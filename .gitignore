@@ -27,13 +27,7 @@ src/META-INF/MANIFEST.MF
 *.iml
 .gradle/
 /build
-out/production/classes/META-INF/java-generator_main.kotlin_module
 
-<<<<<<< HEAD
-out/test/classes/META-INF/java-generator_main.kotlin_module
-
-=======
->>>>>>> master
 modules/**
 
-out/production/classes/META-INF/android-studio-poet_main.kotlin_module
+out/**
