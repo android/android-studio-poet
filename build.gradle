@@ -38,7 +38,7 @@ task runGenerator(type: JavaExec) {
 task fatJar(type: Jar) {
     manifest {
         attributes (
-                'Main-Class': 'main.PackagesGeneratorUI',
+                'Main-Class': 'main.AndroidStudioPoet',
         )
     }
     baseName = project.name + '-all'
