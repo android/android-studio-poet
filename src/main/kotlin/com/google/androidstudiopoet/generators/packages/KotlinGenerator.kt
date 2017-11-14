@@ -5,7 +5,7 @@ import java.io.File
 
 class KotlinGenerator constructor(fileWriter: FileWriter): PackageGenerator(fileWriter, "Kt") {
 
-    override fun generateClass(packageName: String, classNumber: Int, methodsPerClass: Int, mainPackage: File) {
+    override fun generateClass(packageName: String, classNumber: Int, methodsPerClass: Int, mainPackage: String) {
         val className = "Foo" + classNumber
         val buff = StringBuilder()
 
@@ -32,7 +32,7 @@ class KotlinGenerator constructor(fileWriter: FileWriter): PackageGenerator(file
 
         buff.append("\n}")
 
-        val classPath = mainPackage.absolutePath + "/" + packageName +
+        val classPath = mainPackage + "/" + packageName +
                 "/" + className + ".kt"
 
         writeFile(classPath, buff.toString())
