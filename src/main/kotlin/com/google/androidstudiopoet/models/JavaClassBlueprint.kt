@@ -1,21 +1,22 @@
 package com.google.androidstudiopoet.models
 
 class JavaClassBlueprint(packageName: String, classNumber: Int, private val methodsPerClass: Int,
-                         private val mainPackage: String, private val methodToCallWithinClass: MethodToCall?):
+                         private val mainPackage: String, private val methodsToCallWithinClass: List<MethodToCall>) :
         ClassBlueprint(packageName, "Foo" + classNumber) {
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
                 .map { i ->
-                    var callStatement: String? = null
+                    val statements = ArrayList<String>()
+                    // adding lambda
+                    statements += "final Runnable anything = () -> System.out.println(\"anything\")"
                     if (i > 0) {
-                        callStatement = "foo" + (i - 1) + "()"
-                    } else if (methodToCallWithinClass != null) {
-                        callStatement = "new ${methodToCallWithinClass.className}().${methodToCallWithinClass.methodName}()"
+                        statements += "foo" + (i - 1) + "()"
+                    } else if (!methodsToCallWithinClass.isEmpty()) {
+                        methodsToCallWithinClass.forEach({ statements += "new ${it.className}().${it.methodName}()" })
+
                     }
-                    val statements = listOf(callStatement,
-                            // adding lambda
-                            "final Runnable anything = () -> System.out.println(\"anything\")")
+
                     MethodBlueprint(i, statements)
                 }
     }
@@ -25,6 +26,6 @@ class JavaClassBlueprint(packageName: String, classNumber: Int, private val meth
     }
 
     override fun getMethodToCallFromOutside(): MethodToCall {
-        return MethodToCall(getMethodBlueprints().last().methodName, className)
+        return MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
     }
 }

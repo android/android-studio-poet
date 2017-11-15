@@ -1,19 +1,20 @@
 package com.google.androidstudiopoet.models
 
 class KotlinClassBlueprint(packageName: String, classNumber: Int, private val methodsPerClass: Int,
-                           private val mainPackage: String, private val methodToCallWithinClass: MethodToCall?):
+                           private val mainPackage: String, private val methodsToCallWithinClass: List<MethodToCall>) :
         ClassBlueprint(packageName, "Foo" + classNumber) {
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
                 .map { i ->
-                    var callStatement: String? = null
+                    val statements = ArrayList<String>()
                     if (i > 0) {
-                        callStatement = "foo" + (i - 1) + "()\n"
-                    } else if (methodToCallWithinClass != null) {
-                        callStatement = "${methodToCallWithinClass.className}().${methodToCallWithinClass.methodName}()\n"
+                        statements += "foo" + (i - 1) + "()\n"
+                    } else if (!methodsToCallWithinClass.isEmpty()) {
+                        methodsToCallWithinClass.forEach { statements += "${it.className}().${it.methodName}()\n" }
+
                     }
-                    MethodBlueprint(i, listOf(callStatement))
+                    MethodBlueprint(i, statements)
                 }
     }
 
@@ -22,6 +23,6 @@ class KotlinClassBlueprint(packageName: String, classNumber: Int, private val me
     }
 
     override fun getMethodToCallFromOutside(): MethodToCall {
-        return MethodToCall(getMethodBlueprints().last().methodName, className)
+        return MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
     }
 }

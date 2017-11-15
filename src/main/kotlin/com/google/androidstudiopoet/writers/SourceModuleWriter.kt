@@ -100,7 +100,7 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
         writeBuildGradle(moduleRootFile, moduleBlueprint)
 
         packagesGenerator.writePackages(PackagesBlueprint(configPOJO, moduleBlueprint.index,
-                moduleRoot + "/src/main/java/", File(moduleRootPath), null))
+                moduleRoot + "/src/main/java/", File(moduleRootPath), listOf()))
     }
 
     private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {
