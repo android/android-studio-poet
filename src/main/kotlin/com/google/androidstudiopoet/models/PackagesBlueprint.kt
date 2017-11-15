@@ -21,4 +21,5 @@ data class PackagesBlueprint(private val config: ConfigPOJO, private val moduleI
         PackageBlueprint(packageIndex, moduleIndex, kotlinClassCount, kotlinMethodsPerClass, where, moduleRoot)
     }
 
+
 }

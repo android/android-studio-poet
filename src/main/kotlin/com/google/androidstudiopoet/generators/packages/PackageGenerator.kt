@@ -1,5 +1,7 @@
 package com.google.androidstudiopoet.generators.packages
 
+import com.google.androidstudiopoet.models.ClassBlueprint
+import com.google.androidstudiopoet.models.MethodToCall
 import com.google.androidstudiopoet.models.PackageBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 import java.io.File
@@ -15,13 +17,20 @@ abstract class PackageGenerator(private val fileWriter: FileWriter, private val 
 
         packageFolder.mkdir()
 
+        val classBlueprints = ArrayList<ClassBlueprint>()
+        var previousClassMethodToCall: MethodToCall? = null
         for (classIndex in 0 until blueprint.classesPerPackage) {
-            generateClass(packageName, classIndex, blueprint.methodsPerClass, blueprint.mainPackage)
+            val classBlueprint = createClassBlueprint(packageName, classIndex, blueprint, previousClassMethodToCall)
+            classBlueprints += classBlueprint
+            previousClassMethodToCall = generateClass(classBlueprint)
+
         }
     }
 
-    abstract fun generateClass(packageName: String, classNumber: Int,
-                                         methodsPerClass: Int, mainPackage: String)
+    abstract fun createClassBlueprint(packageName: String, classIndex: Int, blueprint: PackageBlueprint,
+                                      previousClassMethodToCall: MethodToCall?): ClassBlueprint
+
+    abstract fun generateClass(blueprint: ClassBlueprint): MethodToCall
 
     protected fun writeFile(path: String, content: String) {
         fileWriter.writeToFile(content, path)
