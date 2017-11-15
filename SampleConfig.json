@@ -1,0 +1,27 @@
+{
+  "projectName": "gennyCLI",
+  "root": "./modules/",
+  "numModules": "5",
+  "allMethods": "4000",
+  "javaPackageCount": "20",
+  "javaClassCount": "8",
+  "javaMethodCount": "2000",
+  "kotlinPackageCount": "20",
+  "kotlinClassCount": "8",
+  "androidModules": "2",
+  "numActivitiesPerAndroidModule": "8",
+  "dependencies": [
+    {
+      "from": 3,
+      "to": 2
+    },
+    {
+      "from": 4,
+      "to": 2
+    },
+    {
+      "from": 4,
+      "to": 3
+    }
+  ]
+}

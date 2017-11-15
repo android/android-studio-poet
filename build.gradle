@@ -1,8 +1,8 @@
-group 'com.google.java-generator'
+group 'com.google.androidstudio.poet'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.2'
+    ext.kotlin_version = '1.1.60'
 
     repositories {
         jcenter()
@@ -30,7 +30,7 @@ dependencies {
 }
 
 task runGenerator(type: JavaExec) {
-    main = 'ui.PackagesGeneratorUI'
+    main = 'com.google.androidstudiopoet.AndroidStudioPoet'
     classpath = sourceSets.main.runtimeClasspath
 }
 
@@ -38,7 +38,7 @@ task runGenerator(type: JavaExec) {
 task fatJar(type: Jar) {
     manifest {
         attributes (
-                'Main-Class': 'ui.PackagesGeneratorUI',
+                'Main-Class': 'com.google.androidstudiopoet.AndroidStudioPoet',
         )
     }
     baseName = project.name + '-all'
@@ -48,5 +48,13 @@ task fatJar(type: Jar) {
 kotlin {
     experimental {
         coroutines "enable"
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/assets', 'src/main/assets/gradle.wrapper']
+        }
     }
 }

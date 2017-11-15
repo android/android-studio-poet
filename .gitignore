@@ -27,6 +27,7 @@ src/META-INF/MANIFEST.MF
 *.iml
 .gradle/
 /build
-out/production/classes/META-INF/java-generator_main.kotlin_module
 
 modules/**
+
+out/**
