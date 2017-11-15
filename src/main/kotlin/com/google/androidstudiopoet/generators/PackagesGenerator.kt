@@ -26,8 +26,8 @@ class PackagesGenerator(private val javaGenerator: JavaGenerator,
     fun writePackages(blueprint: PackagesBlueprint) {
         val packagesRoot = File(blueprint.where)
         packagesRoot.mkdirs()
-        System.out.println(blueprint.javaPackageBlueprints)
-        blueprint.javaPackageBlueprints.forEach({ javaGenerator.generatePackage(it) })
+        val lastJavaMethodToCall = blueprint.javaPackageBlueprints.map { javaGenerator.generatePackage(it) }
+                .last()
         blueprint.kotlinPackageBlueprints.forEach({ kotlinGenerator.generatePackage(it) })
     }
 }

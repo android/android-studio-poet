@@ -7,10 +7,7 @@ import com.squareup.javapoet.TypeSpec
 import com.google.androidstudiopoet.writers.FileWriter
 import javax.lang.model.element.Modifier
 
-class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter, "Java") {
-    override fun createClassBlueprint(packageName: String, classIndex: Int, blueprint: PackageBlueprint, previousClassMethodToCall: MethodToCall?): ClassBlueprint {
-        return JavaClassBlueprint(packageName, classIndex, blueprint.methodsPerClass, blueprint.mainPackage, previousClassMethodToCall)
-    }
+class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
 
     override fun generateClass(blueprint: ClassBlueprint): MethodToCall {
 

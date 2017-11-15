@@ -3,15 +3,12 @@ package com.google.androidstudiopoet.generators.packages
 import com.google.androidstudiopoet.models.*
 import com.google.androidstudiopoet.writers.FileWriter
 
-class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter, "Kt") {
-    override fun createClassBlueprint(packageName: String, classIndex: Int, blueprint: PackageBlueprint, previousClassMethodToCall: MethodToCall?): ClassBlueprint {
-        return KotlinClassBlueprint(packageName, classIndex, blueprint.methodsPerClass, blueprint.mainPackage, previousClassMethodToCall)
-    }
+class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
 
     override fun generateClass(blueprint: ClassBlueprint): MethodToCall {
         val buff = StringBuilder()
 
-        buff.append("package $blueprint.packageName;\n")
+        buff.append("package ${blueprint.packageName};\n")
 
         val annotName = blueprint.className + "Fancy"
         buff.append("annotation class " + annotName + "\n")

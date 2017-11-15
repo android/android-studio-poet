@@ -3,7 +3,7 @@ package com.google.androidstudiopoet.models
 import java.io.File
 
 data class PackagesBlueprint(private val config: ConfigPOJO, private val moduleIndex: Int,
-                             val where: String, private val moduleRoot: File) {
+                             val where: String, private val moduleRoot: File, private val methodToCallWithinClass: MethodToCall?) {
 
     private val javaPackageCount = config.javaPackageCount!!.toInt()
     private val javaClassCount = config.javaClassCount!!.toInt()
@@ -13,13 +13,24 @@ data class PackagesBlueprint(private val config: ConfigPOJO, private val moduleI
     private val kotlinClassCount = config.kotlinClassCount!!.toInt()
     private val kotlinMethodsPerClass = config.kotlinMethodsPerClass
 
-    val javaPackageBlueprints = (0 until javaPackageCount).map { packageIndex ->
-        PackageBlueprint(packageIndex, moduleIndex, javaClassCount, javaMethodsPerClass, where, moduleRoot)
+    val javaPackageBlueprints = ArrayList<PackageBlueprint>()
+    val kotlinPackageBlueprints = ArrayList<PackageBlueprint>()
+
+    init {
+        var previousClassMethodToCall: MethodToCall? = methodToCallWithinClass
+        (0 until javaPackageCount).forEach { packageIndex ->
+            val packageBlueprint = PackageBlueprint(packageIndex, moduleIndex, javaClassCount, javaMethodsPerClass, where, moduleRoot, Language.JAVA, previousClassMethodToCall)
+            javaPackageBlueprints += packageBlueprint
+            previousClassMethodToCall = packageBlueprint.methodToCallFromOutside
+        }
+
+        (0 until kotlinPackageCount).map { packageIndex ->
+            val packageBlueprint = PackageBlueprint(packageIndex, moduleIndex, kotlinClassCount, kotlinMethodsPerClass, where, moduleRoot, Language.KOTLIN, previousClassMethodToCall)
+            kotlinPackageBlueprints += packageBlueprint
+            previousClassMethodToCall = packageBlueprint.methodToCallFromOutside
+        }
     }
 
-    val kotlinPackageBlueprints = (0 until kotlinPackageCount).map { packageIndex ->
-        PackageBlueprint(packageIndex, moduleIndex, kotlinClassCount, kotlinMethodsPerClass, where, moduleRoot)
-    }
 
 
 }
