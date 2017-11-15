@@ -14,19 +14,39 @@
 
 package com.google.androidstudiopoet
 
-import org.intellij.lang.annotations.Language
+import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.writers.SourceModuleWriter
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import org.intellij.lang.annotations.Language
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.EventQueue
 import java.awt.Font
+import java.io.File
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter) : JFrame() {
+class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, config: Array<String>) : JFrame() {
 
     private val contentPane: JPanel
     private val textArea: JTextArea
+
+    @Language("JSON") private val SAMPLE_CONFIG = "{\n" +
+            "  \"projectName\": \"genny\",\n" +
+            "  \"root\": \"./modules/\",\n" +
+            "  \"numModules\": \"5\",\n" +
+            "  \"allMethods\": \"4000\",\n" +
+            "  \"javaPackageCount\": \"20\",\n" +
+            "  \"javaClassCount\": \"8\",\n" +
+            "  \"javaMethodCount\": \"2000\",\n" +
+            "  \"kotlinPackageCount\": \"20\",\n" +
+            "  \"kotlinClassCount\": \"8\",\n" +
+            "  \"androidModules\": \"2\",\n" +
+            "  \"numActivitiesPerAndroidModule\": \"8\",\n" +
+            "  \"dependencies\": [{\"from\": 3, \"to\": 2},\n" +
+            "    {\"from\": 4, \"to\": 2}, {\"from\": 4, \"to\": 3}]\n" +
+            "}"
 
     init {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -46,7 +66,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter) : JFrame(
         textArea.foreground = Color.CYAN
         textArea.font = Font("Menlo", Font.PLAIN, 18)
 
-        textArea.text = SAMPLE_CONFIG
+        textArea.text = generateConfigTextFromArgs(config)
         textArea.caretPosition = textArea.text.length
         textArea.caretColor = Color.YELLOW
 
@@ -68,30 +88,29 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter) : JFrame(
         pack()
     }
 
+    private fun generateConfigTextFromArgs(args: Array<String>): String? {
+
+        if (!args.isEmpty()) {
+            return try {
+                var configFile = File(args[0])
+                var result: String = configFile.readText()
+                Gson().fromJson(result, ConfigPOJO::class.java)
+                result
+            } catch (jss: JsonSyntaxException) {
+                SAMPLE_CONFIG
+            }
+        }
+
+        return SAMPLE_CONFIG
+    }
+
     companion object {
-
-        @Language("JSON") val SAMPLE_CONFIG = "{\n" +
-                "  \"projectName\": \"genny\",\n" +
-                "  \"root\": \"./modules/\",\n" +
-                "  \"numModules\": \"5\",\n" +
-                "  \"allMethods\": \"4000\",\n" +
-                "  \"javaPackageCount\": \"20\",\n" +
-                "  \"javaClassCount\": \"8\",\n" +
-                "  \"javaMethodCount\": \"2000\",\n" +
-                "  \"kotlinPackageCount\": \"20\",\n" +
-                "  \"kotlinClassCount\": \"8\",\n" +
-                "  \"androidModules\": \"2\",\n" +
-                "  \"numActivitiesPerAndroidModule\": \"8\",\n" +
-                "  \"dependencies\": [{\"from\": 3, \"to\": 2},\n" +
-                "    {\"from\": 4, \"to\": 2}, {\"from\": 4, \"to\": 3}]\n" +
-                "}"
-
         @JvmStatic
         fun main(args: Array<String>) {
 
             EventQueue.invokeLater {
                 try {
-                    val frame = AndroidStudioPoet(Injector.modulesWriter)
+                    val frame = AndroidStudioPoet(Injector.modulesWriter, args)
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
