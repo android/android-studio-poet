@@ -15,6 +15,7 @@ data class PackagesBlueprint(private val config: ConfigPOJO, private val moduleI
 
     val javaPackageBlueprints = ArrayList<PackageBlueprint>()
     val kotlinPackageBlueprints = ArrayList<PackageBlueprint>()
+    var methodToCallFromOutside: MethodToCall
 
     init {
         var previousClassMethodToCall = methodsToCallWithinPackages
@@ -28,6 +29,12 @@ data class PackagesBlueprint(private val config: ConfigPOJO, private val moduleI
             val packageBlueprint = PackageBlueprint(packageIndex, moduleIndex, kotlinClassCount, kotlinMethodsPerClass, where, moduleRoot, Language.KOTLIN, previousClassMethodToCall)
             kotlinPackageBlueprints += packageBlueprint
             previousClassMethodToCall = listOf(packageBlueprint.methodToCallFromOutside)
+        }
+
+        methodToCallFromOutside = if (kotlinPackageCount != 0) {
+            kotlinPackageBlueprints.last().methodToCallFromOutside
+        } else {
+            javaPackageBlueprints.last().methodToCallFromOutside
         }
     }
 
