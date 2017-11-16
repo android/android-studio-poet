@@ -1,47 +1,38 @@
 package com.google.androidstudiopoet.generators.packages
 
+import com.google.androidstudiopoet.models.*
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
 import com.google.androidstudiopoet.writers.FileWriter
-import java.io.File
 import javax.lang.model.element.Modifier
 
-class JavaGenerator constructor(fileWriter: FileWriter): PackageGenerator(fileWriter, "Java") {
+class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
 
-    override fun generateClass(packageName: String, classNumber: Int, methodsPerClass: Int, mainPackage: File) {
-        val className = "Foo" + classNumber
+    override fun generateClass(blueprint: ClassBlueprint): MethodToCall {
 
-        val clazz = TypeSpec.classBuilder(className)
-                .addModifiers(Modifier.PUBLIC)
+        val classSpec = blueprint.getMethodBlueprints()
+                .map { generateMethod(it) }
+                .fold(getClazz(blueprint)) { acc, methodSpec -> acc.addMethod(methodSpec) }
+                .build()
 
-        for (i in 0 until methodsPerClass) {
-            clazz.addMethod(generateMethod(i, classNumber, methodsPerClass))
-        }
+        val javaFile = JavaFile.builder(blueprint.packageName, classSpec).build()
 
-        val javaFile = JavaFile.builder(packageName, clazz.build()).build()
-
-        val classPath = mainPackage.absolutePath + "/" + packageName +
-                "/" + className + ".java"
-
-        writeFile(classPath, javaFile.toString())
+        writeFile(blueprint.getClassPath(), javaFile.toString())
+        return blueprint.getMethodToCallFromOutside()
     }
 
-    private fun generateMethod(methodNumber: Int, classNumber: Int, methodsPerClass: Int): MethodSpec {
-        val methodName = "foo" + methodNumber
+    private fun getClazz(blueprint: ClassBlueprint) =
+            TypeSpec.classBuilder(blueprint.className)
+                    .addModifiers(Modifier.PUBLIC)
 
-        val method = MethodSpec.methodBuilder(methodName)
+    private fun generateMethod(blueprint: MethodBlueprint): MethodSpec {
+
+        val method = MethodSpec.methodBuilder(blueprint.methodName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(Void.TYPE)
 
-        if (methodNumber > 0) {
-            method.addStatement("foo" + (methodNumber - 1) + "()")
-        } else if (classNumber > 0) {
-            method.addStatement("new Foo" + (classNumber - 1) + "().foo" + (methodsPerClass - 1) + "()")
-        }
-
-        // adding lambda
-        method.addStatement("final Runnable anything = () -> System.out.println(\"anything\")")
+        blueprint.statements.forEach { statement -> statement?.let { method.addStatement(it) } }
 
         return method.build()
     }

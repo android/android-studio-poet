@@ -1,27 +1,28 @@
 package com.google.androidstudiopoet.generators.packages
 
+import com.google.androidstudiopoet.models.ClassBlueprint
+import com.google.androidstudiopoet.models.MethodToCall
+import com.google.androidstudiopoet.models.PackageBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 import java.io.File
 
-abstract class PackageGenerator(private val fileWriter: FileWriter, private val postfix: String) {
+abstract class PackageGenerator(private val fileWriter: FileWriter) {
 
-    fun generatePackage(packageIndex: Int, moduleIndex: Int, classesPerPackage: Int,
-                              methodsPerClass: Int, mainPackage: File, moduleRoot: File) {
-        val packageName = moduleRoot.name + moduleIndex +"package" + postfix + packageIndex
-        val packageFolder = File(mainPackage.toString() + "/" + packageName)
+    fun generatePackage(blueprint: PackageBlueprint): MethodToCall? {
+
+        val packageFolder = File(blueprint.mainPackage, blueprint.packageName)
         if (packageFolder.exists()) {
             packageFolder.delete()
         }
 
         packageFolder.mkdir()
 
-        for (classIndex in 0 until classesPerPackage) {
-            generateClass(packageName, classIndex, methodsPerClass, mainPackage)
-        }
+        blueprint.classBlueprints.forEach({ generateClass(it) })
+
+        return blueprint.methodToCallFromOutside
     }
 
-    abstract fun generateClass(packageName: String, classNumber: Int,
-                                         methodsPerClass: Int, mainPackage: File)
+    abstract fun generateClass(blueprint: ClassBlueprint): MethodToCall
 
     protected fun writeFile(path: String, content: String) {
         fileWriter.writeToFile(content, path)

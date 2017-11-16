@@ -27,6 +27,7 @@ import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ModuleBlueprint
+import com.google.androidstudiopoet.models.PackagesBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import java.io.File
 
@@ -98,8 +99,8 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
         writeLibsFolder(moduleRootFile)
         writeBuildGradle(moduleRootFile, moduleBlueprint)
 
-        packagesGenerator.writePackages(configPOJO, moduleBlueprint.index,
-                moduleRoot + "/src/main/java/", File(moduleRootPath))
+        packagesGenerator.writePackages(PackagesBlueprint(configPOJO, moduleBlueprint.index,
+                moduleRoot + "/src/main/java/", File(moduleRootPath), listOf()))
     }
 
     private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {

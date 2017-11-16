@@ -16,29 +16,19 @@ package com.google.androidstudiopoet.generators
 
 import com.google.androidstudiopoet.generators.packages.JavaGenerator
 import com.google.androidstudiopoet.generators.packages.KotlinGenerator
-import com.google.androidstudiopoet.models.ConfigPOJO
+import com.google.androidstudiopoet.models.PackageBlueprint
+import com.google.androidstudiopoet.models.PackagesBlueprint
 import java.io.File
 
 class PackagesGenerator(private val javaGenerator: JavaGenerator,
                         private val kotlinGenerator: KotlinGenerator) {
 
-    fun writePackages(config: ConfigPOJO, moduleIndex: Int, where: String, moduleRoot: File) {
-
-        val packagesRoot = File(where)
+    fun writePackages(blueprint: PackagesBlueprint) {
+        val packagesRoot = File(blueprint.where)
         packagesRoot.mkdirs()
-
-        for (packageIndex in 0 until config.javaPackageCount!!.toInt()) {
-            javaGenerator.generatePackage(packageIndex, moduleIndex, config.javaClassCount!!.toInt(),
-                    config.javaMethodsPerClass, packagesRoot, moduleRoot)
-        }
-
-        val kotlinMethodsPerClass = config.kotlinMethodsPerClass
-
-        for (packageIndex in 0 until config.kotlinPackageCount!!.toInt()) {
-            var kotlinPackageIndex = (packageIndex + config.javaPackageCount!!.toInt())
-            kotlinGenerator.generatePackage(kotlinPackageIndex, moduleIndex,
-                    config.kotlinPackageCount!!.toInt(), kotlinMethodsPerClass, packagesRoot, moduleRoot)
-        }
+        blueprint.javaPackageBlueprints.map { javaGenerator.generatePackage(it) }
+                .last()
+        blueprint.kotlinPackageBlueprints.forEach({ kotlinGenerator.generatePackage(it) })
     }
 }
 
