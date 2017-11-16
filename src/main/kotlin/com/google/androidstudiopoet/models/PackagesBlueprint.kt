@@ -1,15 +1,9 @@
 package com.google.androidstudiopoet.models
 
-data class PackagesBlueprint(private val config: ConfigPOJO, val where: String, private val moduleName: String,
-                             private val methodsToCallWithinPackages: List<MethodToCall>) {
-
-    private val javaPackageCount = config.javaPackageCount!!.toInt()
-    private val javaClassCount = config.javaClassCount!!.toInt()
-    private val javaMethodsPerClass = config.javaMethodsPerClass
-
-    private val kotlinPackageCount = config.kotlinPackageCount!!.toInt()
-    private val kotlinClassCount = config.kotlinClassCount!!.toInt()
-    private val kotlinMethodsPerClass = config.kotlinMethodsPerClass
+data class PackagesBlueprint(private val javaPackageCount : Int, private val javaClassCount : Int,
+                             private val javaMethodsPerClass : Int, private val kotlinPackageCount : Int,
+                             private val kotlinClassCount : Int, private val kotlinMethodsPerClass : Int,
+                             val where: String, private val moduleName: String, private val methodsToCallWithinPackages: List<MethodToCall>) {
 
     val javaPackageBlueprints = ArrayList<PackageBlueprint>()
     val kotlinPackageBlueprints = ArrayList<PackageBlueprint>()

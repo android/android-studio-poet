@@ -56,7 +56,7 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
         val allJobs = mutableListOf<Job>()
         projectBlueprint.moduleBlueprints.forEach{ blueprint ->
             val job = launch {
-                writeModule(blueprint, projectBlueprint.configPOJO)
+                writeModule(blueprint)
             }
             allJobs.add(job)
         }
@@ -72,17 +72,14 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
 
     }
 
-    private fun writeModule(moduleBlueprint: ModuleBlueprint, configPOJO: ConfigPOJO) {
-        val moduleRootPath = moduleBlueprint.root
-        val moduleRoot = moduleRootPath.joinPath(moduleBlueprint.name)
-        val moduleRootFile = File(moduleRoot)
+    private fun writeModule(moduleBlueprint: ModuleBlueprint) {
+        val moduleRootFile = File(moduleBlueprint.moduleRoot)
         moduleRootFile.mkdir()
 
         writeLibsFolder(moduleRootFile)
         writeBuildGradle(moduleRootFile, moduleBlueprint)
 
-        packagesGenerator.writePackages(PackagesBlueprint(configPOJO,
-                moduleRoot + "/src/main/java/", moduleBlueprint.name, moduleBlueprint.methodsToCall))
+        packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
     }
 
     private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {
@@ -95,16 +92,5 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
         // write libs
         val libRoot = moduleRootFile.toString() + "/libs/"
         File(libRoot).mkdir()
-    }
-
-    private fun writeRootFolder(projectRoot: String) {
-        val root = File(projectRoot)
-
-        if (!root.exists()) {
-            root.mkdir()
-        } else {
-            root.delete()
-            root.mkdir()
-        }
     }
 }
