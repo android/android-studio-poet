@@ -14,6 +14,8 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val moduleDependencies = blueprint.dependencies.map { "implementation project(':$it')\n" }.fold()
 
+        val flavorsSection = createFlavorsSection(blueprint.productFlavors)
+
         val gradleText = """
             apply plugin: 'com.android.$androidPlugin'
             apply plugin: 'kotlin-android'
@@ -39,6 +41,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                     }
                 }
+                $flavorsSection
                 compileOptions {
                     targetCompatibility 1.8
                     sourceCompatibility 1.8
@@ -60,5 +63,30 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
             """.trim()
 
         fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))
+    }
+
+    private fun createFlavorsSection(productFlavors : List<Int>?): String {
+        if (productFlavors == null || productFlavors.size == 0) {
+            return ""
+        }
+
+        val dimensionsList = productFlavors.withIndex().map { (dimension, _) -> "\"dim$dimension\"" }.joinToString()
+
+        val flavorsList = productFlavors.withIndex().map { (dimension, size) ->
+            (0 until size).map { flavor ->
+                """
+                    dim${dimension}flav$flavor {
+                        dimension "dim${dimension}"
+                    }"""
+            }.fold()
+        }.fold()
+
+        return """
+                flavorDimensions $dimensionsList
+
+                productFlavors {
+                    $flavorsList
+                }
+                """
     }
 }
