@@ -1,41 +1,37 @@
 package com.google.androidstudiopoet.generators.packages
 
+import com.google.androidstudiopoet.models.*
 import com.google.androidstudiopoet.writers.FileWriter
-import java.io.File
 
-class KotlinGenerator constructor(fileWriter: FileWriter): PackageGenerator(fileWriter, "Kt") {
+class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
 
-    override fun generateClass(packageName: String, classNumber: Int, methodsPerClass: Int, mainPackage: File) {
-        val className = "Foo" + classNumber
+    override fun generateClass(blueprint: ClassBlueprint): MethodToCall {
         val buff = StringBuilder()
 
-        buff.append("package $packageName;\n")
+        buff.append("package ${blueprint.packageName};\n")
 
-        var annotName = className + "Fancy"
+        val annotName = blueprint.className + "Fancy"
         buff.append("annotation class " + annotName + "\n")
         buff.append("@" + annotName + "\n")
 
-        buff.append("public class $className {\n")
+        buff.append("public class ${blueprint.className} {\n")
 
-        for (i in 0 until methodsPerClass) {
-
-            buff.append("fun foo$i(){\n")
-
-            if (i > 0) {
-                buff.append("foo" + (i - 1) + "()\n")
-            } else if (classNumber > 0) {
-                buff.append("Foo" + (classNumber - 1) + "().foo" + (methodsPerClass - 1) + "()\n")
-            }
-
-            buff.append("\n}")
-        }
+        blueprint.getMethodBlueprints()
+                .map { generateMethod(it) }
+                .fold(buff) { acc, method -> acc.append(method) }
 
         buff.append("\n}")
 
-        val classPath = mainPackage.absolutePath + "/" + packageName +
-                "/" + className + ".kt"
+        writeFile(blueprint.getClassPath(), buff.toString())
+        return blueprint.getMethodToCallFromOutside()
+    }
 
-        writeFile(classPath, buff.toString())
+    private fun generateMethod(blueprint: MethodBlueprint): String {
+        val buff = StringBuilder()
+        buff.append("fun ${blueprint.methodName}(){\n")
+        blueprint.statements.forEach { statement -> statement?.let { buff.append(it) } }
+        buff.append("\n}")
+        return buff.toString()
     }
 
 }
