@@ -15,7 +15,6 @@ object Injector {
 
     private val fileWriter = FileWriter()
     private val dependencyValidator = DependencyValidator()
-    private val moduleBlueprintFactory = ModuleBlueprintFactory()
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
     private val buildGradleGenerator = BuildGradleGenerator()
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
@@ -45,6 +44,6 @@ object Injector {
             PackagesGenerator(javaGenerator, kotlinGenerator)
 
     val modulesWriter =
-            SourceModuleWriter(dependencyValidator, moduleBlueprintFactory, buildGradleGenerator,
-                    gradleSettingsGenerator, projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator, fileWriter)
+            SourceModuleWriter(dependencyValidator, buildGradleGenerator, gradleSettingsGenerator,
+                    projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator, fileWriter)
 }

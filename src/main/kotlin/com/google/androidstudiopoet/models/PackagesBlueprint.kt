@@ -1,9 +1,7 @@
 package com.google.androidstudiopoet.models
 
-import java.io.File
-
-data class PackagesBlueprint(private val config: ConfigPOJO, private val moduleIndex: Int,
-                             val where: String, private val moduleRoot: File, private val methodsToCallWithinPackages: List<MethodToCall>) {
+data class PackagesBlueprint(private val config: ConfigPOJO, val where: String, private val moduleName: String,
+                             private val methodsToCallWithinPackages: List<MethodToCall>) {
 
     private val javaPackageCount = config.javaPackageCount!!.toInt()
     private val javaClassCount = config.javaClassCount!!.toInt()
@@ -20,13 +18,13 @@ data class PackagesBlueprint(private val config: ConfigPOJO, private val moduleI
     init {
         var previousClassMethodToCall = methodsToCallWithinPackages
         (0 until javaPackageCount).forEach { packageIndex ->
-            val packageBlueprint = PackageBlueprint(packageIndex, moduleIndex, javaClassCount, javaMethodsPerClass, where, moduleRoot, Language.JAVA, previousClassMethodToCall)
+            val packageBlueprint = PackageBlueprint(packageIndex, javaClassCount, javaMethodsPerClass, where, moduleName, Language.JAVA, previousClassMethodToCall)
             javaPackageBlueprints += packageBlueprint
             previousClassMethodToCall = listOf(packageBlueprint.methodToCallFromOutside)
         }
 
         (0 until kotlinPackageCount).map { packageIndex ->
-            val packageBlueprint = PackageBlueprint(packageIndex, moduleIndex, kotlinClassCount, kotlinMethodsPerClass, where, moduleRoot, Language.KOTLIN, previousClassMethodToCall)
+            val packageBlueprint = PackageBlueprint(packageIndex, kotlinClassCount, kotlinMethodsPerClass, where, moduleName, Language.KOTLIN, previousClassMethodToCall)
             kotlinPackageBlueprints += packageBlueprint
             previousClassMethodToCall = listOf(packageBlueprint.methodToCallFromOutside)
         }

@@ -14,10 +14,6 @@
 
 package com.google.androidstudiopoet.writers
 
-import com.google.gson.Gson
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
 import com.google.androidstudiopoet.DependencyValidator
 import com.google.androidstudiopoet.ModuleBlueprintFactory
 import com.google.androidstudiopoet.generators.BuildGradleGenerator
@@ -28,12 +24,15 @@ import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerat
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ModuleBlueprint
 import com.google.androidstudiopoet.models.PackagesBlueprint
+import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.utils.joinPath
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
 
 
 class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
-                         private val blueprintFactory: ModuleBlueprintFactory,
                          private val buildGradleGenerator: BuildGradleGenerator,
                          private val gradleSettingsGenerator: GradleSettingsGenerator,
                          private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
@@ -41,32 +40,23 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
                          private val packagesGenerator: PackagesGenerator,
                          private val fileWriter: FileWriter) {
 
-    fun generate(configStr: String) = runBlocking {
+    fun generate(projectBlueprint: ProjectBlueprint) = runBlocking {
 
-        val gson = Gson()
-        val configPOJO = gson.fromJson(configStr, ConfigPOJO::class.java)
-
-        if (!dependencyValidator.isValid(configPOJO)) {
+        if (!dependencyValidator.isValid(projectBlueprint.configPOJO)) {
             throw IllegalStateException("Incorrect dependencies")
         }
 
-        val projectRoot = configPOJO.root.joinPath(configPOJO.projectName)
+        fileWriter.delete(projectBlueprint.projectRoot)
+        fileWriter.mkdir(projectBlueprint.projectRoot)
 
-        writeRootFolder(configPOJO.root)
-        writeRootFolder(projectRoot)
-        GradlewGenerator.generateGradleW(projectRoot)
-
-        val moduleBlueprints = (0 until configPOJO.numModules).map { i ->
-            blueprintFactory.create(i, configPOJO, projectRoot)
-        }
-
-
-        projectBuildGradleGenerator.generate(projectRoot)
+        GradlewGenerator.generateGradleW(projectBlueprint.projectRoot)
+        projectBuildGradleGenerator.generate(projectBlueprint.projectRoot)
+        gradleSettingsGenerator.generate(projectBlueprint.configPOJO.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
 
         val allJobs = mutableListOf<Job>()
-        moduleBlueprints.forEach{ blueprint ->
+        projectBlueprint.moduleBlueprints.forEach{ blueprint ->
             val job = launch {
-                writeModule(blueprint, configPOJO)
+                writeModule(blueprint, projectBlueprint.configPOJO)
             }
             allJobs.add(job)
         }
@@ -75,18 +65,10 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
             job.join()
         }
 
-
-        val androidModuleBlueprints =
-                (0 until configPOJO.androidModules!!.toInt()).map { i ->
-            blueprintFactory.createAndroidModule(i, configPOJO, projectRoot, moduleBlueprints.map { it.name })
-        }
-
-        androidModuleBlueprints.forEach{ blueprint ->
+        projectBlueprint.androidModuleBlueprints.forEach{ blueprint ->
             androidModuleGenerator.generate(blueprint)
             println("Done writing Android module " + blueprint.index)
         }
-
-        gradleSettingsGenerator.generate(configPOJO.projectName, moduleBlueprints, androidModuleBlueprints, projectRoot)
 
     }
 
@@ -99,8 +81,8 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
         writeLibsFolder(moduleRootFile)
         writeBuildGradle(moduleRootFile, moduleBlueprint)
 
-        packagesGenerator.writePackages(PackagesBlueprint(configPOJO, moduleBlueprint.index,
-                moduleRoot + "/src/main/java/", File(moduleRootPath), listOf()))
+        packagesGenerator.writePackages(PackagesBlueprint(configPOJO,
+                moduleRoot + "/src/main/java/", moduleBlueprint.name, moduleBlueprint.methodsToCall))
     }
 
     private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {

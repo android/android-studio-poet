@@ -4,12 +4,13 @@ import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ModuleBlueprint
 
-class ModuleBlueprintFactory {
+object ModuleBlueprintFactory {
     fun create(index: Int, config: ConfigPOJO, projectRoot: String): ModuleBlueprint {
         val dependencies = config.dependencies
                 ?.filter { it.from == index}
-                ?.map { it.to } ?: listOf()
-        return ModuleBlueprint(index, "module" + index, projectRoot, dependencies)
+                ?.map { "module${it.to}" } ?: listOf()
+
+        return ModuleBlueprint(index, "module" + index, projectRoot, dependencies, listOf())
     }
 
     fun createAndroidModule(i: Int, configPOJO: ConfigPOJO?, projectRoot: String, dependencies: List<String>):
