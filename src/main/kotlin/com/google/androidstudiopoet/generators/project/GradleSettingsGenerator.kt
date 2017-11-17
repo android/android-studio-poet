@@ -8,11 +8,10 @@ import com.google.androidstudiopoet.utils.joinPath
 private const val INCLUDE_LENGTH_LIMIT = 250
 class GradleSettingsGenerator(private val fileWriter: FileWriter) {
 
-    fun generate(projectName: String, moduleBlueprints: List<ModuleBlueprint>, androidModuleBlueprints: List<AndroidModuleBlueprint>, projectRoot: String) {
+    fun generate(projectName: String, allModulesNames: List<String>, projectRoot: String) {
         val buff = StringBuilder()
         buff.append("rootProject.name = \'$projectName\'\n")
-        buff.append(generateIncludeStatements(moduleBlueprints.map { it.name }))
-        buff.append(generateIncludeStatements(androidModuleBlueprints.map { it.name }))
+        buff.append(generateIncludeStatements(allModulesNames))
 
         fileWriter.writeToFile(buff.toString(), projectRoot.joinPath("settings.gradle"))
     }

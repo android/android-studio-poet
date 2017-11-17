@@ -15,6 +15,7 @@
 package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.models.ConfigPOJO
+import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.writers.SourceModuleWriter
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -49,6 +50,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, config: A
             "    {\"from\": 4, \"to\": 2}, {\"from\": 4, \"to\": 3}]\n" +
             "}"
 
+    private val gson = Gson()
+
     init {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
 
@@ -82,7 +85,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, config: A
         val btnGenerate = JButton("Generate")
         btnGenerate.addActionListener {
             println(textArea.text)
-            modulesWriter.generate(textArea.text)
+            val configPOJO = gson.fromJson(textArea.text, ConfigPOJO::class.java)
+            modulesWriter.generate(ProjectBlueprint(configPOJO))
         }
         contentPane.add(btnGenerate, BorderLayout.SOUTH)
 
@@ -95,7 +99,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, config: A
             return try {
                 var configFile = File(args[0])
                 var result: String = configFile.readText()
-                Gson().fromJson(result, ConfigPOJO::class.java)
+                gson.fromJson(result, ConfigPOJO::class.java)
                 result
             } catch (jss: JsonSyntaxException) {
                 SAMPLE_CONFIG
