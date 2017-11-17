@@ -60,6 +60,8 @@ class ConfigPOJO {
 
     val numActivitiesPerAndroidModule: String? = null
 
+    val productFlavors: List<Int>? = null
+
     override fun toString(): String = toJson()
 
     private fun toJson(): String {
