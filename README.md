@@ -26,6 +26,10 @@ Create a real life complexity Android project that mimics your own and observe t
 
 * You can control Andorid resources (images, layouts etc')
 
+* You can control product flavors
+
+* You can have intermodule depdendencies
+
 This is not an official Google product.
 
 ### License
