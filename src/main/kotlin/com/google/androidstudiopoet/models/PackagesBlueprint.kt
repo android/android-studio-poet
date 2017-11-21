@@ -1,16 +1,21 @@
 package com.google.androidstudiopoet.models
 
-data class PackagesBlueprint(private val javaPackageCount : Int, private val javaClassCount : Int,
-                             private val javaMethodsPerClass : Int, private val kotlinPackageCount : Int,
-                             private val kotlinClassCount : Int, private val kotlinMethodsPerClass : Int,
-                             val where: String, private val moduleName: String, private val methodsToCallWithinPackages: List<MethodToCall>) {
+data class PackagesBlueprint(private val javaPackageCount: Int,
+                             private val javaClassCount: Int,
+                             private val javaMethodsPerClass: Int,
+                             private val kotlinPackageCount: Int,
+                             private val kotlinClassCount: Int,
+                             private val kotlinMethodsPerClass: Int,
+                             val where: String,
+                             private val moduleName: String,
+                             private val dependencies: List<ModuleDependency>) {
 
     val javaPackageBlueprints = ArrayList<PackageBlueprint>()
     val kotlinPackageBlueprints = ArrayList<PackageBlueprint>()
     var methodToCallFromOutside: MethodToCall
 
     init {
-        var previousClassMethodToCall = methodsToCallWithinPackages
+        var previousClassMethodToCall:List<MethodToCall> = convertDependenciesToMethodsToCall(dependencies)
         (0 until javaPackageCount).forEach { packageIndex ->
             val packageBlueprint = PackageBlueprint(packageIndex, javaClassCount, javaMethodsPerClass, where, moduleName, Language.JAVA, previousClassMethodToCall)
             javaPackageBlueprints += packageBlueprint
@@ -28,6 +33,13 @@ data class PackagesBlueprint(private val javaPackageCount : Int, private val jav
         } else {
             javaPackageBlueprints.last().methodToCallFromOutside
         }
+    }
+
+    private fun convertDependenciesToMethodsToCall(dependencies: List<ModuleDependency>): List<MethodToCall> {
+
+        var result: MutableList<MethodToCall>  = mutableListOf()
+        dependencies.mapTo(result) { it.methodToCall }
+        return result
     }
 
 }

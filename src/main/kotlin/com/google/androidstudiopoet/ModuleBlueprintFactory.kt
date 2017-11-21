@@ -1,9 +1,6 @@
 package com.google.androidstudiopoet
 
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
-import com.google.androidstudiopoet.models.ConfigPOJO
-import com.google.androidstudiopoet.models.MethodToCall
-import com.google.androidstudiopoet.models.ModuleBlueprint
+import com.google.androidstudiopoet.models.*
 
 object ModuleBlueprintFactory {
     fun create(index: Int, config: ConfigPOJO, projectRoot: String): ModuleBlueprint {
@@ -11,11 +8,16 @@ object ModuleBlueprintFactory {
                 ?.filter { it.from == index}
                 ?.map { it.to }
 
-        val dependenciesNames = dependencies?.map { getModuleNameByIndex(it) } ?: listOf()
+        val moduleNames = dependencies?.map { getModuleNameByIndex(it) } ?: listOf()
         val methodsToCallWithinModule = dependencies?.map { getMethodToCallForDependency(it, config, projectRoot) } ?: listOf()
 
-        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, dependenciesNames, methodsToCallWithinModule,
-                config)
+        val combinations = moduleNames.combine(methodsToCallWithinModule)
+
+        val moduleDependencies:MutableList<ModuleDependency> = combinations
+                .map { ModuleDependency(it.first, it.second) }
+                .toMutableList()
+
+        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, moduleDependencies, config)
     }
 
     private fun getMethodToCallForDependency(index: Int, config: ConfigPOJO, projectRoot: String): MethodToCall {
@@ -24,8 +26,18 @@ object ModuleBlueprintFactory {
             dependency, return methodToCallFromOutside and forget about this module blueprint.
             WARNING: creation of ModuleBlueprint could be expensive
          */
-        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), listOf(), config).methodToCallFromOutside
+        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), config).methodToCallFromOutside
     }
+
+    /**
+     * Method extension code to combine
+     */
+
+    private fun <T1, T2> Collection<T1>.combine(other: Iterable<T2>): List<Pair<T1, T2>> =
+            combine(other, { thisItem: T1, otherItem: T2 -> Pair(thisItem, otherItem) })
+
+    private fun <T1, T2, R> Collection<T1>.combine(other: Iterable<T2>, transformer: (thisItem: T1, otherItem:T2) -> R): List<R> =
+            this.flatMap { thisItem -> other.map { otherItem -> transformer(thisItem, otherItem) }}
 
     private fun getModuleNameByIndex(index: Int) = "module$index"
 
