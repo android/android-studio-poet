@@ -7,7 +7,7 @@ data class ModuleBlueprint(val index: Int,
                            val root: String,
                            val dependencies: List<ModuleDependency>,
                            private val config: ConfigPOJO) {
-    
+
     private val javaPackageCount = config.javaPackageCount!!.toInt()
     private val javaClassCount = config.javaClassCount!!.toInt()
     private val javaMethodsPerClass = config.javaMethodsPerClass

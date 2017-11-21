@@ -8,14 +8,9 @@ object ModuleBlueprintFactory {
                 ?.filter { it.from == index}
                 ?.map { it.to }
 
-        val moduleNames = dependencies?.map { getModuleNameByIndex(it) } ?: listOf()
-        val methodsToCallWithinModule = dependencies?.map { getMethodToCallForDependency(it, config, projectRoot) } ?: listOf()
-
-        val combinations = moduleNames.combine(methodsToCallWithinModule)
-
-        val moduleDependencies:MutableList<ModuleDependency> = combinations
-                .map { ModuleDependency(it.first, it.second) }
-                .toMutableList()
+        val moduleDependencies =
+                dependencies?.map { ModuleDependency(getModuleNameByIndex(it),
+                        getMethodToCallForDependency(it, config, projectRoot)) } ?: listOf()
 
         return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, moduleDependencies, config)
     }
@@ -29,15 +24,6 @@ object ModuleBlueprintFactory {
         return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), config).methodToCallFromOutside
     }
 
-    /**
-     * Method extension code to combine
-     */
-
-    private fun <T1, T2> Collection<T1>.combine(other: Iterable<T2>): List<Pair<T1, T2>> =
-            combine(other, { thisItem: T1, otherItem: T2 -> Pair(thisItem, otherItem) })
-
-    private fun <T1, T2, R> Collection<T1>.combine(other: Iterable<T2>, transformer: (thisItem: T1, otherItem:T2) -> R): List<R> =
-            this.flatMap { thisItem -> other.map { otherItem -> transformer(thisItem, otherItem) }}
 
     private fun getModuleNameByIndex(index: Int) = "module$index"
 
