@@ -15,17 +15,14 @@
 package com.google.androidstudiopoet.writers
 
 import com.google.androidstudiopoet.DependencyValidator
-import com.google.androidstudiopoet.ModuleBlueprintFactory
+import com.google.androidstudiopoet.generators.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.BuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
-import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ModuleBlueprint
-import com.google.androidstudiopoet.models.PackagesBlueprint
 import com.google.androidstudiopoet.models.ProjectBlueprint
-import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
@@ -36,7 +33,7 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
                          private val buildGradleGenerator: BuildGradleGenerator,
                          private val gradleSettingsGenerator: GradleSettingsGenerator,
                          private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
-                         private val androidModuleGenerator: AndroidModuleWriter,
+                         private val androidModuleGenerator: AndroidModuleGenerator,
                          private val packagesGenerator: PackagesGenerator,
                          private val fileWriter: FileWriter) {
 

@@ -8,10 +8,12 @@ data class AndroidModuleBlueprint(val index: Int,
                                   val numOfActivities: Int,
                                   val numOfStrings: Int,
                                   val numOfImages: Int,
-                                  val projectRoot: String,
+                                  private val projectRoot: String,
                                   val hasLaunchActivity: Boolean,
-                                  val dependencies: List<String>,
-                                  val productFlavors: List<Int>?): Blueprint {
+                                  val dependencies: List<ModuleDependency>,
+                                  val productFlavors: List<Int>?,
+                                  private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
+                                  private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int): Blueprint {
     val name = "androidAppModule" + index
     val packageName = "com.$name"
     val moduleRoot = projectRoot.joinPath(name)
@@ -20,4 +22,7 @@ data class AndroidModuleBlueprint(val index: Int,
     val resDirPath = mainPath.joinPath("res")
     val codePath = mainPath.joinPath("java")
     val packagePath = codePath.joinPaths(packageName.split("."))
+
+    val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+            kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, listOf())
 }

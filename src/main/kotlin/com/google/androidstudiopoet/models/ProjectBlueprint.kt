@@ -11,7 +11,8 @@ class ProjectBlueprint(val configPOJO: ConfigPOJO) {
     }
 
     val androidModuleBlueprints = (0 until configPOJO.androidModules!!.toInt()).map { i ->
-        ModuleBlueprintFactory.createAndroidModule(i, configPOJO, projectRoot, moduleBlueprints.map { it.name })
+        ModuleBlueprintFactory.createAndroidModule(i, configPOJO, projectRoot, moduleBlueprints.map { it.index },
+                (i until configPOJO.androidModules.toInt()).toList())
     }
 
     val allModulesNames = moduleBlueprints.map { it.name } + androidModuleBlueprints.map { it.name }

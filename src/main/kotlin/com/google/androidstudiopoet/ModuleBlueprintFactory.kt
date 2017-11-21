@@ -4,35 +4,61 @@ import com.google.androidstudiopoet.models.*
 
 object ModuleBlueprintFactory {
     fun create(index: Int, config: ConfigPOJO, projectRoot: String): ModuleBlueprint {
-        val dependencies = config.dependencies
-                ?.filter { it.from == index}
+
+        val javaPackageCount = config.javaPackageCount!!.toInt()
+        val javaClassCount = config.javaClassCount!!.toInt()
+        val javaMethodsPerClass = config.javaMethodsPerClass
+
+        val kotlinPackageCount = config.kotlinPackageCount!!.toInt()
+        val kotlinClassCount = config.kotlinClassCount!!.toInt()
+        val kotlinMethodsPerClass = config.kotlinMethodsPerClass
+
+        val moduleDependencies = config.dependencies
+                ?.filter { it.from == index }
                 ?.map { it.to }
+                ?.map { getModuleDependency(it, projectRoot, javaPackageCount, javaClassCount,
+                        javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)} ?: listOf()
 
-        val moduleDependencies =
-                dependencies?.map { ModuleDependency(getModuleNameByIndex(it),
-                        getMethodToCallForDependency(it, config, projectRoot)) } ?: listOf()
-
-        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, moduleDependencies, config)
+        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, moduleDependencies, javaPackageCount,
+                javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
     }
 
-    private fun getMethodToCallForDependency(index: Int, config: ConfigPOJO, projectRoot: String): MethodToCall {
+    private fun getModuleDependency(index: Int, projectRoot: String, javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
+                                    kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int): ModuleDependency {
         /*
             Because method to call from outside doesn't depend on the dependencies, we can create ModuleBlueprint for
             dependency, return methodToCallFromOutside and forget about this module blueprint.
             WARNING: creation of ModuleBlueprint could be expensive
          */
-        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), config).methodToCallFromOutside
+        val moduleBlueprint = ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+                kotlinClassCount, kotlinMethodsPerClass)
+
+                return ModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside)
     }
 
 
     private fun getModuleNameByIndex(index: Int) = "module$index"
 
-    fun createAndroidModule(i: Int, configPOJO: ConfigPOJO?, projectRoot: String, dependencies: List<String>):
+    fun createAndroidModule(i: Int, config: ConfigPOJO, projectRoot: String, codeModuleDependencyIndexes: List<Int>,
+                            androidModuleDependencyIndexes: List<Int>):
             AndroidModuleBlueprint {
 
-         return AndroidModuleBlueprint(i,
-                 configPOJO!!.numActivitiesPerAndroidModule!!.toInt(),
-                 configPOJO.numActivitiesPerAndroidModule!!.toInt(),
-                 configPOJO.numActivitiesPerAndroidModule.toInt(), projectRoot, i == 0, dependencies, configPOJO.productFlavors)
+        val javaPackageCount = config.javaPackageCount!!.toInt()
+        val javaClassCount = config.javaClassCount!!.toInt()
+        val javaMethodsPerClass = config.javaMethodsPerClass
+
+        val kotlinPackageCount = config.kotlinPackageCount!!.toInt()
+        val kotlinClassCount = config.kotlinClassCount!!.toInt()
+        val kotlinMethodsPerClass = config.kotlinMethodsPerClass
+
+        val moduleDependencies = codeModuleDependencyIndexes
+                .map { getModuleDependency(it, projectRoot, javaPackageCount, javaClassCount,
+                        javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)}
+
+        return AndroidModuleBlueprint(i,
+                config.numActivitiesPerAndroidModule!!.toInt(),
+                config.numActivitiesPerAndroidModule.toInt(),
+                config.numActivitiesPerAndroidModule.toInt(), projectRoot, i == 0, moduleDependencies, config.productFlavors,
+                javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
     }
 }
