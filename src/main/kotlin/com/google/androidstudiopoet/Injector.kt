@@ -7,7 +7,7 @@ import com.google.androidstudiopoet.generators.packages.JavaGenerator
 import com.google.androidstudiopoet.generators.packages.KotlinGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
-import com.google.androidstudiopoet.writers.AndroidModuleWriter
+import com.google.androidstudiopoet.generators.AndroidModuleGenerator
 import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.writers.SourceModuleWriter
 
@@ -27,21 +27,18 @@ object Injector {
     private val activityGenerator: ActivityGenerator = ActivityGenerator(fileWriter)
     private val manifestGenerator: ManifestGenerator = ManifestGenerator(fileWriter)
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
+    private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
 
     private val androidModuleGenerator =
-            AndroidModuleWriter(
+            AndroidModuleGenerator(
                     stringResourcesGenerator,
                     imageResourcesGenerator,
                     layoutResourcesGenerator,
-                    javaGenerator,
-                    kotlinGenerator,
+                    packagesGenerator,
                     activityGenerator,
                     manifestGenerator, proguardGenerator,
                     amBuildGradleGenerator,
                     fileWriter)
-
-    private val packagesGenerator =
-            PackagesGenerator(javaGenerator, kotlinGenerator)
 
     val modulesWriter =
             SourceModuleWriter(dependencyValidator, buildGradleGenerator, gradleSettingsGenerator,
