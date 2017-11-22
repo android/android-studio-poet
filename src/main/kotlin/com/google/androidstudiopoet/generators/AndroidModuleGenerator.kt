@@ -1,8 +1,6 @@
 package com.google.androidstudiopoet.generators
 
 import com.google.androidstudiopoet.generators.android_modules.*
-import com.google.androidstudiopoet.generators.packages.JavaGenerator
-import com.google.androidstudiopoet.generators.packages.KotlinGenerator
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
@@ -27,9 +25,10 @@ class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourc
         proguardGenerator.generate(blueprint)
         buildGradleGenerator.generate(blueprint)
 
-        val stringResources = stringResourcesGenerator.generate(blueprint)
+        stringResourcesGenerator.generate(blueprint)
+
         val imageResources = imageResourcesGenerator.generate(blueprint)
-        val layouts = layoutResourcesGenerator.generate(blueprint, stringResources.stringNames, imageResources)
+        val layouts = layoutResourcesGenerator.generate(blueprint, blueprint.stringNames, imageResources)
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
         val methodsToCall: List<String> = listOf()
         val activities = activityGenerator.generate(blueprint, layouts, methodsToCall)
