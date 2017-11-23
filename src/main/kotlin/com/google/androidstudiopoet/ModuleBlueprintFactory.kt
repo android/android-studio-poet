@@ -35,6 +35,6 @@ object ModuleBlueprintFactory {
          return AndroidModuleBlueprint(i,
                  configPOJO!!.numActivitiesPerAndroidModule!!.toInt(),
                  configPOJO.numActivitiesPerAndroidModule!!.toInt(),
-                 configPOJO.numActivitiesPerAndroidModule.toInt(), projectRoot, i == 0, dependencies, configPOJO.productFlavors)
+                 configPOJO.numActivitiesPerAndroidModule.toInt(), projectRoot, i == 0, configPOJO.kotlinPackageCount!!.toInt() > 0, dependencies, configPOJO.productFlavors)
     }
 }
