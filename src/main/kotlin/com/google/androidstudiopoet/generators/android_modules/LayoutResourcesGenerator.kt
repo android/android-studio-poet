@@ -10,7 +10,6 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
      * generates layout resources by blueprint and other resources, returns list of layout names to refer later.
      */
     fun generate(blueprint: AndroidModuleBlueprint,
-                 stringResources: List<String>,
                  imageResources: List<String>): List<String> {
 
         var result: ArrayList<String> = ArrayList()
