@@ -1,0 +1,89 @@
+{
+  "inputVersion": "0.0.1",
+  "projectConfig": {
+    "projectName": "genny",
+    "root": "./modules/",
+    "buildSystemConfig": {
+      //Optional param, but it is possible to specify what exactly build system setup should be used
+    },
+    "moduleConfigs": [
+      {
+        //Andorid Application Module
+        "moduleType": "ANDROID",
+        "moduleNamePrefix": "app",
+        "isApplication": true,
+
+        "numActivities": 8,
+        "resourcesConfig": {
+          "stringCount": 10,
+          "imageCount": 9,
+          "layoutCount": 7
+        },
+
+        "javaPackageCount": 3,
+        "javaClassCount": 8,
+        "javaMethodCount": 2000,
+
+        "kotlinPackageCount": 3,
+        "kotlinClassCount": 5,
+        "kotlinMethodCount": 1000,
+
+        "dependencies": [
+          {
+            //Depends on the first "pure" module
+            "type": "SINGLE",
+            "moduleNamePrefix": "pure"
+          },
+          {
+            //Depends on the all five "andoirdLib" modules
+            "type": "SINGLE",
+            "moduleNamePrefix": "androidLib",
+            "moduleCount": 5
+          }
+        ]
+      },
+      {
+        //5 Pure Java + Kotlin libraries
+        "moduleType": "PURE",
+        "moduleCount": 5,
+        "moduleNamePrefix": "pure",
+
+        "javaPackageCount": 3,
+        "javaClassCount": 8,
+        "javaMethodCount": 2000,
+
+        "kotlinPackageCount": 3,
+        "kotlinClassCount": 5,
+        "kotlinMethodCount": 1000
+      },
+      {
+        //5 Android libraries that depends on corresponding "pure" modules
+        "moduleType": "ANDROID",
+        "moduleCount": 5,
+        "moduleNamePrefix": "androidLib",
+
+        "numActivities": 2,
+        "resourcesConfig": {
+          "stringCount": 1,
+          "imageCount": 5,
+          "layoutCount": 3
+        },
+
+        "javaPackageCount": 3,
+        "javaClassCount": 8,
+        "javaMethodCount": 2000,
+
+        "kotlinPackageCount": 3,
+        "kotlinClassCount": 5,
+        "kotlinMethodCount": 1000,
+        "dependencies": [{
+            //Each "androidLib" depends on one "pure" module, so that they together depends on as many modules as possible
+            "type": "BULK",
+            "moduleNamePrefix": "pure",
+            "moduleCount": 1
+          }
+        ]
+      }
+    ]
+  }
+}
