@@ -19,18 +19,10 @@ class BuildSystemConfig {
      */
     var kotlinVersion: String? = null
 
-    /**
-     * Default minSdkVersion value for all android modules
-     */
-    var minSdkVersion: Int? = null
 
     /**
-     * Default compileSdkVersion value for all android modules
+     * Default AndroidBuildConfig for all android modules
      */
-    var compileSdkVersion: Int? = null
+    var defaultAndroidBuildConfig: AndroidBuildConfig? = null
 
-    /**
-     * Default targetSdkVersion value for all android modules
-     */
-    var targetSdkVersion: Int? = null
 }

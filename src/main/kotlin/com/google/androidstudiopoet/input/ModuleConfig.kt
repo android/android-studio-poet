@@ -59,6 +59,7 @@ class AndroidModuleConfig: ModuleConfig() {
      * If true then android application plugin is applied.
      */
     val isApplication: Boolean? = false
+    val buildConfig: AndroidBuildConfig? = null
 
     val numActivities: Int? = 0
     val resourcesConfig: ResourcesConfig? = null
