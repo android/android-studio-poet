@@ -64,6 +64,7 @@ class AndroidModuleConfig: ModuleConfig() {
     val numActivities: Int? = 0
     val resourcesConfig: ResourcesConfig? = null
 
+    val flavours: List<Flavour>? = null
 }
 
 class ResourcesConfig {
@@ -71,3 +72,5 @@ class ResourcesConfig {
     var imageCount: Int? = null
     var layoutCount: Int? = null
 }
+
+

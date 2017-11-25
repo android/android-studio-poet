@@ -1,4 +1,5 @@
 {
+  //Project configuration is wrapped in another object to help us deal with versioning
   "inputVersion": "0.0.1",
   "projectConfig": {
     "projectName": "genny",
@@ -7,6 +8,8 @@
       //Optional param, but it is possible to specify what exactly build system setup should be used
     },
     "moduleConfigs": [
+      //Even though there are only 3 blocks here, in total 11 modules would be generated.
+      //One other thing, I believe that we should forbid dependencies withing one block, only interblock dependencies are allowed.
       {
         //Andorid Application Module
         "moduleType": "ANDROID",
@@ -39,6 +42,17 @@
             "type": "SINGLE",
             "moduleNamePrefix": "androidLib",
             "moduleCount": 5
+          }
+        ],
+        "flavours": [
+          {
+            "name": "master"
+          },
+          {
+            "name": "Dev21",
+            "buildConfig": {
+              "minSdkVersion": 21
+            }
           }
         ]
       },
