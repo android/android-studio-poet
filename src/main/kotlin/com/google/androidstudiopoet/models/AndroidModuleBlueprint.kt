@@ -22,8 +22,11 @@ data class AndroidModuleBlueprint(val index: Int,
     val resDirPath = mainPath.joinPath("res")
     val codePath = mainPath.joinPath("java")
     val packagePath = codePath.joinPaths(packageName.split("."))
-    val stringNames = (0..numOfStrings).map { "${name}string$it" }
+
 
     val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
             kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, listOf())
+
+    val stringNames = (0..numOfStrings).map { "${name}string$it" }
+    val imageNames = (0 until numOfImages).map { "image$it" }
 }

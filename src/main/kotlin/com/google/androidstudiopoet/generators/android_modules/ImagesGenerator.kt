@@ -27,24 +27,19 @@ class ImagesGenerator(val fileWriter: FileWriter) {
     /**
      * generates image resources by blueprint, returns list of image names to refer later.
      */
-    fun generate(blueprint: AndroidModuleBlueprint): List<String> {
-
-        val result: ArrayList<String> = ArrayList()
+    fun generate(blueprint: AndroidModuleBlueprint) {
 
         val imagesDir = blueprint.resDirPath.joinPath("drawable")
+
         fileWriter.mkdir(imagesDir)
 
-        for (i in 0 until blueprint.numOfImages) {
+        blueprint.imageNames.forEach { imageName ->
             val image = generateRandomImage()
-            val imageName = "image$i"
 
             ImageIO.write(image,
                     "png",
-                    File(imagesDir,imageName + ".png"))
-
-            result.add(imageName)
+                    File(imagesDir, imageName + ".png"))
         }
-        return result
     }
 
     private fun generateRandomImage(): BufferedImage {

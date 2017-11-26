@@ -9,17 +9,17 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
     /**
      * generates layout resources by blueprint and other resources, returns list of layout names to refer later.
      */
-    fun generate(blueprint: AndroidModuleBlueprint,
-                 imageResources: List<String>): List<String> {
+    fun generate(blueprint: AndroidModuleBlueprint): List<String> {
 
         var result: ArrayList<String> = ArrayList()
 
         val layoutsDir = blueprint.resDirPath.joinPath("layout")
         fileWriter.mkdir(layoutsDir)
+        val imageResources = blueprint.imageNames
 
         for (i in 0 until blueprint.numOfImages) {
 
-            var layoutText = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+            val layoutText = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                     "<android.support.constraint.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
                     "    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n" +
                     "    xmlns:tools=\"http://schemas.android.com/tools\"\n" +
@@ -41,7 +41,7 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
                     "         android:src=\"@drawable/" + imageResources[i] + "\"\n"+
             "         />\n" +
                     "</android.support.constraint.ConstraintLayout>"
-            var fileName = "activity_main$i.xml"
+            val fileName = "activity_main$i.xml"
             fileWriter.writeToFile(layoutText, layoutsDir.joinPath(fileName))
             result.add("activity_main$i")
         }
