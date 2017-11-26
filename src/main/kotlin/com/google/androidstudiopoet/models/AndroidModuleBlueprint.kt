@@ -33,4 +33,6 @@ data class AndroidModuleBlueprint(val index: Int,
     //TODO layouts shouldn't depend on numOfImages
     val layoutNames = (0 until numOfImages).map { "activity_main$it" }
 
+    val activityNames = 0.until(numOfActivities).map { "Activity$it" }
+
 }

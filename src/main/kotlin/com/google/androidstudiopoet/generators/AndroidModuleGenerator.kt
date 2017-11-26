@@ -31,8 +31,8 @@ class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourc
         layoutResourcesGenerator.generate(blueprint)
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
         val methodsToCall: List<String> = listOf()
-        val activities = activityGenerator.generate(blueprint, methodsToCall)
-        manifestGenerator.generate(blueprint, activities)
+        activityGenerator.generate(blueprint, methodsToCall)
+        manifestGenerator.generate(blueprint)
     }
 
     private fun generateMainFolders(blueprint: AndroidModuleBlueprint) {

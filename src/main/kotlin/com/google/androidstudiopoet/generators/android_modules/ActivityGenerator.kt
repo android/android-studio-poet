@@ -10,8 +10,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
     /**
      * generates activity classes by blueprint, list of layouts and methods to call.
      */
-    fun generate(blueprint: AndroidModuleBlueprint,
-                 methodsToCall: List<String>): ActivityGenerationResult {
+    fun generate(blueprint: AndroidModuleBlueprint, methodsToCall: List<String>) {
 
         // generate activities
         var index = 0
@@ -19,44 +18,38 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         File(blueprint.packagePath).mkdirs()
 
         while (index < blueprint.numOfActivities) {
-            generateClass(index, blueprint.layoutNames[index], blueprint.packagePath,  blueprint.packageName)
+            generateClass(blueprint.activityNames[index], blueprint.layoutNames[index], blueprint.packagePath, blueprint.packageName)
             index++
         }
-
-        // for manifest
-
-        return ActivityGenerationResult(0.until(blueprint.numOfActivities).map { "Activity$it" })
     }
 
-    private fun generateClass(activityIndex: Int, layout: String, where: String, packageName: String) {
-
-        val className = "Activity" + activityIndex
+    private fun generateClass(className: String, layout: String, where: String, packageName: String) {
 
         // TODO add methods
         // TODO move to java poet
         val classText =
                 "package $packageName;\n" +
-                "import android.app.Activity;\n" +
-                "import android.os.Bundle;\n" +
-                "import $packageName.R;\n" +
-                "\n" +
-                "\n" +
-                "public class " + className + " extends Activity {\n" +
-                "    public $className() {\n" +
-                "    }\n" +
-                "\n" +
-                "    /**\n" +
-                "     * Called with the activity is first created.\n" +
-                "     */\n" +
-                "    @Override\n" +
-                "    public void onCreate(Bundle savedInstanceState) {\n" +
-                "        super.onCreate(savedInstanceState);\n" +
-                "\n" +
-                "        // Set the layout for this activity.  You can find it\n" +
-                "        // in res/layout/hello_activity.xml\n" +
-                "        setContentView(R.layout." + layout + ");\n" +
-                "    }\n" +
-                "}\n"
+                        "import android.app.Activity;\n" +
+                        "import android.os.Bundle;\n" +
+                        "import $packageName.R;\n" +
+                        "\n" +
+                        "\n" +
+                        "public class " + className + " extends Activity {\n" +
+                        "    public $className() {\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    /**\n" +
+                        "     * Called with the activity is first created.\n" +
+                        "     */\n" +
+                        "    @Override\n" +
+                        "    public void onCreate(Bundle savedInstanceState) {\n" +
+                        "        super.onCreate(savedInstanceState);\n" +
+                        "\n" +
+                        "        // Set the layout for this activity.  You can find it\n" +
+                        "        // in res/layout/hello_activity.xml\n" +
+                        "        setContentView(R.layout." + layout + ");\n" +
+                        "    }\n" +
+                        "}\n"
 
         println("$where/$className.java")
 
@@ -64,6 +57,6 @@ class ActivityGenerator(var fileWriter: FileWriter) {
 
     }
 
-    data class ActivityGenerationResult(val activityNames: List<String>): GenerationResult
+    data class ActivityGenerationResult(val activityNames: List<String>) : GenerationResult
 }
 
