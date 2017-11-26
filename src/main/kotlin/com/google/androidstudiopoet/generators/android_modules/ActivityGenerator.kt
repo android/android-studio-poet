@@ -10,7 +10,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
     /**
      * generates activity classes by blueprint, list of layouts and methods to call.
      */
-    fun generate(blueprint: AndroidModuleBlueprint, layouts: List<String>,
+    fun generate(blueprint: AndroidModuleBlueprint,
                  methodsToCall: List<String>): ActivityGenerationResult {
 
         // generate activities
@@ -19,7 +19,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         File(blueprint.packagePath).mkdirs()
 
         while (index < blueprint.numOfActivities) {
-            generateClass(index, layouts[index], blueprint.packagePath,  blueprint.packageName)
+            generateClass(index, blueprint.layoutNames[index], blueprint.packagePath,  blueprint.packageName)
             index++
         }
 

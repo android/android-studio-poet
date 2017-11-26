@@ -28,10 +28,10 @@ class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourc
         stringResourcesGenerator.generate(blueprint)
 
         imageResourcesGenerator.generate(blueprint)
-        val layouts = layoutResourcesGenerator.generate(blueprint)
+        layoutResourcesGenerator.generate(blueprint)
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
         val methodsToCall: List<String> = listOf()
-        val activities = activityGenerator.generate(blueprint, layouts, methodsToCall)
+        val activities = activityGenerator.generate(blueprint, methodsToCall)
         manifestGenerator.generate(blueprint, activities)
     }
 
