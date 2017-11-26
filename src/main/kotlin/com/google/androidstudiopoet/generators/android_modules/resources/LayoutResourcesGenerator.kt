@@ -1,6 +1,6 @@
-package com.google.androidstudiopoet.generators.android_modules
+package com.google.androidstudiopoet.generators.android_modules.resources
 
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.models.ResourcesBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
@@ -9,7 +9,7 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
     /**
      * generates layout resources by blueprint and other resources, returns list of layout names to refer later.
      */
-    fun generate(blueprint: AndroidModuleBlueprint) {
+    fun generate(blueprint: ResourcesBlueprint) {
 
         val layoutsDir = blueprint.resDirPath.joinPath("layout")
         fileWriter.mkdir(layoutsDir)

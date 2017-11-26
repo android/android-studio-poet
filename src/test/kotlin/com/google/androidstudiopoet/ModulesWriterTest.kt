@@ -8,7 +8,7 @@ import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
 import com.google.androidstudiopoet.test_utils.mock
-import com.google.androidstudiopoet.generators.AndroidModuleGenerator
+import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.writers.SourceModuleWriter
 

@@ -27,12 +27,9 @@ data class AndroidModuleBlueprint(val index: Int,
     val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
             kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, listOf())
 
-    val stringNames = (0..numOfStrings).map { "${name}string$it" }
-    val imageNames = (0 until numOfImages).map { "image$it" }
+    val resourcesBlueprint = ResourcesBlueprint(name, resDirPath, numOfActivities, numOfStrings, numOfImages)
 
-    //TODO layouts shouldn't depend on numOfImages
-    val layoutNames = (0 until numOfImages).map { "activity_main$it" }
-
-    val activityNames = 0.until(numOfActivities).map { "Activity$it" }
+    val layoutNames = resourcesBlueprint.layoutNames
+    val activityNames = resourcesBlueprint.activityNames
 
 }

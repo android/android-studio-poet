@@ -13,9 +13,9 @@
  */
 
 
-package com.google.androidstudiopoet.generators.android_modules
+package com.google.androidstudiopoet.generators.android_modules.resources
 
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.models.ResourcesBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.utils.joinPath
 import java.awt.image.BufferedImage
@@ -27,7 +27,7 @@ class ImagesGenerator(val fileWriter: FileWriter) {
     /**
      * generates image resources by blueprint, returns list of image names to refer later.
      */
-    fun generate(blueprint: AndroidModuleBlueprint) {
+    fun generate(blueprint: ResourcesBlueprint) {
 
         val imagesDir = blueprint.resDirPath.joinPath("drawable")
 

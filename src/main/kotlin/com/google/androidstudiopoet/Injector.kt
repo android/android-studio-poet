@@ -7,7 +7,11 @@ import com.google.androidstudiopoet.generators.packages.JavaGenerator
 import com.google.androidstudiopoet.generators.packages.KotlinGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
-import com.google.androidstudiopoet.generators.AndroidModuleGenerator
+import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
+import com.google.androidstudiopoet.generators.android_modules.resources.ImagesGenerator
+import com.google.androidstudiopoet.generators.android_modules.resources.LayoutResourcesGenerator
+import com.google.androidstudiopoet.generators.android_modules.resources.ResourcesGenerator
+import com.google.androidstudiopoet.generators.android_modules.resources.StringResourcesGenerator
 import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.writers.SourceModuleWriter
 
@@ -19,9 +23,10 @@ object Injector {
     private val buildGradleGenerator = BuildGradleGenerator()
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator()
-    private val stringResourcesGenerator: StringResourcesGenerator = StringResourcesGenerator(fileWriter)
-    private val imageResourcesGenerator: ImagesGenerator = ImagesGenerator(fileWriter)
-    private val layoutResourcesGenerator: LayoutResourcesGenerator = LayoutResourcesGenerator(fileWriter)
+    private val stringResourcesGenerator = StringResourcesGenerator(fileWriter)
+    private val imageResourcesGenerator = ImagesGenerator(fileWriter)
+    private val layoutResourcesGenerator = LayoutResourcesGenerator(fileWriter)
+    private val resourcesGenerator = ResourcesGenerator(stringResourcesGenerator, imageResourcesGenerator, layoutResourcesGenerator)
     private val javaGenerator: JavaGenerator = JavaGenerator(fileWriter)
     private val kotlinGenerator: KotlinGenerator = KotlinGenerator(fileWriter)
     private val activityGenerator: ActivityGenerator = ActivityGenerator(fileWriter)
@@ -34,6 +39,7 @@ object Injector {
                     stringResourcesGenerator,
                     imageResourcesGenerator,
                     layoutResourcesGenerator,
+                    resourcesGenerator,
                     packagesGenerator,
                     activityGenerator,
                     manifestGenerator, proguardGenerator,

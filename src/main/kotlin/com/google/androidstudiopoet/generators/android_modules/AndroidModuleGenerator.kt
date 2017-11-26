@@ -1,6 +1,10 @@
-package com.google.androidstudiopoet.generators
+package com.google.androidstudiopoet.generators.android_modules
 
-import com.google.androidstudiopoet.generators.android_modules.*
+import com.google.androidstudiopoet.generators.PackagesGenerator
+import com.google.androidstudiopoet.generators.android_modules.resources.ImagesGenerator
+import com.google.androidstudiopoet.generators.android_modules.resources.LayoutResourcesGenerator
+import com.google.androidstudiopoet.generators.android_modules.resources.ResourcesGenerator
+import com.google.androidstudiopoet.generators.android_modules.resources.StringResourcesGenerator
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
@@ -8,6 +12,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourcesGenerator,
                              private val imageResourcesGenerator: ImagesGenerator,
                              private val layoutResourcesGenerator: LayoutResourcesGenerator,
+                             private val resourcesGenerator: ResourcesGenerator,
                              private val packagesGenerator: PackagesGenerator,
                              private val activityGenerator: ActivityGenerator,
                              private val manifestGenerator: ManifestGenerator,
@@ -24,11 +29,7 @@ class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourc
 
         proguardGenerator.generate(blueprint)
         buildGradleGenerator.generate(blueprint)
-
-        stringResourcesGenerator.generate(blueprint)
-
-        imageResourcesGenerator.generate(blueprint)
-        layoutResourcesGenerator.generate(blueprint)
+        resourcesGenerator.generate(blueprint.resourcesBlueprint)
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
         val methodsToCall: List<String> = listOf()
         activityGenerator.generate(blueprint, methodsToCall)
