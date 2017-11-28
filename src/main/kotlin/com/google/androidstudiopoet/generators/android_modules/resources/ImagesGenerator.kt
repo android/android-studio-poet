@@ -13,9 +13,9 @@
  */
 
 
-package com.google.androidstudiopoet.generators.android_modules
+package com.google.androidstudiopoet.generators.android_modules.resources
 
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.models.ResourcesBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.utils.joinPath
 import java.awt.image.BufferedImage
@@ -27,24 +27,19 @@ class ImagesGenerator(val fileWriter: FileWriter) {
     /**
      * generates image resources by blueprint, returns list of image names to refer later.
      */
-    fun generate(blueprint: AndroidModuleBlueprint): List<String> {
-
-        val result: ArrayList<String> = ArrayList()
+    fun generate(blueprint: ResourcesBlueprint) {
 
         val imagesDir = blueprint.resDirPath.joinPath("drawable")
+
         fileWriter.mkdir(imagesDir)
 
-        for (i in 0 until blueprint.numOfImages) {
+        blueprint.imageNames.forEach { imageName ->
             val image = generateRandomImage()
-            val imageName = "image$i"
 
             ImageIO.write(image,
                     "png",
-                    File(imagesDir,imageName + ".png"))
-
-            result.add(imageName)
+                    File(imagesDir, imageName + ".png"))
         }
-        return result
     }
 
     private fun generateRandomImage(): BufferedImage {

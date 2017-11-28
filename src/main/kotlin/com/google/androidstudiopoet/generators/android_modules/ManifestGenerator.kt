@@ -10,8 +10,8 @@ class ManifestGenerator(private val fileWriter: FileWriter) {
     /**
      * generates manifest by blueprint and list of activity names
      */
-    fun generate(blueprint: AndroidModuleBlueprint, activityGenerationResult: ActivityGenerator.ActivityGenerationResult) {
-        val manifestContent = generateManifestTag(blueprint.packageName, generateApplicationTag(activityGenerationResult, blueprint.hasLaunchActivity))
+    fun generate(blueprint: AndroidModuleBlueprint) {
+        val manifestContent = generateManifestTag(blueprint.packageName, generateApplicationTag(blueprint.activityNames, blueprint.hasLaunchActivity))
         fileWriter.writeToFile(manifestContent, blueprint.mainPath.joinPath("AndroidManifest.xml"))
     }
 
@@ -27,8 +27,8 @@ class ManifestGenerator(private val fileWriter: FileWriter) {
                 "</manifest>"
     }
 
-    private fun generateApplicationTag(activityGenerationResult: ActivityGenerator.ActivityGenerationResult, hasLaunchActivity: Boolean): String {
-        return "<application>\n ${generateActivityTags(activityGenerationResult.activityNames, hasLaunchActivity)} </application>\n"
+    private fun generateApplicationTag(activityNames: List<String>, hasLaunchActivity: Boolean): String {
+        return "<application>\n ${generateActivityTags(activityNames, hasLaunchActivity)} </application>\n"
     }
 
     private fun generateActivityTags(activityNames: List<String>, hasLaunchActivity: Boolean): String {

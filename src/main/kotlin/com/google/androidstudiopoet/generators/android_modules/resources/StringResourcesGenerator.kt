@@ -1,19 +1,19 @@
-package com.google.androidstudiopoet.generators.android_modules
+package com.google.androidstudiopoet.generators.android_modules.resources
 
 import com.google.androidstudiopoet.GenerationResult
 import com.google.androidstudiopoet.Generator
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.models.ResourcesBlueprint
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
-class StringResourcesGenerator(private val fileWriter: FileWriter): Generator<AndroidModuleBlueprint, StringResourceGenerationResult> {
+class StringResourcesGenerator(private val fileWriter: FileWriter): Generator<ResourcesBlueprint, StringResourceGenerationResult> {
 
     /**
      * generates string resources by blueprint, returns list of string names to refer later.
      * Precondition: resources package is generated
      */
-    override fun generate(blueprint: AndroidModuleBlueprint): StringResourceGenerationResult {
+    override fun generate(blueprint: ResourcesBlueprint): StringResourceGenerationResult {
         val valuesDirPath = blueprint.resDirPath.joinPath("values")
         fileWriter.mkdir(valuesDirPath)
         val stringsFileContent = getFileContent(blueprint.stringNames)

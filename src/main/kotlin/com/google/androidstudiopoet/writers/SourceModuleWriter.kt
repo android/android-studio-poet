@@ -15,7 +15,7 @@
 package com.google.androidstudiopoet.writers
 
 import com.google.androidstudiopoet.DependencyValidator
-import com.google.androidstudiopoet.generators.AndroidModuleGenerator
+import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.BuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
