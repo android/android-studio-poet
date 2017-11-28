@@ -57,8 +57,10 @@ object ModuleBlueprintFactory {
 
         return AndroidModuleBlueprint(i,
                 config.numActivitiesPerAndroidModule!!.toInt(),
+                config.numActivitiesPerAndroidModule.toInt() + 2,
+                config.numActivitiesPerAndroidModule.toInt() + 5,
                 config.numActivitiesPerAndroidModule.toInt(),
-                config.numActivitiesPerAndroidModule.toInt(), projectRoot, i == 0, moduleDependencies, config.productFlavors,
+                projectRoot, i == 0, moduleDependencies, config.productFlavors,
                 javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
     }
 }

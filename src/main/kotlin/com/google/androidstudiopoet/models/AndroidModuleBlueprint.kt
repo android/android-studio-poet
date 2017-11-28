@@ -6,8 +6,9 @@ import com.google.androidstudiopoet.utils.joinPaths
 
 data class AndroidModuleBlueprint(val index: Int,
                                   val numOfActivities: Int,
-                                  val numOfStrings: Int,
-                                  val numOfImages: Int,
+                                  private val numOfStrings: Int,
+                                  private val numOfImages: Int,
+                                  val numOfLayouts: Int,
                                   private val projectRoot: String,
                                   val hasLaunchActivity: Boolean,
                                   val dependencies: List<ModuleDependency>,
@@ -27,9 +28,9 @@ data class AndroidModuleBlueprint(val index: Int,
     val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
             kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, listOf())
 
-    val resourcesBlueprint = ResourcesBlueprint(name, resDirPath, numOfActivities, numOfStrings, numOfImages)
+    val resourcesBlueprint = ResourcesBlueprint(name, resDirPath, numOfStrings, numOfImages, numOfLayouts)
 
     val layoutNames = resourcesBlueprint.layoutNames
-    val activityNames = resourcesBlueprint.activityNames
+    val activityNames = 0.until(numOfActivities).map { "Activity$it" }
 
 }

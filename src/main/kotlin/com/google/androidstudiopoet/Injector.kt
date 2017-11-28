@@ -26,7 +26,8 @@ object Injector {
     private val stringResourcesGenerator = StringResourcesGenerator(fileWriter)
     private val imageResourcesGenerator = ImagesGenerator(fileWriter)
     private val layoutResourcesGenerator = LayoutResourcesGenerator(fileWriter)
-    private val resourcesGenerator = ResourcesGenerator(stringResourcesGenerator, imageResourcesGenerator, layoutResourcesGenerator)
+    private val resourcesGenerator = ResourcesGenerator(stringResourcesGenerator, imageResourcesGenerator,
+            layoutResourcesGenerator, fileWriter)
     private val javaGenerator: JavaGenerator = JavaGenerator(fileWriter)
     private val kotlinGenerator: KotlinGenerator = KotlinGenerator(fileWriter)
     private val activityGenerator: ActivityGenerator = ActivityGenerator(fileWriter)

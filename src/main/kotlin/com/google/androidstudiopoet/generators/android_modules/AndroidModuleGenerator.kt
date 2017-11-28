@@ -24,7 +24,6 @@ class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourc
      *  Generate android module, including module folder
      */
     fun generate(blueprint: AndroidModuleBlueprint) {
-
         generateMainFolders(blueprint)
 
         proguardGenerator.generate(blueprint)
