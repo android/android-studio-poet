@@ -10,6 +10,7 @@ data class AndroidModuleBlueprint(val index: Int,
                                   val numOfImages: Int,
                                   val projectRoot: String,
                                   val hasLaunchActivity: Boolean,
+                                  val useKotlin: Boolean,
                                   val dependencies: List<String>,
                                   val productFlavors: List<Int>?): Blueprint {
     val name = "androidAppModule" + index

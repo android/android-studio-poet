@@ -18,8 +18,8 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val gradleText = """
             apply plugin: 'com.android.$androidPlugin'
-            apply plugin: 'kotlin-android'
-            apply plugin: 'kotlin-android-extensions'
+            ${if (blueprint.useKotlin) "apply plugin: 'kotlin-android'" else ""}
+            ${if (blueprint.useKotlin) "apply plugin: 'kotlin-android-extensions'" else ""}
             android {
                 compileSdkVersion 26
 
@@ -51,7 +51,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
             dependencies {
                 implementation fileTree(dir: 'libs', include: ['*.jar'])
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${'$'}kotlin_version"
+                ${if (blueprint.useKotlin) "implementation \"org.jetbrains.kotlin:kotlin-stdlib-jre7:${'$'}kotlin_version\"" else ""}
                 implementation 'com.android.support:appcompat-v7:26.1.0'
                 implementation 'com.android.support.constraint:constraint-layout:1.0.2'
                 testImplementation 'junit:junit:4.12'
@@ -65,7 +65,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
         fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))
     }
 
-    private fun createFlavorsSection(productFlavors : List<Int>?): String {
+    private fun createFlavorsSection(productFlavors: List<Int>?): String {
         if (productFlavors == null || productFlavors.size == 0) {
             return ""
         }

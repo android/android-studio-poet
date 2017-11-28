@@ -19,39 +19,52 @@ annotation class Fancy
 @Fancy
 object BuildGradle {
 
-    fun print(dependencies: String) = "" +
+    fun print(dependencies: String, useKotlin: Boolean) = "" +
             "apply plugin: 'java-library'\n" +
-            "apply plugin: 'kotlin'\n" +
+            (if (useKotlin)
+                "apply plugin: 'kotlin'\n"
+            else
+                "") +
             "\n" +
             "dependencies {\n" +
             "    implementation fileTree(dir: 'libs', include: ['*.jar'])\n" +
-            "    compile \"org.jetbrains.kotlin:kotlin-stdlib-jre8:\$kotlin_version\"\n" +
+            (if (useKotlin)
+                "    compile \"org.jetbrains.kotlin:kotlin-stdlib-jre8:\$kotlin_version\"\n"
+            else
+                "") +
             dependencies +
             "}\n" +
             "\n" +
             "sourceCompatibility = \"1.8\"\n" +
             "targetCompatibility = \"1.8\"\n" +
             "buildscript {\n" +
-            "    ext.kotlin_version = '1.1.51'\n" +
+            (if (useKotlin)
+                "    ext.kotlin_version = '1.1.51'\n"
+            else "")+
             "    repositories {\n" +
             "        mavenCentral()\n" +
             "    }\n" +
             "    dependencies {\n" +
-            "        classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:\$kotlin_version\"\n" +
+            (if (useKotlin)
+                "        classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:\$kotlin_version\"\n"
+            else
+                "") +
             "    }\n" +
             "}\n" +
             "repositories {\n" +
             "    mavenCentral()\n" +
             "}\n" +
-            "compileKotlin {\n" +
-            "    kotlinOptions {\n" +
-            "        jvmTarget = \"1.8\"\n" +
-            "    }\n" +
-            "}\n" +
-            "compileTestKotlin {\n" +
-            "    kotlinOptions {\n" +
-            "        jvmTarget = \"1.8\"\n" +
-            "    }\n" +
-            "}\n"
-
+            if (useKotlin)
+                "compileKotlin {\n" +
+                "    kotlinOptions {\n" +
+                "        jvmTarget = \"1.8\"\n" +
+                "    }\n" +
+                "}\n" +
+                "compileTestKotlin {\n" +
+                "    kotlinOptions {\n" +
+                "        jvmTarget = \"1.8\"\n" +
+                "    }\n" +
+                "}\n"
+            else
+                ""
 }
