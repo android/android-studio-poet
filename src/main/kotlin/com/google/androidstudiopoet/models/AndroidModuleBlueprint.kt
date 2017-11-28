@@ -24,13 +24,21 @@ data class AndroidModuleBlueprint(val index: Int,
     val codePath = mainPath.joinPath("java")
     val packagePath = codePath.joinPaths(packageName.split("."))
 
+    private val methodsToCallWithIn = dependencies.map { it.methodToCall }
 
     val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-            kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, listOf())
+            kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, methodsToCallWithIn)
 
-    val resourcesBlueprint = ResourcesBlueprint(name, resDirPath, numOfStrings, numOfImages, numOfLayouts)
+    private val resourcesToReferWithin = dependencies
+            .filterIsInstance<AndroidModuleDependency>()
+            .map { it.resourcesToRefer }
+            .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer ->  resourcesToRefer.combine(acc)}
+
+    val resourcesBlueprint = ResourcesBlueprint(name, resDirPath, numOfStrings, numOfImages, numOfLayouts, resourcesToReferWithin)
 
     val layoutNames = resourcesBlueprint.layoutNames
     val activityNames = 0.until(numOfActivities).map { "Activity$it" }
 
+    var methodToCallFromOutside = packagesBlueprint.methodToCallFromOutside
+    var resourcesToReferFromOutside = resourcesBlueprint.resourcesToReferFromOutside
 }

@@ -7,24 +7,25 @@ data class ResourcesBlueprint(private val moduleName: String,
                               val resDirPath: String,
                               private val numOfStrings: Int,
                               val numOfImages: Int,
-                              private val numOfLayouts: Int) : Blueprint {
+                              private val numOfLayouts: Int,
+                              private val resourcesToReferWithin: ResourcesToRefer) : Blueprint {
     val stringNames = (0..numOfStrings).map { "${moduleName}string$it" }
-    val imageNames = (0 until numOfImages).map { "image$it" }
+    val imageNames = (0 until numOfImages).map { "${moduleName.toLowerCase()}image$it" }
 
-    //TODO layouts shouldn't depend on numOfImages
-    val layoutNames = (0 until numOfLayouts).map { "activity_main$it" }
+    val layoutNames = (0 until numOfLayouts).map { "${moduleName.toLowerCase()}activity_main$it" }
 
     val layoutsDir = resDirPath.joinPath("layout")
 
-    private val stringsPerLayout = stringNames.splitPerLayout(numOfLayouts)
-    private val imagesPerLayout = imageNames.splitPerLayout(numOfLayouts)
+    private val stringsPerLayout = (stringNames + resourcesToReferWithin.strings).splitPerLayout(numOfLayouts)
+    private val imagesPerLayout = (imageNames + resourcesToReferWithin.images).splitPerLayout(numOfLayouts)
 
     val layoutBlueprints = layoutNames.mapIndexed { index, layoutName ->
         LayoutBlueprint(layoutsDir.joinPath(layoutName) + ".xml",
                 stringsPerLayout.getOrElse(index, { listOf() }),
                 imagesPerLayout.getOrElse(index, { listOf() }),
-                listOf()) }
+                if (index == 0) resourcesToReferWithin.layouts else listOf()) }
 
+    var resourcesToReferFromOutside = ResourcesToRefer(listOf(stringNames.last()), listOf(imageNames.last()), listOf(layoutNames.last()))
 }
 
 fun List<String>.splitPerLayout(limit: Int) =
