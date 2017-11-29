@@ -1,7 +1,7 @@
 package com.google.androidstudiopoet.models
 
-data class ModuleDependency(val name: String, val methodToCall: MethodToCall) {
+open class ModuleDependency(val name: String, val methodToCall: MethodToCall)
 
-    override fun toString():String = name
-}
+class AndroidModuleDependency(name: String, methodToCall: MethodToCall, val resourcesToRefer: ResourcesToRefer)
+    : ModuleDependency(name, methodToCall)
 
