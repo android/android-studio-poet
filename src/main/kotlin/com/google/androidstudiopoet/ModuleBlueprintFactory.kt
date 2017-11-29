@@ -7,12 +7,12 @@ import com.google.androidstudiopoet.models.ModuleBlueprint
 
 object ModuleBlueprintFactory {
     fun create(index: Int, config: ConfigPOJO, projectRoot: String): ModuleBlueprint {
-        val dependencies = config.dependencies
-                ?.filter { it.from == index}
-                ?.map { it.to }
+        val dependencies = config.resolvedDependencies
+                .filter { it.from == index}
+                .map { it.to }
 
-        val dependenciesNames = dependencies?.map { getModuleNameByIndex(it) } ?: listOf()
-        val methodsToCallWithinModule = dependencies?.map { getMethodToCallForDependency(it, config, projectRoot) } ?: listOf()
+        val dependenciesNames = dependencies.map { getModuleNameByIndex(it) }
+        val methodsToCallWithinModule = dependencies.map { getMethodToCallForDependency(it, config, projectRoot) }
 
         return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, dependenciesNames, methodsToCallWithinModule,
                 config)
