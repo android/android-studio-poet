@@ -13,13 +13,13 @@ object ModuleBlueprintFactory {
         val kotlinClassCount = config.kotlinClassCount!!.toInt()
         val kotlinMethodsPerClass = config.kotlinMethodsPerClass
 
-        val moduleDependencies = config.dependencies
-                ?.filter { it.from == index }
-                ?.map { it.to }
-                ?.map {
+        val moduleDependencies = config.resolvedDependencies
+                .filter { it.from == index }
+                .map { it.to }
+                .map {
                     getModuleDependency(it, projectRoot, javaPackageCount, javaClassCount,
                             javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, config.useKotlin)
-                } ?: listOf()
+                }
 
         return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, config.useKotlin, moduleDependencies, javaPackageCount,
                 javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)

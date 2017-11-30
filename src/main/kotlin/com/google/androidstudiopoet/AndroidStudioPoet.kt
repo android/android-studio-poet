@@ -76,9 +76,6 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
 
     }
 
-
-
-
     init {
 
         val jsonText = fromFileNameOrDefault(filename)
@@ -142,13 +139,12 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
     }
 
 
-
     private fun configFrom(json: String): ConfigPOJO? {
 
         val gson = Gson()
 
         try {
-             return gson.fromJson(json, ConfigPOJO::class.java)
+            return gson.fromJson(json, ConfigPOJO::class.java)
         } catch (js: JsonSyntaxException) {
             System.err.println("Cannot parse json: $js")
             return null

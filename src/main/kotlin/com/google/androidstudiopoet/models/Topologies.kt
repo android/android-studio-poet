@@ -8,11 +8,11 @@ import java.util.*
 enum class Topologies {
 
     FULL {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<Dependency> {
-            val result = mutableListOf<Dependency>()
+        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<DependencyConfig> {
+            val result = mutableListOf<DependencyConfig>()
             for (from in 0 until configPOJO.numModules) {
                 for (to in from + 1 until configPOJO.numModules) {
-                    result.add(Dependency(from, to))
+                    result.add(DependencyConfig(from, to))
                 }
             }
             return result
@@ -20,16 +20,16 @@ enum class Topologies {
     },
 
     RANDOM {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<Dependency> {
+        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<DependencyConfig> {
             val seedInput = parameters["seed"]
             val seed: Long = seedInput?.toLong() ?: 0
 
             Random().setSeed(seed)
-            val result = mutableListOf<Dependency>()
+            val result = mutableListOf<DependencyConfig>()
             for (from in 0 until configPOJO.numModules) {
                 for (to in from + 1 until configPOJO.numModules) {
                     if (Random().nextBoolean()) {
-                        result.add(Dependency(from, to))
+                        result.add(DependencyConfig(from, to))
                     }
                 }
             }
@@ -38,7 +38,7 @@ enum class Topologies {
     },
 
     LINEAR {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<Dependency> = (1 until configPOJO.numModules).map { Dependency(it - 1, it) }
+        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<DependencyConfig> = (1 until configPOJO.numModules).map { DependencyConfig(it - 1, it) }
     }
     ;
 
@@ -46,5 +46,5 @@ enum class Topologies {
      * Function that should add dependencies to configPOJO based on the given parameters and the
      * content of configPOJO
      */
-    abstract fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<Dependency>
+    abstract fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<DependencyConfig>
 }
