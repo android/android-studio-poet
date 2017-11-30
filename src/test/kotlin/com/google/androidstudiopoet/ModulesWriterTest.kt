@@ -7,6 +7,7 @@ import com.google.androidstudiopoet.generators.BuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
+import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.test_utils.mock
 import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.writers.FileWriter
@@ -19,21 +20,22 @@ class ModulesWriterTest {
     val gradleSettingsGenerator: GradleSettingsGenerator = mock()
     val dependencyValidator: DependencyValidator = mock()
     val moduleBlueprinFactory: ModuleBlueprintFactory = mock()
+    val projectBlueprint: ProjectBlueprint = mock()
     val buildGradleGenerator: BuildGradleGenerator = mock()
     val androidModuleGenerator: AndroidModuleGenerator = mock()
     val packagesGenerator: PackagesGenerator = mock()
     val modulesWriter = SourceModuleWriter(dependencyValidator,
-            moduleBlueprinFactory,
             buildGradleGenerator,
             gradleSettingsGenerator,
             projectBuildGradleGenerator,
             androidModuleGenerator,
             packagesGenerator,
-            fileWriter)
+            fileWriter
+    )
 
     @Test(expected = IllegalStateException::class)
     fun `generate throws ISE when input is invalid`() {
         whenever(dependencyValidator.isValid(any())).thenReturn(false)
-        modulesWriter.generate("{}")
+        modulesWriter.generate(projectBlueprint)
     }
 }

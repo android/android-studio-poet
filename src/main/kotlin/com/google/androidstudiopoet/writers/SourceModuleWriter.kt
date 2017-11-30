@@ -46,8 +46,8 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
         fileWriter.delete(projectBlueprint.projectRoot)
         fileWriter.mkdir(projectBlueprint.projectRoot)
 
-        GradlewGenerator.generateGradleW(projectBlueprint.projectRoot)
-        projectBuildGradleGenerator.generate(projectBlueprint.projectRoot, projectBlueprint.configPOJO.useKotlin)
+        GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint.configPOJO)
+        projectBuildGradleGenerator.generate(projectBlueprint.projectRoot, projectBlueprint.configPOJO)
         gradleSettingsGenerator.generate(projectBlueprint.configPOJO.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
 
         val allJobs = mutableListOf<Job>()

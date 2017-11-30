@@ -38,9 +38,6 @@ object BuildGradle {
             "sourceCompatibility = \"1.8\"\n" +
             "targetCompatibility = \"1.8\"\n" +
             "buildscript {\n" +
-            (if (useKotlin)
-                "    ext.kotlin_version = '1.1.51'\n"
-            else "")+
             "    repositories {\n" +
             "        mavenCentral()\n" +
             "    }\n" +

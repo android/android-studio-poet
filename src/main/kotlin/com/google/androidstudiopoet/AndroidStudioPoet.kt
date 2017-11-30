@@ -28,86 +28,7 @@ import java.io.File
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, config: Array<String>) : JFrame() {
-
-    private val contentPane: JPanel
-    private val textArea: JTextArea
-
-    @Language("JSON") private val SAMPLE_CONFIG = "{\n" +
-            "  \"projectName\": \"genny\",\n" +
-            "  \"root\": \"./modules/\",\n" +
-            "  \"numModules\": \"5\",\n" +
-            "  \"allMethods\": \"4000\",\n" +
-            "  \"javaPackageCount\": \"20\",\n" +
-            "  \"javaClassCount\": \"8\",\n" +
-            "  \"javaMethodCount\": \"2000\",\n" +
-            "  \"kotlinPackageCount\": \"20\",\n" +
-            "  \"kotlinClassCount\": \"8\",\n" +
-            "  \"androidModules\": \"2\",\n" +
-            "  \"numActivitiesPerAndroidModule\": \"8\",\n" +
-            "  \"productFlavors\": [1, 1, 1],\n" +
-            "  \"dependencies\": [{\"from\": 3, \"to\": 2},\n" +
-            "    {\"from\": 4, \"to\": 2}, {\"from\": 4, \"to\": 3}]\n" +
-            "}"
-
-    private val gson = Gson()
-
-    init {
-        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-
-        contentPane = JPanel()
-        contentPane.border = EmptyBorder(5, 5, 5, 5)
-        contentPane.layout = BorderLayout(0, 0)
-        setContentPane(contentPane)
-
-        val lblTextLineExample = JLabel("Android Studio Poet")
-        lblTextLineExample.horizontalAlignment = SwingConstants.CENTER
-        contentPane.add(lblTextLineExample, BorderLayout.NORTH)
-
-        textArea = JTextArea()
-
-        textArea.background = Color(46, 48, 50)
-        textArea.foreground = Color.CYAN
-        textArea.font = Font("Menlo", Font.PLAIN, 18)
-
-        textArea.text = generateConfigTextFromArgs(config)
-        textArea.caretPosition = textArea.text.length
-        textArea.caretColor = Color.YELLOW
-
-        val scrollPane = JScrollPane(textArea,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS)
-        textArea.rows = 30
-        textArea.columns = 50
-
-        contentPane.add(scrollPane, BorderLayout.CENTER)
-
-        val btnGenerate = JButton("Generate")
-        btnGenerate.addActionListener {
-            println(textArea.text)
-            val configPOJO = gson.fromJson(textArea.text, ConfigPOJO::class.java)
-            modulesWriter.generate(ProjectBlueprint(configPOJO))
-        }
-        contentPane.add(btnGenerate, BorderLayout.SOUTH)
-
-        pack()
-    }
-
-    private fun generateConfigTextFromArgs(args: Array<String>): String? {
-
-        if (!args.isEmpty()) {
-            return try {
-                var configFile = File(args[0])
-                var result: String = configFile.readText()
-                gson.fromJson(result, ConfigPOJO::class.java)
-                result
-            } catch (jss: JsonSyntaxException) {
-                SAMPLE_CONFIG
-            }
-        }
-
-        return SAMPLE_CONFIG
-    }
+class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename: String?) : JFrame() {
 
     companion object {
         @JvmStatic
@@ -115,12 +36,123 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, config: A
 
             EventQueue.invokeLater {
                 try {
-                    val frame = AndroidStudioPoet(Injector.modulesWriter, args)
+                    val frame = AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull())
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
+
+        @Language("JSON") const val SAMPLE_CONFIG = """
+{
+  "projectName": "genny",
+  "root": "./modules/",
+  "gradleVersion": "4.3.1",
+  "androidGradlePluginVersion": "3.0.1",
+  "kotlinVersion": "1.1.60",
+  "numModules": "5",
+  "allMethods": "4000",
+  "javaPackageCount": "20",
+  "javaClassCount": "8",
+  "javaMethodCount": "2000",
+  "kotlinPackageCount": "20",
+  "kotlinClassCount": "8",
+  "androidModules": "2",
+  "numActivitiesPerAndroidModule": "8",
+  "productFlavors": [
+      2, 3, 4
+   ],
+   "topologies": [
+      {"type": "random", "seed": "2"}
+   ],
+  "dependencies": [
+    {"from": 3, "to": 2},
+    {"from": 4, "to": 2},
+    {"from": 4, "to": 3}
+  ]
+}
+"""
+
     }
+
+
+
+
+    init {
+
+        val jsonText = fromFileNameOrDefault(filename)
+
+        val textArea = createTextArea(jsonText)
+        val scrollPane = JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS)
+
+        val btnGenerate = JButton("Generate").apply {
+            addActionListener {
+                println(textArea.text)
+                val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
+                modulesWriter.generate(ProjectBlueprint(config))
+            }
+        }
+
+        val contentPane = JPanel().apply {
+            border = EmptyBorder(5, 5, 5, 5)
+            layout = BorderLayout(0, 0)
+            add(createTitleLabel(), BorderLayout.NORTH)
+            add(scrollPane, BorderLayout.CENTER)
+            add(btnGenerate, BorderLayout.SOUTH)
+        }
+
+        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+
+        setContentPane(contentPane)
+
+        pack()
+    }
+
+
+    private fun createTitleLabel(): JLabel {
+        return JLabel("Android Studio Poet").apply {
+            horizontalAlignment = SwingConstants.CENTER
+        }
+    }
+
+    private fun createTextArea(jsonText: String): JTextArea {
+        return JTextArea().apply {
+            background = Color(46, 48, 50)
+            foreground = Color.CYAN
+            font = Font("Menlo", Font.PLAIN, 18)
+            text = jsonText
+            caretPosition = text.length
+            caretColor = Color.YELLOW
+            rows = 30
+            columns = 50
+        }
+    }
+
+    private fun fromFileNameOrDefault(filename: String?): String = when {
+        filename == null -> SAMPLE_CONFIG
+        !File(filename).canRead() -> SAMPLE_CONFIG
+        else -> File(filename).readText().let { json ->
+            if (configFrom(json) == null) {
+                SAMPLE_CONFIG
+            } else {
+                json
+            }
+        }
+    }
+
+
+
+    private fun configFrom(json: String): ConfigPOJO? {
+
+        val gson = Gson()
+
+        try {
+             return gson.fromJson(json, ConfigPOJO::class.java)
+        } catch (js: JsonSyntaxException) {
+            System.err.println("Cannot parse json: $js")
+            return null
+        }
+    }
+
 }
