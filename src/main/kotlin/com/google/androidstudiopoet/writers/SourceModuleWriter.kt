@@ -53,11 +53,11 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
         projectBlueprint.moduleBlueprints.forEach{ blueprint ->
             val job = launch {
                 writeModule(blueprint)
+                println("Done writing module ${blueprint.index}")
             }
             allJobs.add(job)
         }
-        for ((index, job) in allJobs.withIndex()) {
-            println("Done writing module " + index)
+        for (job in allJobs) {
             job.join()
         }
 
