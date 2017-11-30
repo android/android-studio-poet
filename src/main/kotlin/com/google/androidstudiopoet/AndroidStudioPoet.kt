@@ -27,6 +27,7 @@ import java.awt.Font
 import java.io.File
 import javax.swing.*
 import javax.swing.border.EmptyBorder
+import kotlin.system.measureTimeMillis
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename: String?) : JFrame() {
 
@@ -88,9 +89,12 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
 
         val btnGenerate = JButton("Generate").apply {
             addActionListener {
-                println(textArea.text)
-                val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
-                modulesWriter.generate(ProjectBlueprint(config))
+                val timeSpent = measureTimeMillis {
+                    println(textArea.text)
+                    val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
+                    modulesWriter.generate(ProjectBlueprint(config))
+                }
+                println("Finished in $timeSpent ms")
             }
         }
 
