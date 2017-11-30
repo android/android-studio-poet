@@ -46,6 +46,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, config: A
             "  \"androidModules\": \"2\",\n" +
             "  \"numActivitiesPerAndroidModule\": \"8\",\n" +
             "  \"productFlavors\": [2, 3, 4],\n" +
+            "  \"topologies\": [{\"type\": \"random\", \"seed\": \"2\"}],\n" +
             "  \"dependencies\": [{\"from\": 3, \"to\": 2},\n" +
             "    {\"from\": 4, \"to\": 2}, {\"from\": 4, \"to\": 3}]\n" +
             "}"
