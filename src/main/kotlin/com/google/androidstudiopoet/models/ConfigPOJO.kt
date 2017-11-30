@@ -46,13 +46,19 @@ class ConfigPOJO {
     var kotlinClassCount: String? = null
 
     val javaMethodsPerClass: Int
-        get() = Integer.parseInt(javaMethodCount!!) / (Integer.parseInt(javaClassCount!!) * Integer.parseInt(javaPackageCount!!))
+        get() {
+            val totalJavaClasses = (Integer.parseInt(javaClassCount!!) * Integer.parseInt(javaPackageCount!!))
+            return if (totalJavaClasses >0 ) Integer.parseInt(javaMethodCount!!) / totalJavaClasses else 0
+        }
 
     private val allKotlinMethods: Int
         get() = Integer.parseInt(allMethods!!) - Integer.parseInt(javaMethodCount!!)
 
     val kotlinMethodsPerClass: Int
-        get() = allKotlinMethods / (Integer.parseInt(kotlinClassCount!!) * Integer.parseInt(kotlinPackageCount!!))
+        get() {
+            val totalKotlinClasses = Integer.parseInt(kotlinClassCount!!) * Integer.parseInt(kotlinPackageCount!!)
+            return if (totalKotlinClasses > 0)  allKotlinMethods / totalKotlinClasses else 0
+        }
 
     var dependencies: List<DependencyConfig>? = null
 
@@ -69,5 +75,8 @@ class ConfigPOJO {
 
         return gson.toJson(this)
     }
+
+    val useKotlin: Boolean
+        get() = kotlinPackageCount!!.toInt() > 0
 }
 

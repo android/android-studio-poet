@@ -22,7 +22,7 @@ object Injector {
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
     private val buildGradleGenerator = BuildGradleGenerator()
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
-    private val projectBuildGradleGenerator = ProjectBuildGradleGenerator()
+    private val projectBuildGradleGenerator = ProjectBuildGradleGenerator(fileWriter)
     private val stringResourcesGenerator = StringResourcesGenerator(fileWriter)
     private val imageResourcesGenerator = ImagesGenerator(fileWriter)
     private val layoutResourcesGenerator = LayoutResourcesGenerator(fileWriter)

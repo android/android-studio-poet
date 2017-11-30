@@ -18,21 +18,21 @@ object ModuleBlueprintFactory {
                 ?.map { it.to }
                 ?.map {
                     getModuleDependency(it, projectRoot, javaPackageCount, javaClassCount,
-                            javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
+                            javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, config.useKotlin)
                 } ?: listOf()
 
-        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, moduleDependencies, javaPackageCount,
+        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, config.useKotlin, moduleDependencies, javaPackageCount,
                 javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
     }
 
     private fun getModuleDependency(index: Int, projectRoot: String, javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
-                                    kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int): ModuleDependency {
+                                    kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int, useKotlin: Boolean): ModuleDependency {
         /*
             Because method to call from outside doesn't depend on the dependencies, we can create ModuleBlueprint for
             dependency, return methodToCallFromOutside and forget about this module blueprint.
             WARNING: creation of ModuleBlueprint could be expensive
          */
-        val moduleBlueprint = ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+        val moduleBlueprint = ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, useKotlin, listOf(), javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
                 kotlinClassCount, kotlinMethodsPerClass)
 
         return ModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside)
@@ -66,7 +66,7 @@ object ModuleBlueprintFactory {
         val moduleDependencies = codeModuleDependencyIndexes
                 .map {
                     getModuleDependency(it, projectRoot, javaPackageCount, javaClassCount,
-                            javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
+                            javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, config.useKotlin)
                 } + androidModuleDependencyIndexes.map { getAndroidModuleDependency(it, config, projectRoot) }
 
         return AndroidModuleBlueprint(i,
@@ -74,7 +74,7 @@ object ModuleBlueprintFactory {
                 config.numActivitiesPerAndroidModule.toInt() + 2,
                 config.numActivitiesPerAndroidModule.toInt() + 5,
                 config.numActivitiesPerAndroidModule.toInt(),
-                projectRoot, i == 0, moduleDependencies, config.productFlavors,
+                projectRoot, i == 0, config.useKotlin, moduleDependencies, config.productFlavors,
                 javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
     }
 }
