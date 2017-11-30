@@ -69,6 +69,12 @@ class ConfigPOJO {
 
     val productFlavors: List<Int>? = null
 
+    val gradleVersion: String? = ""
+
+    val kotlinVersion: String? = null
+
+    val androidGradlePluginVersion: String? = null
+
     val topologies: List<Map<String, String>>? = null
 
     override fun toString(): String = toJson()
