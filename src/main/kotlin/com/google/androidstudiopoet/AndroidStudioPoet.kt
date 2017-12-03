@@ -45,39 +45,35 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
         }
 
         @Language("JSON") const val SAMPLE_CONFIG = """
-{
-  "projectName": "genny",
-  "root": "./modules/",
-  "gradleVersion": "4.3.1",
-  "androidGradlePluginVersion": "3.0.1",
-  "kotlinVersion": "1.1.60",
-  "numModules": "5",
-  "allMethods": "4000",
-  "javaPackageCount": "20",
-  "javaClassCount": "8",
-  "javaMethodCount": "2000",
-  "kotlinPackageCount": "20",
-  "kotlinClassCount": "8",
-  "androidModules": "2",
-  "numActivitiesPerAndroidModule": "8",
-  "productFlavors": [
-      2, 3, 4
-   ],
-   "topologies": [
-      {"type": "random", "seed": "2"}
-   ],
-  "dependencies": [
-    {"from": 3, "to": 2},
-    {"from": 4, "to": 2},
-    {"from": 4, "to": 3}
-  ]
-}
-"""
-
+            {
+              "projectName": "genny",
+              "root": "./modules/",
+              "gradleVersion": "4.3.1",
+              "androidGradlePluginVersion": "3.0.1",
+              "kotlinVersion": "1.1.60",
+              "numModules": "5",
+              "allMethods": "4000",
+              "javaPackageCount": "20",
+              "javaClassCount": "8",
+              "javaMethodCount": "2000",
+              "kotlinPackageCount": "20",
+              "kotlinClassCount": "8",
+              "androidModules": "2",
+              "numActivitiesPerAndroidModule": "8",
+              "productFlavors": [
+                  2, 3, 4
+               ],
+               "topologies": [
+                  {"type": "random", "seed": "2"}
+               ],
+              "dependencies": [
+                {"from": 3, "to": 2},
+                {"from": 4, "to": 2},
+                {"from": 4, "to": 3}
+              ]
+            }
+            """
     }
-
-
-
 
     init {
 
@@ -141,18 +137,15 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
         }
     }
 
-
-
     private fun configFrom(json: String): ConfigPOJO? {
 
         val gson = Gson()
 
         try {
-             return gson.fromJson(json, ConfigPOJO::class.java)
+            return gson.fromJson(json, ConfigPOJO::class.java)
         } catch (js: JsonSyntaxException) {
             System.err.println("Cannot parse json: $js")
             return null
         }
     }
-
 }
