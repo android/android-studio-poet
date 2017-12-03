@@ -16,12 +16,6 @@ limitations under the License.
 
 package com.google.androidstudiopoet
 
-<<<<<<< HEAD
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.whenever
-import org.junit.Test
-=======
->>>>>>> 8b44cec288b1b18eeb3b8caa8d192427e36b35dd
 import com.google.androidstudiopoet.generators.BuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
