@@ -16,8 +16,8 @@
 package com.google.androidstudiopoet.generators.android_modules.resources
 
 import com.google.androidstudiopoet.models.ResourcesBlueprint
-import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.utils.joinPath
+import com.google.androidstudiopoet.writers.FileWriter
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
