@@ -22,10 +22,14 @@ import com.google.androidstudiopoet.models.MethodToCall
 import com.google.androidstudiopoet.models.ModuleBlueprint
 
 object ModuleBlueprintFactory {
+
+    // Store if a methodToCallFromOutside was already computed
+    private var methodCache : MutableList<MethodToCall?> = mutableListOf()
+    // Used to synchronize cache elements (can be one per item since each is independent)
+    private var methodLock : List<Any> = listOf()
+
     fun create(index: Int, config: ConfigPOJO, projectRoot: String): ModuleBlueprint {
-        val dependencies = config.resolvedDependencies
-                .filter { it.from == index}
-                .map { it.to }
+        val dependencies : List<Int> = config.resolvedDependencies[index]?.map { it.to } ?: listOf()
 
         val dependenciesNames = dependencies.map { getModuleNameByIndex(it) }
         val methodsToCallWithinModule = dependencies.map { getMethodToCallForDependency(it, config, projectRoot) }
@@ -35,13 +39,25 @@ object ModuleBlueprintFactory {
     }
 
     private fun getMethodToCallForDependency(index: Int, config: ConfigPOJO, projectRoot: String): MethodToCall {
+        synchronized(methodLock[index]) {
+            val cachedMethod = methodCache[index]
+            if (cachedMethod != null) {
+                return cachedMethod
+            }
+            val newMethod = getMethodToCallForModule(index, config, projectRoot)
+            methodCache[index] = newMethod
+            return newMethod
+        }
+    }
+
+    private fun getMethodToCallForModule(index: Int, config: ConfigPOJO, projectRoot: String) =
         /*
             Because method to call from outside doesn't depend on the dependencies, we can create ModuleBlueprint for
             dependency, return methodToCallFromOutside and forget about this module blueprint.
             WARNING: creation of ModuleBlueprint could be expensive
          */
-        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), listOf(), config).methodToCallFromOutside
-    }
+        ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), listOf(), config).methodToCallFromOutside
+
 
     private fun getModuleNameByIndex(index: Int) = "module$index"
 
@@ -53,4 +69,10 @@ object ModuleBlueprintFactory {
                  configPOJO.numActivitiesPerAndroidModule!!.toInt(),
                  configPOJO.numActivitiesPerAndroidModule.toInt(), projectRoot, i == 0, configPOJO.useKotlin, dependencies, configPOJO.productFlavors)
     }
+
+    fun initCache(size : Int) {
+        methodCache = MutableList(size, {null})
+        methodLock = List(size, {String()})
+    }
 }
+
