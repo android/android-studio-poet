@@ -39,21 +39,25 @@ object ModuleBlueprintFactory {
     }
 
     private fun getMethodToCallForDependency(index: Int, config: ConfigPOJO, projectRoot: String): MethodToCall {
-        /*
-            Because method to call from outside doesn't depend on the dependencies, we can create ModuleBlueprint for
-            dependency, return methodToCallFromOutside and forget about this module blueprint.
-            WARNING: creation of ModuleBlueprint could be expensive
-         */
         synchronized(methodLock[index]) {
             val cachedMethod = methodCache[index]
             if (cachedMethod != null) {
                 return cachedMethod
             }
-            val newMethod = ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), listOf(), config).methodToCallFromOutside
+            val newMethod = getMethodToCallForModule(index, config, projectRoot)
             methodCache[index] = newMethod
             return newMethod
         }
     }
+
+    private fun getMethodToCallForModule(index: Int, config: ConfigPOJO, projectRoot: String) =
+        /*
+            Because method to call from outside doesn't depend on the dependencies, we can create ModuleBlueprint for
+            dependency, return methodToCallFromOutside and forget about this module blueprint.
+            WARNING: creation of ModuleBlueprint could be expensive
+         */
+        ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, listOf(), listOf(), config).methodToCallFromOutside
+
 
     private fun getModuleNameByIndex(index: Int) = "module$index"
 
