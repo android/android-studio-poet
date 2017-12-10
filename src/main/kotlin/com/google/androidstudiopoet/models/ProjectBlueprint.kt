@@ -17,19 +17,31 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.ModuleBlueprintFactory
+import com.google.androidstudiopoet.input.AndroidModuleConfig
+import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.utils.joinPath
 
 class ProjectBlueprint(val configPOJO: ConfigPOJO) {
-    val projectRoot = configPOJO.root.joinPath(configPOJO.projectName)
+    val projectName = configPOJO.projectName
 
-    val moduleBlueprints = (0 until configPOJO.numModules).map { i ->
-        ModuleBlueprintFactory.create(i, configPOJO, projectRoot)
-    }
+    val projectRoot = configPOJO.root.joinPath(projectName)
+
+    private val pureModulesConfigs = (0 until configPOJO.numModules).map { ModuleConfig(it, configPOJO) }
+    val moduleBlueprints = pureModulesConfigs.map { ModuleBlueprintFactory.create(it, projectRoot) }
 
     val androidModuleBlueprints = (0 until configPOJO.androidModules!!.toInt()).map { i ->
-        ModuleBlueprintFactory.createAndroidModule(i, configPOJO, projectRoot, moduleBlueprints.map { it.index },
-                (i + 1 until configPOJO.androidModules.toInt()).toList())
+        ModuleBlueprintFactory.createAndroidModule(projectRoot, pureModulesConfigs.map { it.index },
+                AndroidModuleConfig(i, configPOJO),
+                (i + 1 until configPOJO.androidModules.toInt()).toList().map { AndroidModuleConfig(it, configPOJO) })
     }
 
     val allModulesNames = moduleBlueprints.map { it.name } + androidModuleBlueprints.map { it.name }
+
+    val androidGradlePluginVersion = configPOJO.androidGradlePluginVersion
+    val kotlinVersion = configPOJO.kotlinVersion
+    val useKotlin = configPOJO.useKotlin
+    val gradleVersion = configPOJO.gradleVersion!!
+
+    val dependencies = configPOJO.dependencies ?: listOf()
+    val moduleCount = configPOJO.numModules
 }

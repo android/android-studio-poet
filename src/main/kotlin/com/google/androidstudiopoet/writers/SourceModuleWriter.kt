@@ -28,7 +28,6 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
 
-
 class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
                          private val buildGradleGenerator: BuildGradleGenerator,
                          private val gradleSettingsGenerator: GradleSettingsGenerator,
@@ -39,16 +38,16 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
 
     fun generate(projectBlueprint: ProjectBlueprint) = runBlocking {
 
-        if (!dependencyValidator.isValid(projectBlueprint.configPOJO)) {
+        if (!dependencyValidator.isValid(projectBlueprint.dependencies, projectBlueprint.moduleCount)) {
             throw IllegalStateException("Incorrect dependencies")
         }
 
         fileWriter.delete(projectBlueprint.projectRoot)
         fileWriter.mkdir(projectBlueprint.projectRoot)
 
-        GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint.configPOJO)
-        projectBuildGradleGenerator.generate(projectBlueprint.projectRoot, projectBlueprint.configPOJO)
-        gradleSettingsGenerator.generate(projectBlueprint.configPOJO.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
+        GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint)
+        projectBuildGradleGenerator.generate(projectBlueprint.projectRoot, projectBlueprint)
+        gradleSettingsGenerator.generate(projectBlueprint.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
 
         val allJobs = mutableListOf<Job>()
         projectBlueprint.moduleBlueprints.forEach{ blueprint ->

@@ -16,29 +16,24 @@ limitations under the License.
 
 package com.google.androidstudiopoet
 
+import com.google.androidstudiopoet.input.AndroidModuleConfig
+import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.models.*
 
 object ModuleBlueprintFactory {
-    fun create(index: Int, config: ConfigPOJO, projectRoot: String): ModuleBlueprint {
+    fun create(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
 
-        val javaPackageCount = config.javaPackageCount!!.toInt()
-        val javaClassCount = config.javaClassCount!!.toInt()
-        val javaMethodsPerClass = config.javaMethodsPerClass
-
-        val kotlinPackageCount = config.kotlinPackageCount!!.toInt()
-        val kotlinClassCount = config.kotlinClassCount!!.toInt()
-        val kotlinMethodsPerClass = config.kotlinMethodsPerClass
-
-        val moduleDependencies = config.resolvedDependencies
-                .filter { it.from == index }
+        val moduleDependencies = moduleConfig.dependencies
                 .map { it.to }
                 .map {
-                    getModuleDependency(it, projectRoot, javaPackageCount, javaClassCount,
-                            javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, config.useKotlin)
+                    getModuleDependency(it, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
+                            moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
+                            moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin)
                 }
 
-        return ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, config.useKotlin, moduleDependencies, javaPackageCount,
-                javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
+        return ModuleBlueprint(getModuleNameByIndex(moduleConfig.index), projectRoot, moduleConfig.useKotlin, moduleDependencies,
+                moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
+                moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass)
     }
 
     private fun getModuleDependency(index: Int, projectRoot: String, javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
@@ -48,49 +43,42 @@ object ModuleBlueprintFactory {
             dependency, return methodToCallFromOutside and forget about this module blueprint.
             WARNING: creation of ModuleBlueprint could be expensive
          */
-        val moduleBlueprint = ModuleBlueprint(index, getModuleNameByIndex(index), projectRoot, useKotlin, listOf(), javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+        val moduleBlueprint = ModuleBlueprint(getModuleNameByIndex(index), projectRoot, useKotlin, listOf(), javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
                 kotlinClassCount, kotlinMethodsPerClass)
 
         return ModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside)
     }
 
-    private fun getAndroidModuleDependency(index: Int, config: ConfigPOJO, projectRoot: String): AndroidModuleDependency {
+    private fun getAndroidModuleDependency(projectRoot: String, androidModuleConfig: AndroidModuleConfig): AndroidModuleDependency {
         /*
             Because method to call from outside and resources to refer don't depend on the dependencies, we can create AndroidModuleBlueprint for
             dependency, return methodToCallFromOutside with resourcesToRefer and forget about this module blueprint.
             WARNING: creation of AndroidModuleBlueprint could be expensive
          */
 
-        val moduleBlueprint = createAndroidModule(index, config, projectRoot, listOf(), listOf())
+        val moduleBlueprint = createAndroidModule(projectRoot, listOf(), androidModuleConfig, listOf())
         return AndroidModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside, moduleBlueprint.resourcesToReferFromOutside)
     }
 
     private fun getModuleNameByIndex(index: Int) = "module$index"
 
-    fun createAndroidModule(i: Int, config: ConfigPOJO, projectRoot: String, codeModuleDependencyIndexes: List<Int>,
-                            androidModuleDependencyIndexes: List<Int>):
+    fun createAndroidModule(projectRoot: String, codeModuleDependencyIndexes: List<Int>,
+                            androidModuleConfig: AndroidModuleConfig, androidDependencies: List<AndroidModuleConfig>):
             AndroidModuleBlueprint {
-
-        val javaPackageCount = config.javaPackageCount!!.toInt()
-        val javaClassCount = config.javaClassCount!!.toInt()
-        val javaMethodsPerClass = config.javaMethodsPerClass
-
-        val kotlinPackageCount = config.kotlinPackageCount!!.toInt()
-        val kotlinClassCount = config.kotlinClassCount!!.toInt()
-        val kotlinMethodsPerClass = config.kotlinMethodsPerClass
 
         val moduleDependencies = codeModuleDependencyIndexes
                 .map {
-                    getModuleDependency(it, projectRoot, javaPackageCount, javaClassCount,
-                            javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, config.useKotlin)
-                } + androidModuleDependencyIndexes.map { getAndroidModuleDependency(it, config, projectRoot) }
+                    getModuleDependency(it, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
+                            androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
+                            androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin)
+                } + androidDependencies.map { getAndroidModuleDependency(projectRoot, it) }
 
-        return AndroidModuleBlueprint(i,
-                config.numActivitiesPerAndroidModule!!.toInt(),
-                config.numActivitiesPerAndroidModule.toInt() + 2,
-                config.numActivitiesPerAndroidModule.toInt() + 5,
-                config.numActivitiesPerAndroidModule.toInt(),
-                projectRoot, i == 0, config.useKotlin, moduleDependencies, config.productFlavors,
-                javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass)
+        return AndroidModuleBlueprint(androidModuleConfig.index,
+                androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
+                projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
+                moduleDependencies, androidModuleConfig.productFlavors,
+                androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
+                androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
+                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass)
     }
 }

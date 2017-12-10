@@ -44,7 +44,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         // TODO add methods
         // TODO move to java poet
         val classText =
-                "package $packageName;\n" +
+                "input $packageName;\n" +
                         "import android.app.Activity;\n" +
                         "import android.os.Bundle;\n" +
                         "import $packageName.R;\n" +
