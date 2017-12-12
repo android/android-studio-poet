@@ -34,7 +34,7 @@ class ManifestGenerator(private val fileWriter: FileWriter) {
     private fun generateManifestTag(packageName: String, applicationTag: String): String {
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
-                "    input=\"$packageName\">\n" +
+                "    package=\"$packageName\">\n" +
                 "\n" +
                 "    <uses-permission android:name=\"android.permission.INTERNET\" />\n" +
                 "\n" +

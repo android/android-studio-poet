@@ -26,7 +26,7 @@ class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fil
     override fun generateClass(blueprint: ClassBlueprint): MethodToCall {
         val buff = StringBuilder()
 
-        buff.append("input ${blueprint.packageName};\n")
+        buff.append("package ${blueprint.packageName};\n")
 
         val annotName = blueprint.className + "Fancy"
         buff.append("annotation class " + annotName + "\n")

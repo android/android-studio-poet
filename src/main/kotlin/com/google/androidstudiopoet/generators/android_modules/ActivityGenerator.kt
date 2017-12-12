@@ -26,7 +26,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
     /**
      * generates activity classes by blueprint, list of layouts and methods to call.
      */
-    fun generate(blueprint: AndroidModuleBlueprint, methodsToCall: List<String>) {
+    fun generate(blueprint: AndroidModuleBlueprint) {
 
         // generate activities
         var index = 0
@@ -44,7 +44,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         // TODO add methods
         // TODO move to java poet
         val classText =
-                "input $packageName;\n" +
+                "package $packageName;\n" +
                         "import android.app.Activity;\n" +
                         "import android.os.Bundle;\n" +
                         "import $packageName.R;\n" +

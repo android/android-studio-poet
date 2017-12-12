@@ -20,7 +20,7 @@ data class PackageBlueprint(private val packageIndex: Int, private val classesPe
                             private val methodsPerClass: Int, val mainPackage: String, private val moduleName: String,
                             val language: Language, private val methodsToCallWithinPackage: List<MethodToCall>) {
 
-    val packageName = moduleName + "input" + language.postfix + packageIndex
+    val packageName = moduleName + "package" + language.postfix + packageIndex
     val classBlueprints = ArrayList<ClassBlueprint>()
 
     var methodToCallFromOutside: MethodToCall

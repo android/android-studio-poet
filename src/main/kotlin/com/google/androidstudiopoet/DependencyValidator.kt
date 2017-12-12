@@ -25,7 +25,7 @@ class DependencyValidator {
     }
 
     private fun correctAmountOfModules(dependencies: List<DependencyConfig>, moduleCount: Int): Boolean {
-        return dependencies?.none { it.to >= moduleCount || it.from >= moduleCount } ?: true
+        return dependencies.none { it.to >= moduleCount || it.from >= moduleCount }
     }
 
 }

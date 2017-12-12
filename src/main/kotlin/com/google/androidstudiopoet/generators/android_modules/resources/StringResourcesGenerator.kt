@@ -27,7 +27,7 @@ class StringResourcesGenerator(private val fileWriter: FileWriter): Generator<Re
 
     /**
      * generates string resources by blueprint, returns list of string names to refer later.
-     * Precondition: resources input is generated
+     * Precondition: resources package is generated
      */
     override fun generate(blueprint: ResourcesBlueprint): StringResourceGenerationResult {
         val valuesDirPath = blueprint.resDirPath.joinPath("values")
