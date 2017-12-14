@@ -21,10 +21,14 @@ import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.models.*
 
 object ModuleBlueprintFactory {
-    fun create(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
 
+    // Store if a ModuleDependency was already computed
+    private var moduleDepencencyCache : MutableList<ModuleDependency?> = mutableListOf()
+    // Used to synchronize cache elements (can be one per item since each is independent)
+    private var moduleDepencencyLock : List<Any> = listOf()
+
+    fun create(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
         val moduleDependencies = moduleConfig.dependencies
-                .map { it.to }
                 .map {
                     getModuleDependency(it, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
                             moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
@@ -38,15 +42,31 @@ object ModuleBlueprintFactory {
 
     private fun getModuleDependency(index: Int, projectRoot: String, javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
                                     kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int, useKotlin: Boolean): ModuleDependency {
+        synchronized(moduleDepencencyLock[index]) {
+            val cachedMethod = moduleDepencencyCache[index]
+            if (cachedMethod != null) {
+                return cachedMethod
+            }
+            val newMethodDependency = getDependencyForModule(index, projectRoot, javaPackageCount, javaClassCount,
+                    javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, useKotlin)
+            moduleDepencencyCache[index] = newMethodDependency
+            return newMethodDependency
+        }
+    }
+
+    private fun getDependencyForModule(index: Int, projectRoot: String, javaPackageCount: Int, javaClassCount: Int,
+                                         javaMethodsPerClass: Int, kotlinPackageCount: Int, kotlinClassCount: Int,
+                                         kotlinMethodsPerClass: Int, useKotlin: Boolean): ModuleDependency {
         /*
             Because method to call from outside doesn't depend on the dependencies, we can create ModuleBlueprint for
             dependency, return methodToCallFromOutside and forget about this module blueprint.
             WARNING: creation of ModuleBlueprint could be expensive
          */
-        val moduleBlueprint = ModuleBlueprint(getModuleNameByIndex(index), projectRoot, useKotlin, listOf(), javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass)
+        val tempModuleBlueprint = ModuleBlueprint(getModuleNameByIndex(index), projectRoot, useKotlin, listOf(),
+                javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,kotlinClassCount,
+                kotlinMethodsPerClass)
+        return ModuleDependency(tempModuleBlueprint.name, tempModuleBlueprint.methodToCallFromOutside)
 
-        return ModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside)
     }
 
     private fun getAndroidModuleDependency(projectRoot: String, androidModuleConfig: AndroidModuleConfig): AndroidModuleDependency {
@@ -59,8 +79,6 @@ object ModuleBlueprintFactory {
         val moduleBlueprint = createAndroidModule(projectRoot, listOf(), androidModuleConfig, listOf())
         return AndroidModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside, moduleBlueprint.resourcesToReferFromOutside)
     }
-
-    private fun getModuleNameByIndex(index: Int) = "module$index"
 
     fun createAndroidModule(projectRoot: String, codeModuleDependencyIndexes: List<Int>,
                             androidModuleConfig: AndroidModuleConfig, androidDependencies: List<AndroidModuleConfig>):
@@ -81,4 +99,12 @@ object ModuleBlueprintFactory {
                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
                 androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass)
     }
+
+    private fun getModuleNameByIndex(index: Int) = "module$index"
+
+    fun initCache(size : Int) {
+        moduleDepencencyCache = MutableList(size, {null})
+        moduleDepencencyLock = List(size, {String()})
+    }
 }
+
