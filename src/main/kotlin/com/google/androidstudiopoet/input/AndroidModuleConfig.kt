@@ -14,18 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet
+package com.google.androidstudiopoet.input
 
-import com.google.androidstudiopoet.models.DependencyConfig
+import com.google.androidstudiopoet.models.ConfigPOJO
 
-class DependencyValidator {
-    fun isValid(dependencies: List<DependencyConfig>, moduleCount: Int): Boolean {
-        //TODO Add check for cycle dependencies and proper reporting
-        return correctAmountOfModules(dependencies, moduleCount)
-    }
+class AndroidModuleConfig(index: Int, config: ConfigPOJO): ModuleConfig(index, config) {
 
-    private fun correctAmountOfModules(dependencies: List<DependencyConfig>, moduleCount: Int): Boolean {
-        return dependencies.none { it.to >= moduleCount || it.from >= moduleCount }
-    }
+    val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
+    val hasLaunchActivity = index == 0
+    val resourcesConfig = ResourcesConfig(activityCount + 2,
+            activityCount + 5, activityCount)
+
+    val productFlavors: List<Int>? = config.productFlavors
 
 }

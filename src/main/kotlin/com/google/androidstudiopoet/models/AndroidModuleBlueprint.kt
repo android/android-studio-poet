@@ -17,14 +17,13 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.Blueprint
+import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
 
 data class AndroidModuleBlueprint(val index: Int,
                                   val numOfActivities: Int,
-                                  private val numOfStrings: Int,
-                                  private val numOfImages: Int,
-                                  val numOfLayouts: Int,
+                                  private val resourcesConfig: ResourcesConfig,
                                   private val projectRoot: String,
                                   val hasLaunchActivity: Boolean,
                                   val useKotlin: Boolean,
@@ -53,7 +52,8 @@ data class AndroidModuleBlueprint(val index: Int,
             .map { it.resourcesToRefer }
             .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer ->  resourcesToRefer.combine(acc)}
 
-    val resourcesBlueprint = ResourcesBlueprint(name, resDirPath, numOfStrings, numOfImages, numOfLayouts, resourcesToReferWithin)
+    val resourcesBlueprint = ResourcesBlueprint(name, resDirPath, resourcesConfig.stringCount ?: 0,
+            resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin)
 
     val layoutNames = resourcesBlueprint.layoutNames
     val activityNames = 0.until(numOfActivities).map { "Activity$it" }

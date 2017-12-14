@@ -21,19 +21,19 @@ import com.google.androidstudiopoet.utils.joinPath
 
 data class ResourcesBlueprint(private val moduleName: String,
                               val resDirPath: String,
-                              private val numOfStrings: Int,
-                              val numOfImages: Int,
-                              private val numOfLayouts: Int,
+                              private val stringCount: Int,
+                              private val imageCount: Int,
+                              private val layoutCount: Int,
                               private val resourcesToReferWithin: ResourcesToRefer) : Blueprint {
-    val stringNames = (0..numOfStrings).map { "${moduleName}string$it" }
-    val imageNames = (0 until numOfImages).map { "${moduleName.toLowerCase()}image$it" }
+    val stringNames = (0..stringCount).map { "${moduleName}string$it" }
+    val imageNames = (0 until imageCount).map { "${moduleName.toLowerCase()}image$it" }
 
-    val layoutNames = (0 until numOfLayouts).map { "${moduleName.toLowerCase()}activity_main$it" }
+    val layoutNames = (0 until layoutCount).map { "${moduleName.toLowerCase()}activity_main$it" }
 
     val layoutsDir = resDirPath.joinPath("layout")
 
-    private val stringsPerLayout = (stringNames + resourcesToReferWithin.strings).splitPerLayout(numOfLayouts)
-    private val imagesPerLayout = (imageNames + resourcesToReferWithin.images).splitPerLayout(numOfLayouts)
+    private val stringsPerLayout = (stringNames + resourcesToReferWithin.strings).splitPerLayout(layoutCount)
+    private val imagesPerLayout = (imageNames + resourcesToReferWithin.images).splitPerLayout(layoutCount)
 
     val layoutBlueprints = layoutNames.mapIndexed { index, layoutName ->
         LayoutBlueprint(layoutsDir.joinPath(layoutName) + ".xml",

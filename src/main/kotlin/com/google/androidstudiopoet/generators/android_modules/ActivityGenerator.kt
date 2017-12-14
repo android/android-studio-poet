@@ -26,7 +26,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
     /**
      * generates activity classes by blueprint, list of layouts and methods to call.
      */
-    fun generate(blueprint: AndroidModuleBlueprint, methodsToCall: List<String>) {
+    fun generate(blueprint: AndroidModuleBlueprint) {
 
         // generate activities
         var index = 0

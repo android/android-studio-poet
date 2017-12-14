@@ -18,9 +18,8 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.utils.joinPath
 
-data class ModuleBlueprint(val index: Int,
-                           val name: String,
-                           val root: String,
+data class ModuleBlueprint(val name: String,
+                           private val root: String,
                            val useKotlin: Boolean,
                            val dependencies: List<ModuleDependency>,
                            private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,

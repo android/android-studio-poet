@@ -46,8 +46,7 @@ class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourc
         buildGradleGenerator.generate(blueprint)
         resourcesGenerator.generate(blueprint.resourcesBlueprint)
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
-        val methodsToCall: List<String> = listOf()
-        activityGenerator.generate(blueprint, methodsToCall)
+        activityGenerator.generate(blueprint)
         manifestGenerator.generate(blueprint)
     }
 
