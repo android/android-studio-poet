@@ -23,7 +23,7 @@ import com.google.androidstudiopoet.utils.fold
 class BuildGradleGenerator {
     fun create(moduleBlueprint: ModuleBlueprint): String {
         return BuildGradle.print(moduleBlueprint.dependencies
-                .map { it -> "compile project(':$it')\n" }
+                .map { it -> "compile project(':${it.name}')\n" }
                 .fold(), moduleBlueprint.useKotlin)
     }
 }

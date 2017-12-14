@@ -16,7 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.project
 
-import com.google.androidstudiopoet.models.ConfigPOJO
+import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
@@ -24,10 +24,11 @@ internal const val ASSETS_PATH = "src/main/assets"
 
 class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
-    fun generate(root: String, config: ConfigPOJO) {
+    fun generate(root: String, projectBlueprint: ProjectBlueprint) {
 
-        val (kotlinBuildScript, kotlinClasspath) = if (config.useKotlin) {
-            "ext.kotlin_version = '${config.kotlinVersion}'" to """classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version""""
+        val (kotlinBuildScript, kotlinClasspath) = if (projectBlueprint.useKotlin) {
+
+            "ext.kotlin_version = '${projectBlueprint.kotlinVersion}'" to """classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version""""
         } else {
             Pair("", "")
         }
@@ -42,7 +43,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:${config.androidGradlePluginVersion}'
+        classpath 'com.android.tools.build:gradle:${projectBlueprint.androidGradlePluginVersion}'
         $kotlinClasspath
 
         // NOTE: Do not place your application dependencies here; they belong

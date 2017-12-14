@@ -22,7 +22,7 @@ import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.test_utils.mock
-import com.google.androidstudiopoet.writers.AndroidModuleWriter
+import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.writers.SourceModuleWriter
 import com.nhaarman.mockito_kotlin.any
@@ -31,16 +31,15 @@ import org.junit.Test
 
 class ModulesWriterTest {
 
-    val fileWriter: FileWriter = mock()
-    val projectBuildGradleGenerator: ProjectBuildGradleGenerator = mock()
-    val gradleSettingsGenerator: GradleSettingsGenerator = mock()
-    val dependencyValidator: DependencyValidator = mock()
-    val moduleBlueprinFactory: ModuleBlueprintFactory = mock()
-    val projectBlueprint: ProjectBlueprint = mock()
-    val buildGradleGenerator: BuildGradleGenerator = mock()
-    val androidModuleGenerator: AndroidModuleWriter = mock()
-    val packagesGenerator: PackagesGenerator = mock()
-    val modulesWriter = SourceModuleWriter(dependencyValidator,
+    private val fileWriter: FileWriter = mock()
+    private val projectBuildGradleGenerator: ProjectBuildGradleGenerator = mock()
+    private val gradleSettingsGenerator: GradleSettingsGenerator = mock()
+    private val dependencyValidator: DependencyValidator = mock()
+    private val projectBlueprint: ProjectBlueprint = mock()
+    private val buildGradleGenerator: BuildGradleGenerator = mock()
+    private val androidModuleGenerator: AndroidModuleGenerator = mock()
+    private val packagesGenerator: PackagesGenerator = mock()
+    private val modulesWriter = SourceModuleWriter(dependencyValidator,
             buildGradleGenerator,
             gradleSettingsGenerator,
             projectBuildGradleGenerator,
@@ -51,7 +50,7 @@ class ModulesWriterTest {
 
     @Test(expected = IllegalStateException::class)
     fun `generate throws ISE when input is invalid`() {
-        whenever(dependencyValidator.isValid(any())).thenReturn(false)
+        whenever(dependencyValidator.isValid(any(), any())).thenReturn(false)
         modulesWriter.generate(projectBlueprint)
     }
 }

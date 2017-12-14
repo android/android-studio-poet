@@ -14,18 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet
+package com.google.androidstudiopoet.models
 
-import com.google.androidstudiopoet.models.DependencyConfig
-
-class DependencyValidator {
-    fun isValid(dependencies: List<DependencyConfig>, moduleCount: Int): Boolean {
-        //TODO Add check for cycle dependencies and proper reporting
-        return correctAmountOfModules(dependencies, moduleCount)
-    }
-
-    private fun correctAmountOfModules(dependencies: List<DependencyConfig>, moduleCount: Int): Boolean {
-        return dependencies.none { it.to >= moduleCount || it.from >= moduleCount }
-    }
-
-}
+data class DependencyConfig(val from: Int, val to: Int)

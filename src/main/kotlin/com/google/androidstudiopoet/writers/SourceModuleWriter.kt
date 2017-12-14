@@ -15,6 +15,7 @@
 package com.google.androidstudiopoet.writers
 
 import com.google.androidstudiopoet.DependencyValidator
+import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.BuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
@@ -27,33 +28,32 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
 
-
 class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
                          private val buildGradleGenerator: BuildGradleGenerator,
                          private val gradleSettingsGenerator: GradleSettingsGenerator,
                          private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
-                         private val androidModuleGenerator: AndroidModuleWriter,
+                         private val androidModuleGenerator: AndroidModuleGenerator,
                          private val packagesGenerator: PackagesGenerator,
                          private val fileWriter: FileWriter) {
 
     fun generate(projectBlueprint: ProjectBlueprint) = runBlocking {
 
-        if (!dependencyValidator.isValid(projectBlueprint.configPOJO)) {
+        if (!dependencyValidator.isValid(projectBlueprint.dependencies, projectBlueprint.moduleCount)) {
             throw IllegalStateException("Incorrect dependencies")
         }
 
         fileWriter.delete(projectBlueprint.projectRoot)
         fileWriter.mkdir(projectBlueprint.projectRoot)
 
-        GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint.configPOJO)
-        projectBuildGradleGenerator.generate(projectBlueprint.projectRoot, projectBlueprint.configPOJO)
-        gradleSettingsGenerator.generate(projectBlueprint.configPOJO.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
+        GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint)
+        projectBuildGradleGenerator.generate(projectBlueprint.projectRoot, projectBlueprint)
+        gradleSettingsGenerator.generate(projectBlueprint.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
 
         val allJobs = mutableListOf<Job>()
         projectBlueprint.moduleBlueprints.forEach{ blueprint ->
             val job = launch {
                 writeModule(blueprint)
-                println("Done writing module ${blueprint.index}")
+                println("Done writing module ${blueprint.name}")
             }
             allJobs.add(job)
         }
@@ -63,7 +63,7 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
 
         projectBlueprint.androidModuleBlueprints.forEach{ blueprint ->
             androidModuleGenerator.generate(blueprint)
-            println("Done writing Android module " + blueprint.index)
+            println("Done writing Android module " + blueprint.name)
         }
 
     }

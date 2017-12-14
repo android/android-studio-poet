@@ -17,12 +17,30 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.ModuleBlueprintFactory
+import com.google.androidstudiopoet.input.AndroidModuleConfig
+import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.*
 import kotlin.system.measureTimeMillis
 
 class ProjectBlueprint(val configPOJO: ConfigPOJO) {
-    val projectRoot = configPOJO.root.joinPath(configPOJO.projectName)
+
+    val projectName = configPOJO.projectName
+
+    val projectRoot = configPOJO.root.joinPath(projectName)
+
+
+    private val pureModulesConfigs = (0 until configPOJO.numModules).map { ModuleConfig(it, configPOJO) }
+
+    val androidGradlePluginVersion = configPOJO.androidGradlePluginVersion
+    val kotlinVersion = configPOJO.kotlinVersion
+    val useKotlin = configPOJO.useKotlin
+    val gradleVersion = configPOJO.gradleVersion!!
+
+    val dependencies = configPOJO.dependencies ?: listOf()
+
+    val moduleCount = configPOJO.numModules
+
     val moduleBlueprints : List<ModuleBlueprint>
     val androidModuleBlueprints : List<AndroidModuleBlueprint>
     val allModulesNames : List<String>
@@ -32,9 +50,9 @@ class ProjectBlueprint(val configPOJO: ConfigPOJO) {
         val timeModels = measureTimeMillis {
             ModuleBlueprintFactory.initCache(configPOJO.numModules)
             runBlocking {
-                val deferred = (0 until configPOJO.numModules).map {
+                val deferred = pureModulesConfigs.map {
                     async {
-                        ModuleBlueprintFactory.create(it, configPOJO, projectRoot)
+                        ModuleBlueprintFactory.create(it, projectRoot)
                     }
                 }
                 temporaryModuleBlueprints = deferred.map {it.await()}
@@ -46,7 +64,9 @@ class ProjectBlueprint(val configPOJO: ConfigPOJO) {
         var temporayAndroidBlueprints : List<AndroidModuleBlueprint> = listOf()
         val timeAndroidModels = measureTimeMillis {
             temporayAndroidBlueprints = (0 until configPOJO.androidModules!!.toInt()).map { i ->
-                ModuleBlueprintFactory.createAndroidModule(i, configPOJO, projectRoot, moduleBlueprints.map { it.name })
+                ModuleBlueprintFactory.createAndroidModule(projectRoot, pureModulesConfigs.map { it.index },
+                        AndroidModuleConfig(i, configPOJO),
+                        (i + 1 until configPOJO.androidModules.toInt()).toList().map { AndroidModuleConfig(it, configPOJO) })
             }
         }
         androidModuleBlueprints = temporayAndroidBlueprints

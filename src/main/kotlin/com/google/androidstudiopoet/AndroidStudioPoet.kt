@@ -141,6 +141,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
         }
     }
 
+
     private fun configFrom(json: String): ConfigPOJO? {
 
         val gson = Gson()

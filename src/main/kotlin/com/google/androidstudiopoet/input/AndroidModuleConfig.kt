@@ -14,6 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.models
+package com.google.androidstudiopoet.input
 
-data class Dependency(val from: Int, val to: Int)
+import com.google.androidstudiopoet.models.ConfigPOJO
+
+class AndroidModuleConfig(index: Int, config: ConfigPOJO): ModuleConfig(index, config) {
+
+    val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
+    val hasLaunchActivity = index == 0
+    val resourcesConfig = ResourcesConfig(activityCount + 2,
+            activityCount + 5, activityCount)
+
+    val productFlavors: List<Int>? = config.productFlavors
+
+}

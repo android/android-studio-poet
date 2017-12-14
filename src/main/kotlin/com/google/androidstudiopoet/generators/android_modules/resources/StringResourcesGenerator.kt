@@ -14,30 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.generators.android_modules
+package com.google.androidstudiopoet.generators.android_modules.resources
 
 import com.google.androidstudiopoet.GenerationResult
 import com.google.androidstudiopoet.Generator
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.models.ResourcesBlueprint
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
-class StringResourcesGenerator(private val fileWriter: FileWriter): Generator<AndroidModuleBlueprint, StringResourceGenerationResult> {
+class StringResourcesGenerator(private val fileWriter: FileWriter): Generator<ResourcesBlueprint, StringResourceGenerationResult> {
 
     /**
      * generates string resources by blueprint, returns list of string names to refer later.
      * Precondition: resources package is generated
      */
-    override fun generate(blueprint: AndroidModuleBlueprint): StringResourceGenerationResult {
+    override fun generate(blueprint: ResourcesBlueprint): StringResourceGenerationResult {
         val valuesDirPath = blueprint.resDirPath.joinPath("values")
         fileWriter.mkdir(valuesDirPath)
-
-        val stringNames = (0..blueprint.numOfStrings).map { "${blueprint.name}string$it" }
-        val stringsFileContent = getFileContent(stringNames)
+        val stringsFileContent = getFileContent(blueprint.stringNames)
 
         fileWriter.writeToFile(stringsFileContent, valuesDirPath.joinPath("strings.xml"))
-        return StringResourceGenerationResult(stringNames)
+        return StringResourceGenerationResult(blueprint.stringNames)
     }
 
     private fun getFileContent(stringNames: List<String>): String {
@@ -47,5 +45,7 @@ class StringResourcesGenerator(private val fileWriter: FileWriter): Generator<An
         return stringsFileContent
     }
 }
+
+// TODO remove the class below after refactoring the generators
 
 data class StringResourceGenerationResult(val stringNames: List<String>): GenerationResult

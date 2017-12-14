@@ -16,7 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.project
 
-import com.google.androidstudiopoet.models.ConfigPOJO
+import com.google.androidstudiopoet.models.ProjectBlueprint
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Files
@@ -24,7 +24,7 @@ import java.nio.file.StandardCopyOption
 
 object GradlewGenerator {
 
-    fun generateGradleW(root: String, configPOJO: ConfigPOJO) {
+    fun generateGradleW(root: String, projectBlueprint: ProjectBlueprint) {
 
         val gradlew = "gradlew"
         val gradlewbat = "gradlew.bat"
@@ -48,7 +48,7 @@ object GradlewGenerator {
         Files.copy(FileInputStream(File(sourceFolder, gradleWrapperJar)),
                 File(gradleWrapperFolder, gradleWrapperJar).toPath(), StandardCopyOption.REPLACE_EXISTING)
 
-        File(gradleWrapperFolder, gradleWrapperProperties).writeText(gradleWrapper(configPOJO.gradleVersion!!))
+        File(gradleWrapperFolder, gradleWrapperProperties).writeText(gradleWrapper(projectBlueprint.gradleVersion))
     }
 
 
