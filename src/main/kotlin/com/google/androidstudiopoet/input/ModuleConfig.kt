@@ -29,6 +29,7 @@ open class ModuleConfig(val index: Int, config: ConfigPOJO) {
     val kotlinMethodsPerClass = config.kotlinMethodsPerClass
     val useKotlin: Boolean = config.useKotlin
 
-    val dependencies = config.resolvedDependencies
-            .filter { it.from == index }
+    val dependencies = config.resolvedDependencies[index]?.map { it.to } ?: listOf()
+
+
 }
