@@ -85,12 +85,19 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
 
         val btnGenerate = JButton("Generate").apply {
             addActionListener {
+                var projectBluePrint : ProjectBlueprint? = null
                 val timeSpent = measureTimeMillis {
                     println(textArea.text)
                     val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
-                    modulesWriter.generate(ProjectBlueprint(config))
+                    projectBluePrint = ProjectBlueprint(config)
+                    modulesWriter.generate(projectBluePrint!!)
                 }
                 println("Finished in $timeSpent ms")
+                println("Dependency graph:")
+                projectBluePrint!!.printDependencies()
+                if (projectBluePrint!!.hasCircularDependencies()) {
+                    println("WARNING: there are circular dependencies")
+                }
             }
         }
 

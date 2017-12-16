@@ -34,10 +34,15 @@ object ModuleBlueprintFactory {
                             moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
                             moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin)
                 }
-
-        return ModuleBlueprint(getModuleNameByIndex(moduleConfig.index), projectRoot, moduleConfig.useKotlin, moduleDependencies,
+        val result = ModuleBlueprint(getModuleNameByIndex(moduleConfig.index), projectRoot, moduleConfig.useKotlin, moduleDependencies,
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
                 moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass)
+        synchronized(moduleDepencencyLock[moduleConfig.index]) {
+            if (moduleDepencencyCache[moduleConfig.index] == null) {
+                moduleDepencencyCache[moduleConfig.index] = ModuleDependency(result.name, result.methodToCallFromOutside)
+            }
+        }
+        return result
     }
 
     private fun getModuleDependency(index: Int, projectRoot: String, javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,

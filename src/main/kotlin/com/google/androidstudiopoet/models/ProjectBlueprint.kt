@@ -74,4 +74,36 @@ class ProjectBlueprint(val configPOJO: ConfigPOJO) {
 
         allModulesNames = moduleBlueprints.map { it.name } + androidModuleBlueprints.map { it.name }
     }
+
+    fun printDependencies() {
+        println("digraph $projectName {")
+        for (module in pureModulesConfigs) {
+            val list = if (module.dependencies.size > 0) " -> ${module.dependencies.sorted().joinToString()}" else ""
+            println("  ${module.index}$list;")
+        }
+        println("}")
+    }
+
+    fun hasCircularDependencies() : Boolean {
+        // Try to find a topological order (it will be stored in withZero)
+        val dependencyCounter : MutableList<Int> = mutableListOf()
+        pureModulesConfigs.mapTo(dependencyCounter, {_ -> 0})
+        // Count how many modules depend on each
+        pureModulesConfigs.flatMap { it.dependencies }.forEach { dependencyCounter[it]++ }
+        // Try to generate a topological order
+        val topologicalOrder = dependencyCounter.withIndex().filter { pair -> pair.value == 0 }.map { it -> it.index }.toMutableList()
+        var index = 0
+        while (index < topologicalOrder.size && topologicalOrder.size < pureModulesConfigs.size) {
+            val from = topologicalOrder[index]
+            for (to in pureModulesConfigs[from].dependencies) {
+                dependencyCounter[to]--
+                if (dependencyCounter[to] == 0) {
+                    topologicalOrder.add(to)
+                }
+            }
+            index++
+        }
+        // No circular dependencies if and olny if all modules can be sorted
+        return topologicalOrder.size != pureModulesConfigs.size
+    }
 }
