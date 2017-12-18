@@ -32,7 +32,7 @@ data class AndroidModuleBlueprint(val index: Int,
                                   private val productFlavorConfigs: List<FlavorConfig>?,
                                   private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
                                   private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int
-): Blueprint {
+) : Blueprint {
 
     val name = "androidAppModule" + index
     val packageName = "com.$name"
@@ -45,22 +45,32 @@ data class AndroidModuleBlueprint(val index: Int,
 
     private val methodsToCallWithIn = dependencies.map { it.methodToCall }
 
-    val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-            kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, methodsToCallWithIn)
+    val packagesBlueprint by lazy {
+        PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+                kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, methodsToCallWithIn)
+    }
 
     private val resourcesToReferWithin = dependencies
             .filterIsInstance<AndroidModuleDependency>()
             .map { it.resourcesToRefer }
-            .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer ->  resourcesToRefer.combine(acc)}
+            .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer -> resourcesToRefer.combine(acc) }
 
-    val resourcesBlueprint = ResourcesBlueprint(name, resDirPath, resourcesConfig.stringCount ?: 0,
-            resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin)
+    val resourcesBlueprint by lazy {
+        ResourcesBlueprint(name, resDirPath, resourcesConfig.stringCount ?: 0,
+                resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin)
+    }
 
-    val layoutNames = resourcesBlueprint.layoutNames
+    val layoutNames by lazy {
+        resourcesBlueprint.layoutNames
+    }
     val activityNames = 0.until(numOfActivities).map { "Activity$it" }
 
-    var methodToCallFromOutside = packagesBlueprint.methodToCallFromOutside
-    var resourcesToReferFromOutside = resourcesBlueprint.resourcesToReferFromOutside
+    val methodToCallFromOutside by lazy {
+        packagesBlueprint.methodToCallFromOutside
+    }
+    val resourcesToReferFromOutside by lazy {
+        resourcesBlueprint.resourcesToReferFromOutside
+    }
 
     val productFlavors = productFlavorConfigs?.map { Flavor(it.name, it.dimension) }?.toSet()
     val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()

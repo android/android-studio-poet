@@ -55,9 +55,6 @@ object Injector {
 
     private val androidModuleGenerator =
             AndroidModuleGenerator(
-                    stringResourcesGenerator,
-                    imageResourcesGenerator,
-                    layoutResourcesGenerator,
                     resourcesGenerator,
                     packagesGenerator,
                     activityGenerator,
