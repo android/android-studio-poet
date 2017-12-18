@@ -17,6 +17,8 @@ limitations under the License.
 package com.google.androidstudiopoet.generators.project
 
 import com.google.androidstudiopoet.models.ProjectBlueprint
+import com.google.androidstudiopoet.utils.joinPath
+import com.google.androidstudiopoet.writers.RemoteFilesWriter
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Files
@@ -30,8 +32,8 @@ object GradlewGenerator {
         val gradlewbat = "gradlew.bat"
 
         val gradleWFile = File(root, gradlew).toPath()
-        Files.copy(FileInputStream(File(ASSETS_PATH, gradlew)), gradleWFile, StandardCopyOption.REPLACE_EXISTING)
-        Files.copy(FileInputStream(File(ASSETS_PATH, gradlewbat)), File(root, gradlewbat).toPath(), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy(FileInputStream(File(getAssetsPath(), gradlew)), gradleWFile, StandardCopyOption.REPLACE_EXISTING)
+        Files.copy(FileInputStream(File(getAssetsPath(), gradlewbat)), File(root, gradlewbat).toPath(), StandardCopyOption.REPLACE_EXISTING)
 
         Runtime.getRuntime().exec("chmod u+x " + gradleWFile)
 
@@ -40,7 +42,7 @@ object GradlewGenerator {
         val gradleWrapperFolder = File(gradleFolder, "wrapper")
         gradleWrapperFolder.mkdir()
 
-        val sourceFolder = File(ASSETS_PATH, "gradle/wrapper")
+        val sourceFolder = File(getAssetsPath(), "gradle/wrapper")
 
         val gradleWrapperJar = "gradle-wrapper.jar"
         val gradleWrapperProperties = "gradle-wrapper.properties"
@@ -51,6 +53,17 @@ object GradlewGenerator {
         File(gradleWrapperFolder, gradleWrapperProperties).writeText(gradleWrapper(projectBlueprint.gradleVersion))
     }
 
+    private fun getAssetsPath(): String {
+
+        var assetsFolder: String = System.getProperty("user.home").joinPath(".aspoet").joinPath("assets")
+
+        if(!File(assetsFolder).exists()) {
+            println("not here yet")
+            var result: String = RemoteFilesWriter("", assetsFolder).getResultPath()
+        }
+
+        return "src/main/assets"
+    }
 
     fun gradleWrapper(gradleVersion: String) = """
 distributionBase=GRADLE_USER_HOME
