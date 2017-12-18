@@ -99,7 +99,7 @@ object ModuleBlueprintFactory {
         return AndroidModuleBlueprint(androidModuleConfig.index,
                 androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
                 projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
-                moduleDependencies, androidModuleConfig.productFlavors,
+                moduleDependencies, androidModuleConfig.productFlavorConfigs,
                 androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
                 androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass)

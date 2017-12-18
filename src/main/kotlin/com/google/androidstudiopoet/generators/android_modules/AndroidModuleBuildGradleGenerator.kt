@@ -17,7 +17,9 @@ limitations under the License.
 package com.google.androidstudiopoet.generators.android_modules
 
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.utils.fold
+import com.google.androidstudiopoet.utils.isNullOrEmpty
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
@@ -30,7 +32,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val moduleDependencies = blueprint.dependencies.map { "implementation project(':${it.name}')\n" }.fold()
 
-        val flavorsSection = createFlavorsSection(blueprint.productFlavors)
+        val flavorsSection = createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 
         val gradleText = """
             apply plugin: 'com.android.$androidPlugin'
@@ -81,21 +83,19 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
         fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))
     }
 
-    private fun createFlavorsSection(productFlavors: List<Int>?): String {
-        if (productFlavors == null || productFlavors.size == 0) {
+    private fun createFlavorsSection(productFlavors: Set<Flavor>?, flavorDimensions: Set<String>?): String {
+        if (productFlavors.isNullOrEmpty() && flavorDimensions.isNullOrEmpty()) {
             return ""
         }
 
-        val dimensionsList = productFlavors.withIndex().map { (dimension, _) -> "\"dim$dimension\"" }.joinToString()
+        val dimensionsList = flavorDimensions?.joinToString { "\"$it\"" } ?: ""
 
-        val flavorsList = productFlavors.withIndex().map { (dimension, size) ->
-            (0 until size).map { flavor ->
-                """
-                    dim${dimension}flav$flavor {
-                        dimension "dim${dimension}"
+        val flavorsList = productFlavors?.map {
+            """
+                    ${it.name} {
+                        ${if (it.dimension != null) "dimension \"${it.dimension}\"" else ""}
                     }"""
-            }.fold()
-        }.fold()
+        }?.fold()
 
         return """
                 flavorDimensions $dimensionsList

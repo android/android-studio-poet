@@ -16,12 +16,4 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-import com.google.androidstudiopoet.models.ConfigPOJO
-
-class AndroidModuleConfig(index: Int, config: ConfigPOJO, val productFlavorConfigs: List<FlavorConfig>): ModuleConfig(index, config) {
-
-    val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
-    val hasLaunchActivity = index == 0
-    val resourcesConfig = ResourcesConfig(activityCount + 2,
-            activityCount + 5, activityCount)
-}
+data class FlavorConfig(val name: String, val dimension: String?)

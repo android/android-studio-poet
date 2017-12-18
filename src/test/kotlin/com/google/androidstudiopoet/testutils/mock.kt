@@ -14,14 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.input
+package com.google.androidstudiopoet.testutils
 
-import com.google.androidstudiopoet.models.ConfigPOJO
+import org.mockito.Mockito
 
-class AndroidModuleConfig(index: Int, config: ConfigPOJO, val productFlavorConfigs: List<FlavorConfig>): ModuleConfig(index, config) {
-
-    val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
-    val hasLaunchActivity = index == 0
-    val resourcesConfig = ResourcesConfig(activityCount + 2,
-            activityCount + 5, activityCount)
-}
+inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)

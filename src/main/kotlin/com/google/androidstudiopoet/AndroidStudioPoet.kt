@@ -14,6 +14,7 @@
 
 package com.google.androidstudiopoet
 
+import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.writers.SourceModuleWriter
@@ -29,7 +30,8 @@ import javax.swing.*
 import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
 
-class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename: String?) : JFrame() {
+class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename: String?,
+                        configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter) : JFrame() {
 
     companion object {
         @JvmStatic
@@ -37,7 +39,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
 
             EventQueue.invokeLater {
                 try {
-                    val frame = AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull())
+                    val frame = AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
+                            Injector.configPojoToFlavourConfigsConverter)
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -89,7 +92,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
                 val timeSpent = measureTimeMillis {
                     println(textArea.text)
                     val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
-                    projectBluePrint = ProjectBlueprint(config)
+                    projectBluePrint = ProjectBlueprint(config, configPojoToFlavourConfigsConverter)
                     modulesWriter.generate(projectBluePrint!!)
                 }
                 println("Finished in $timeSpent ms")
