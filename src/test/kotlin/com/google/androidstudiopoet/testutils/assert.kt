@@ -14,8 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.test_utils
+package com.google.androidstudiopoet.testutils
 
-import org.mockito.Mockito
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
 
-inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)
+fun <T> Collection<T>.assertEmpty() {
+    assertTrue(this.isEmpty())
+}
+
+inline fun <T> Collection<T>.assertSize(expectedSize: Int) {
+    assertEquals(expectedSize, size)
+}
+
+inline fun Any.assertEquals(expected: Any) {
+    assertEquals(expected, this)
+}

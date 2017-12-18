@@ -17,18 +17,12 @@ limitations under the License.
 package com.google.androidstudiopoet.generators.android_modules
 
 import com.google.androidstudiopoet.generators.PackagesGenerator
-import com.google.androidstudiopoet.generators.android_modules.resources.ImagesGenerator
-import com.google.androidstudiopoet.generators.android_modules.resources.LayoutResourcesGenerator
 import com.google.androidstudiopoet.generators.android_modules.resources.ResourcesGenerator
-import com.google.androidstudiopoet.generators.android_modules.resources.StringResourcesGenerator
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
-class AndroidModuleGenerator(private val stringResourcesGenerator: StringResourcesGenerator,
-                             private val imageResourcesGenerator: ImagesGenerator,
-                             private val layoutResourcesGenerator: LayoutResourcesGenerator,
-                             private val resourcesGenerator: ResourcesGenerator,
+class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
                              private val packagesGenerator: PackagesGenerator,
                              private val activityGenerator: ActivityGenerator,
                              private val manifestGenerator: ManifestGenerator,

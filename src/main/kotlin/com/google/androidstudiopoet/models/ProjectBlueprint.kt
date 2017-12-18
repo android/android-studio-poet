@@ -17,13 +17,14 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.ModuleBlueprintFactory
+import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.*
 import kotlin.system.measureTimeMillis
 
-class ProjectBlueprint(val configPOJO: ConfigPOJO) {
+class ProjectBlueprint(private val configPOJO: ConfigPOJO, configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter) {
 
     val projectName = configPOJO.projectName
 
@@ -61,12 +62,13 @@ class ProjectBlueprint(val configPOJO: ConfigPOJO) {
         moduleBlueprints = temporaryModuleBlueprints
         println("Time to create model blueprints: $timeModels")
 
+        val productFlavors = configPojoToFlavourConfigsConverter.convert(configPOJO)
         var temporayAndroidBlueprints : List<AndroidModuleBlueprint> = listOf()
         val timeAndroidModels = measureTimeMillis {
             temporayAndroidBlueprints = (0 until configPOJO.androidModules!!.toInt()).map { i ->
                 ModuleBlueprintFactory.createAndroidModule(projectRoot, pureModulesConfigs.map { it.index },
-                        AndroidModuleConfig(i, configPOJO),
-                        (i + 1 until configPOJO.androidModules.toInt()).toList().map { AndroidModuleConfig(it, configPOJO) })
+                        AndroidModuleConfig(i, configPOJO, productFlavors),
+                        (i + 1 until configPOJO.androidModules.toInt()).toList().map { AndroidModuleConfig(it, configPOJO, productFlavors) })
             }
         }
         androidModuleBlueprints = temporayAndroidBlueprints
