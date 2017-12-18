@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.test_utils
+package com.google.androidstudiopoet.input
 
-import org.mockito.Mockito
-
-inline fun <reified T: Any> mock() = Mockito.mock(T::class.java)
+data class FlavorConfig(val name: String, val dimension: String?)

@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet
 
+import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
 import com.google.androidstudiopoet.generators.BuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.android_modules.*
@@ -50,6 +51,7 @@ object Injector {
     private val manifestGenerator: ManifestGenerator = ManifestGenerator(fileWriter)
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
+    val configPojoToFlavourConfigsConverter = ConfigPojoToFlavourConfigsConverter()
 
     private val androidModuleGenerator =
             AndroidModuleGenerator(

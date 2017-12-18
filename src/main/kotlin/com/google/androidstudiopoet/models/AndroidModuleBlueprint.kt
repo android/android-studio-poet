@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.Blueprint
+import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
@@ -28,7 +29,7 @@ data class AndroidModuleBlueprint(val index: Int,
                                   val hasLaunchActivity: Boolean,
                                   val useKotlin: Boolean,
                                   val dependencies: List<ModuleDependency>,
-                                  val productFlavors: List<Int>?,
+                                  private val productFlavorConfigs: List<FlavorConfig>?,
                                   private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
                                   private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int
 ): Blueprint {
@@ -60,4 +61,7 @@ data class AndroidModuleBlueprint(val index: Int,
 
     var methodToCallFromOutside = packagesBlueprint.methodToCallFromOutside
     var resourcesToReferFromOutside = resourcesBlueprint.resourcesToReferFromOutside
+
+    val productFlavors = productFlavorConfigs?.map { Flavor(it.name, it.dimension) }?.toSet()
+    val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()
 }

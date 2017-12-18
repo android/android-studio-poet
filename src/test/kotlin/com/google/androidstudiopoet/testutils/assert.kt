@@ -14,6 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.input
+package com.google.androidstudiopoet.testutils
 
-data class FlavourConfig(val name: String, val dimension: String)
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
+
+fun <T> Collection<T>.assertEmpty() {
+    assertTrue(this.isEmpty())
+}
+
+inline fun <T> Collection<T>.assertSize(expectedSize: Int) {
+    assertEquals(expectedSize, size)
+}
+
+inline fun Any.assertEquals(expected: Any) {
+    assertEquals(expected, this)
+}
