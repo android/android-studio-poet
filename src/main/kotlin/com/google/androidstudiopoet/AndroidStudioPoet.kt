@@ -88,18 +88,23 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
 
         val btnGenerate = JButton("Generate").apply {
             addActionListener {
-                var projectBluePrint : ProjectBlueprint? = null
-                val timeSpent = measureTimeMillis {
-                    println(textArea.text)
-                    val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
-                    projectBluePrint = ProjectBlueprint(config, configPojoToFlavourConfigsConverter)
-                    modulesWriter.generate(projectBluePrint!!)
-                }
-                println("Finished in $timeSpent ms")
-                println("Dependency graph:")
-                projectBluePrint!!.printDependencies()
-                if (projectBluePrint!!.hasCircularDependencies()) {
-                    println("WARNING: there are circular dependencies")
+                try {
+                    var projectBluePrint: ProjectBlueprint? = null
+                    val timeSpent = measureTimeMillis {
+                        println(textArea.text)
+                        val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
+                        projectBluePrint = ProjectBlueprint(config, configPojoToFlavourConfigsConverter)
+                        modulesWriter.generate(projectBluePrint!!)
+                    }
+                    println("Finished in $timeSpent ms")
+                    println("Dependency graph:")
+                    projectBluePrint!!.printDependencies()
+                    if (projectBluePrint!!.hasCircularDependencies()) {
+                        println("WARNING: there are circular dependencies")
+                    }
+                } catch (e: Exception) {
+                        println("ERROR: the generation failed due to JSON script errors - " +
+                                "please fix and try again ")
                 }
             }
         }
