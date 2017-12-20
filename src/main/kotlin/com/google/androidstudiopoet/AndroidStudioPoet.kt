@@ -14,6 +14,7 @@
 
 package com.google.androidstudiopoet
 
+import com.google.androidstudiopoet.converters.ConfigPojoToBuildTypeConfigsConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ProjectBlueprint
@@ -31,7 +32,8 @@ import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename: String?,
-                        configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter) : JFrame() {
+                        configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
+                        configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter) : JFrame() {
 
     companion object {
         @JvmStatic
@@ -40,7 +42,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
             EventQueue.invokeLater {
                 try {
                     val frame = AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
-                            Injector.configPojoToFlavourConfigsConverter)
+                            Injector.configPojoToFlavourConfigsConverter,
+                            Injector.configPojoToBuildTypeConfigsConverter)
                     frame.isVisible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -65,7 +68,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
               "androidModules": "2",
               "numActivitiesPerAndroidModule": "8",
               "productFlavors": [
-                  2, 3, 4
+                  2, 3
                ],
                "topologies": [
                   {"type": "random", "seed": "2"}
@@ -74,7 +77,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
                 {"from": 3, "to": 2},
                 {"from": 4, "to": 2},
                 {"from": 4, "to": 3}
-              ]
+              ],
+              "buildTypes": 6
             }
             """
     }
@@ -92,7 +96,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
                 val timeSpent = measureTimeMillis {
                     println(textArea.text)
                     val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
-                    projectBluePrint = ProjectBlueprint(config, configPojoToFlavourConfigsConverter)
+                    projectBluePrint = ProjectBlueprint(config, configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter)
                     modulesWriter.generate(projectBluePrint!!)
                 }
                 println("Finished in $timeSpent ms")

@@ -69,6 +69,8 @@ class ConfigPOJO {
 
     val productFlavors: List<Int>? = null
 
+    val buildTypes: Int? = null
+
     val gradleVersion: String? = ""
 
     val kotlinVersion: String? = null
@@ -96,7 +98,7 @@ class ConfigPOJO {
         val givenTopologies = topologies
         if (givenTopologies != null) {
             for (parameters in givenTopologies) {
-                val type = parameters.get("type") ?: throw InvalidParameterException("No type specified in topology $parameters")
+                val type = parameters["type"] ?: throw InvalidParameterException("No type specified in topology $parameters")
                 val topology: Topologies = Topologies.valueOf(type.toUpperCase())
                 val currentDependencies = topology.generateDependencies(parameters, this)
                 addDependencies(allDependencies, currentDependencies)
