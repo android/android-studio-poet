@@ -15,3 +15,10 @@
 package com.google.androidstudiopoet.utils
 
 fun <T> Collection<T>?.isNullOrEmpty() = this == null || this.isEmpty()
+
+fun <T> Collection<T>?.joinLines(separator: CharSequence = "\n") : String {
+    if (this == null) {
+        return ""
+    }
+    return this.joinToString(separator = separator)
+}

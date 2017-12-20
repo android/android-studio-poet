@@ -14,6 +14,8 @@
 
 package com.google.androidstudiopoet
 
+import com.google.androidstudiopoet.utils.joinLines
+
 annotation class Fancy
 
 @Fancy
@@ -65,11 +67,4 @@ object BuildGradle {
             else
                 "" ) +
             extraLines.joinLines()
-}
-
-fun Collection<Any>?.joinLines(separator: CharSequence = "\n") : String {
-    if (this == null) {
-        return ""
-    }
-    return this.joinToString(separator = separator)
 }
