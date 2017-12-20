@@ -28,27 +28,20 @@ import java.awt.EventQueue
 import java.awt.Font
 import java.io.File
 import javax.swing.*
+import javax.swing.JFrame.EXIT_ON_CLOSE
 import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
 
-class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename: String?,
-                        configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
-                        configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter) : JFrame() {
+class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
+                        private val configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
+                        private val configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter) {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-
-            EventQueue.invokeLater {
-                try {
-                    val frame = AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
-                            Injector.configPojoToFlavourConfigsConverter,
-                            Injector.configPojoToBuildTypeConfigsConverter)
-                    frame.isVisible = true
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+            AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
+                    Injector.configPojoToFlavourConfigsConverter,
+                    Injector.configPojoToBuildTypeConfigsConverter).run()
         }
 
         @Language("JSON") const val SAMPLE_CONFIG = """
@@ -83,28 +76,36 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
             """
     }
 
-    init {
+    fun run() {
 
-        val jsonText = fromFileNameOrDefault(filename)
+        val configPOJO = fromFile(filename)
+        when (configPOJO) {
+            null -> showUI(SAMPLE_CONFIG)
+            else -> processInput(configPOJO)
+        }
+    }
 
+    private fun showUI(jsonText: String) {
+        EventQueue.invokeLater {
+            try {
+                val frame = createUI(jsonText)
+                frame.isVisible = true
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun createUI(jsonText: String): JFrame {
+        val frame = JFrame()
         val textArea = createTextArea(jsonText)
         val scrollPane = JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS)
 
         val btnGenerate = JButton("Generate").apply {
             addActionListener {
-                var projectBluePrint : ProjectBlueprint? = null
-                val timeSpent = measureTimeMillis {
-                    println(textArea.text)
-                    val config: ConfigPOJO = configFrom(textArea.text) ?: configFrom(SAMPLE_CONFIG)!!
-                    projectBluePrint = ProjectBlueprint(config, configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter)
-                    modulesWriter.generate(projectBluePrint!!)
-                }
-                println("Finished in $timeSpent ms")
-                println("Dependency graph:")
-                projectBluePrint!!.printDependencies()
-                if (projectBluePrint!!.hasCircularDependencies()) {
-                    println("WARNING: there are circular dependencies")
-                }
+                val text = textArea.text
+                println(text)
+                processInput(configFrom(text)!!)
             }
         }
 
@@ -116,11 +117,26 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
             add(btnGenerate, BorderLayout.SOUTH)
         }
 
-        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+        frame.defaultCloseOperation = EXIT_ON_CLOSE
 
-        setContentPane(contentPane)
+        frame.contentPane = contentPane
 
-        pack()
+        frame.pack()
+        return frame
+    }
+
+    private fun processInput(configPOJO: ConfigPOJO) {
+        var projectBluePrint: ProjectBlueprint? = null
+        val timeSpent = measureTimeMillis {
+            projectBluePrint = ProjectBlueprint(configPOJO, configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter)
+            modulesWriter.generate(projectBluePrint!!)
+        }
+        println("Finished in $timeSpent ms")
+        println("Dependency graph:")
+        projectBluePrint!!.printDependencies()
+        if (projectBluePrint!!.hasCircularDependencies()) {
+            println("WARNING: there are circular dependencies")
+        }
     }
 
 
@@ -143,16 +159,11 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, filename:
         }
     }
 
-    private fun fromFileNameOrDefault(filename: String?): String = when {
-        filename == null -> SAMPLE_CONFIG
-        !File(filename).canRead() -> SAMPLE_CONFIG
-        else -> File(filename).readText().let { json ->
-            if (configFrom(json) == null) {
-                SAMPLE_CONFIG
-            } else {
-                json
-            }
-        }
+    private fun fromFile(filename: String?): ConfigPOJO? = when {
+        filename == null -> null
+        !File(filename).canRead() -> null
+        else -> File(filename).readText().let {
+            return configFrom(it) }
     }
 
 
