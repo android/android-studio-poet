@@ -18,7 +18,7 @@ package com.google.androidstudiopoet.input
 
 import com.google.androidstudiopoet.models.ConfigPOJO
 
-class AndroidModuleConfig(index: Int, config: ConfigPOJO, val productFlavorConfigs: List<FlavorConfig>): ModuleConfig(index, config) {
+class AndroidModuleConfig(index: Int, config: ConfigPOJO, val productFlavorConfigs: List<FlavorConfig>, val buildTypes: List<BuildTypeConfig>): ModuleConfig(index, config) {
 
     val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
     val hasLaunchActivity = index == 0

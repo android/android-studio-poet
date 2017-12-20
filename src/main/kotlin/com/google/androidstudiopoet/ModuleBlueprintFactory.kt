@@ -23,9 +23,9 @@ import com.google.androidstudiopoet.models.*
 object ModuleBlueprintFactory {
 
     // Store if a ModuleDependency was already computed
-    private var moduleDepencencyCache : MutableList<ModuleDependency?> = mutableListOf()
+    private var moduleDependencyCache: MutableList<ModuleDependency?> = mutableListOf()
     // Used to synchronize cache elements (can be one per item since each is independent)
-    private var moduleDepencencyLock : List<Any> = listOf()
+    private var moduleDependencyLock: List<Any> = listOf()
 
     fun create(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
         val moduleDependencies = moduleConfig.dependencies
@@ -37,9 +37,9 @@ object ModuleBlueprintFactory {
         val result = ModuleBlueprint(getModuleNameByIndex(moduleConfig.index), projectRoot, moduleConfig.useKotlin, moduleDependencies,
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
                 moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass)
-        synchronized(moduleDepencencyLock[moduleConfig.index]) {
-            if (moduleDepencencyCache[moduleConfig.index] == null) {
-                moduleDepencencyCache[moduleConfig.index] = ModuleDependency(result.name, result.methodToCallFromOutside)
+        synchronized(moduleDependencyLock[moduleConfig.index]) {
+            if (moduleDependencyCache[moduleConfig.index] == null) {
+                moduleDependencyCache[moduleConfig.index] = ModuleDependency(result.name, result.methodToCallFromOutside)
             }
         }
         return result
@@ -47,14 +47,14 @@ object ModuleBlueprintFactory {
 
     private fun getModuleDependency(index: Int, projectRoot: String, javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
                                     kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int, useKotlin: Boolean): ModuleDependency {
-        synchronized(moduleDepencencyLock[index]) {
-            val cachedMethod = moduleDepencencyCache[index]
+        synchronized(moduleDependencyLock[index]) {
+            val cachedMethod = moduleDependencyCache[index]
             if (cachedMethod != null) {
                 return cachedMethod
             }
             val newMethodDependency = getDependencyForModule(index, projectRoot, javaPackageCount, javaClassCount,
                     javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, useKotlin)
-            moduleDepencencyCache[index] = newMethodDependency
+            moduleDependencyCache[index] = newMethodDependency
             return newMethodDependency
         }
     }
@@ -99,7 +99,7 @@ object ModuleBlueprintFactory {
         return AndroidModuleBlueprint(androidModuleConfig.index,
                 androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
                 projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
-                moduleDependencies, androidModuleConfig.productFlavorConfigs,
+                moduleDependencies, androidModuleConfig.productFlavorConfigs, androidModuleConfig.buildTypes,
                 androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
                 androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass)
@@ -108,8 +108,8 @@ object ModuleBlueprintFactory {
     private fun getModuleNameByIndex(index: Int) = "module$index"
 
     fun initCache(size : Int) {
-        moduleDepencencyCache = MutableList(size, {null})
-        moduleDepencencyLock = List(size, {String()})
+        moduleDependencyCache = MutableList(size, {null})
+        moduleDependencyLock = List(size, {String()})
     }
 }
 

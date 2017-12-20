@@ -10,7 +10,7 @@ class AndroidModuleBlueprintTest {
     private val resourcesConfig: ResourcesConfig = mock()
     private val dependency: ModuleDependency = mock()
     private val originalAndroidModuleBlueprint = AndroidModuleBlueprint(1, 1, resourcesConfig,
-            "root", true, false, listOf(dependency), null,
+            "root", true, false, listOf(dependency), null,null,
             1, 1, 1, 1, 1, 1)
 
     @Test

@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.ModuleBlueprintFactory
+import com.google.androidstudiopoet.converters.ConfigPojoToBuildTypeConfigsConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.ModuleConfig
@@ -24,7 +25,8 @@ import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.*
 import kotlin.system.measureTimeMillis
 
-class ProjectBlueprint(private val configPOJO: ConfigPOJO, configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter) {
+class ProjectBlueprint(private val configPOJO: ConfigPOJO, configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
+                       configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter) {
 
     val projectName = configPOJO.projectName
 
@@ -63,15 +65,16 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO, configPojoToFlavourCo
         println("Time to create model blueprints: $timeModels")
 
         val productFlavors = configPojoToFlavourConfigsConverter.convert(configPOJO)
-        var temporayAndroidBlueprints : List<AndroidModuleBlueprint> = listOf()
+        val buildTypes = configPojoToBuildTypeConfigsConverter.convert(configPOJO)
+        var temporaryAndroidBlueprints : List<AndroidModuleBlueprint> = listOf()
         val timeAndroidModels = measureTimeMillis {
-            temporayAndroidBlueprints = (0 until configPOJO.androidModules!!.toInt()).map { i ->
+            temporaryAndroidBlueprints = (0 until configPOJO.androidModules!!.toInt()).map { i ->
                 ModuleBlueprintFactory.createAndroidModule(projectRoot, pureModulesConfigs.map { it.index },
-                        AndroidModuleConfig(i, configPOJO, productFlavors),
-                        (i + 1 until configPOJO.androidModules.toInt()).toList().map { AndroidModuleConfig(it, configPOJO, productFlavors) })
+                        AndroidModuleConfig(i, configPOJO, productFlavors, buildTypes),
+                        (i + 1 until configPOJO.androidModules.toInt()).toList().map { AndroidModuleConfig(it, configPOJO, productFlavors, buildTypes) })
             }
         }
-        androidModuleBlueprints = temporayAndroidBlueprints
+        androidModuleBlueprints = temporaryAndroidBlueprints
         println("Time to create Android model blueprints: $timeAndroidModels")
 
         allModulesNames = moduleBlueprints.map { it.name } + androidModuleBlueprints.map { it.name }
@@ -80,7 +83,7 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO, configPojoToFlavourCo
     fun printDependencies() {
         println("digraph $projectName {")
         for (module in pureModulesConfigs) {
-            val list = if (module.dependencies.size > 0) " -> ${module.dependencies.sorted().joinToString()}" else ""
+            val list = if (module.dependencies.isNotEmpty()) " -> ${module.dependencies.sorted().joinToString()}" else ""
             println("  ${module.index}$list;")
         }
         println("}")
@@ -105,7 +108,7 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO, configPojoToFlavourCo
             }
             index++
         }
-        // No circular dependencies if and olny if all modules can be sorted
+        // No circular dependencies if and only if all modules can be sorted
         return topologicalOrder.size != pureModulesConfigs.size
     }
 }
