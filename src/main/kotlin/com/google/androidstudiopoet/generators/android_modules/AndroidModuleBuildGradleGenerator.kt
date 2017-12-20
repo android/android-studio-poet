@@ -34,51 +34,60 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val flavorsSection = createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 
-        val gradleText = """
-            apply plugin: 'com.android.$androidPlugin'
-            ${if (blueprint.useKotlin) "apply plugin: 'kotlin-android'" else ""}
-            ${if (blueprint.useKotlin) "apply plugin: 'kotlin-android-extensions'" else ""}
-            android {
-                compileSdkVersion 26
+        val gradleText =
+"""
+apply plugin: 'com.android.$androidPlugin'
+${if (blueprint.useKotlin) "apply plugin: 'kotlin-android'" else ""}
+${if (blueprint.useKotlin) "apply plugin: 'kotlin-android-extensions'" else ""}
 
-                defaultConfig {
-                    $applicationId
-                    minSdkVersion 19
-                    targetSdkVersion 26
-                    versionCode 1
-                    versionName "1.0"
-                    multiDexEnabled true
+android {
+    compileSdkVersion 26
 
-                    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    defaultConfig {
+        $applicationId
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
 
-                }
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-                buildTypes {
-                    release {
-                        minifyEnabled false
-                        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-                    }
-                }
-                $flavorsSection
-                compileOptions {
-                    targetCompatibility 1.8
-                    sourceCompatibility 1.8
-                }
+    }
 
-            }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        ${align(blueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
+            "${buildType.name} {\n" +
+            "    ${align(buildType.body,"    ")}\n" +
+            "}"
+        }, "        ")}
+    }
 
-            dependencies {
-                implementation fileTree(dir: 'libs', include: ['*.jar'])
-                ${if (blueprint.useKotlin) "implementation \"org.jetbrains.kotlin:kotlin-stdlib-jre7:${'$'}kotlin_version\"" else ""}
-                implementation 'com.android.support:appcompat-v7:26.1.0'
-                implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-                testImplementation 'junit:junit:4.12'
-                androidTestImplementation 'com.android.support.test:runner:1.0.1'
-                androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-                implementation "com.android.support:multidex:1.0.1"
-                $moduleDependencies
-            }
-            """.trim()
+    ${align(flavorsSection, "    ")}
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    ${if (blueprint.useKotlin) "implementation \"org.jetbrains.kotlin:kotlin-stdlib-jre7:${'$'}kotlin_version\"" else ""}
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation "com.android.support:multidex:1.0.1"
+
+    ${align(moduleDependencies.trimEnd(),"    ")}
+}
+""".trim()
 
         fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))
     }
@@ -90,19 +99,17 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val dimensionsList = flavorDimensions?.joinToString { "\"$it\"" } ?: ""
 
-        val flavorsList = productFlavors?.map {
-            """
-                    ${it.name} {
-                        ${if (it.dimension != null) "dimension \"${it.dimension}\"" else ""}
-                    }"""
-        }?.fold()
+        val flavorsList = productFlavors?.joinToString(separator = "") {
+            "${it.name} {\n" +
+                (if (it.dimension != null) "    dimension \"${it.dimension}\"\n" else "") +
+            "}\n"
+        }
 
-        return """
-                flavorDimensions $dimensionsList
-
-                productFlavors {
-                    $flavorsList
-                }
-                """
+        return "flavorDimensions $dimensionsList\n" +
+               "productFlavors {\n" +
+               "    ${align(flavorsList?.trimEnd(),"    ")}\n" +
+               "}"
     }
+
+    private fun align(input: String?, spaces: String): String = if (input != null) input.lines().joinToString(separator = "\n$spaces") else ""
 }
