@@ -26,6 +26,8 @@ import java.nio.file.StandardCopyOption
 
 object GradlewGenerator {
 
+    private val ref = "master"
+
     fun generateGradleW(root: String, projectBlueprint: ProjectBlueprint) {
 
         val gradlew = "gradlew"
@@ -38,7 +40,7 @@ object GradlewGenerator {
                 ) {
 
             println("AS Poet needs network access to download gradle files from Github " +
-                    "\nhttps://github.com/android/android-studio-poet/tree/master/resources/gradle-assets " +
+                    "\nhttps://github.com/android/android-studio-poet/tree/master/resources/gradle-assets?ref=$ref " +
                     "\nplease copy/paste the gradle folder directly to the generated root folder")
             return
         }
@@ -74,10 +76,9 @@ object GradlewGenerator {
                 .joinPath("gradle-assets")
 
         if (!File(assetsFolder).exists()) {
-            val commitId = "fbc09b6"
             GithubDownloader().downloadDir(
                     "https://api.github.com/repos/android/" +
-                            "android-studio-poet/contents/resources/gradle-assets?ref=$commitId",
+                            "android-studio-poet/contents/resources/gradle-assets?ref=$ref",
                     assetsFolder)
         }
 
