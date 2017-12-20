@@ -33,7 +33,8 @@ data class AndroidModuleBlueprint(val index: Int,
                                   private val productFlavorConfigs: List<FlavorConfig>?,
                                   private val buildTypeConfigs: List<BuildTypeConfig>?,
                                   private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
-                                  private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int
+                                  private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int,
+                                  val extraLines: List<String>?
 ) : Blueprint {
 
     val name = "androidAppModule" + index

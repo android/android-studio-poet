@@ -79,6 +79,10 @@ class ConfigPOJO {
 
     val topologies: List<Map<String, String>>? = null
 
+    val extraBuildFileLines : List<String>? = null
+
+    val extraAndroidBuildFileLines : List<String>? = null
+
     override fun toString(): String = toJson()
 
     private fun toJson(): String {

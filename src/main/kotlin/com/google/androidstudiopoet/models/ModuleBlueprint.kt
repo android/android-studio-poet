@@ -23,7 +23,8 @@ data class ModuleBlueprint(val name: String,
                            val useKotlin: Boolean,
                            val dependencies: List<ModuleDependency>,
                            private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
-                           private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int) {
+                           private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int,
+                           val extraLines: List<String>?) {
 
     val moduleRoot = root.joinPath(name)
     val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,

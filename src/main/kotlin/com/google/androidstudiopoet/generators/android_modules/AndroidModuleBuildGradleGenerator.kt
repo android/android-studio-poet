@@ -87,6 +87,7 @@ dependencies {
 
     ${align(moduleDependencies.trimEnd(),"    ")}
 }
+${if (blueprint.extraLines != null) blueprint.extraLines.joinToString(separator = "\n") else ""}
 """.trim()
 
         fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))
