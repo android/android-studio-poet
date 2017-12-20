@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules
 
+import com.google.androidstudiopoet.joinLines
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.utils.fold
@@ -87,7 +88,7 @@ dependencies {
 
     ${align(moduleDependencies.trimEnd(),"    ")}
 }
-${if (blueprint.extraLines != null) blueprint.extraLines.joinToString(separator = "\n") else ""}
+${blueprint.extraLines.joinLines()}
 """.trim()
 
         fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))

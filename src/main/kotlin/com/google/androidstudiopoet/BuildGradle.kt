@@ -64,5 +64,12 @@ object BuildGradle {
                 "}\n"
             else
                 "" ) +
-            (extraLines?.joinToString(separator = "\n") ?: "")
+            extraLines.joinLines()
+}
+
+fun Collection<Any>?.joinLines(separator: CharSequence = "\n") : String {
+    if (this == null) {
+        return ""
+    }
+    return this.joinToString(separator = separator)
 }
