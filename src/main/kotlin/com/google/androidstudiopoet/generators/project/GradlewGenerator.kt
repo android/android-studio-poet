@@ -74,9 +74,10 @@ object GradlewGenerator {
                 .joinPath("gradle-assets")
 
         if (!File(assetsFolder).exists()) {
+            val commitId = "fbc09b6"
             GithubDownloader().downloadDir(
                     "https://api.github.com/repos/android/" +
-                            "android-studio-poet/contents/resources/gradle-assets?ref=master",
+                            "android-studio-poet/contents/resources/gradle-assets?ref=$commitId",
                     assetsFolder)
         }
 
