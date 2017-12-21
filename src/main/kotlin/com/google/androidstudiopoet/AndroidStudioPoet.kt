@@ -103,9 +103,15 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
 
         val btnGenerate = JButton("Generate").apply {
             addActionListener {
-                val text = textArea.text
-                println(text)
-                processInput(configFrom(text)!!)
+                try {
+                    val text = textArea.text
+                    println(text)
+                    processInput(configFrom(text)!!)
+
+                } catch (e: Exception) {
+                    println("ERROR: the generation failed due to JSON script errors - " +
+                            "please fix and try again ")
+                }
             }
         }
 
@@ -139,7 +145,6 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         }
     }
 
-
     private fun createTitleLabel(): JLabel {
         return JLabel("Android Studio Poet").apply {
             horizontalAlignment = SwingConstants.CENTER
@@ -163,7 +168,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         filename == null -> null
         !File(filename).canRead() -> null
         else -> File(filename).readText().let {
-            return configFrom(it) }
+            return configFrom(it)
+        }
     }
 
 

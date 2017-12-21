@@ -20,8 +20,6 @@ import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
-internal const val ASSETS_PATH = "src/main/assets"
-
 class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
     fun generate(root: String, projectBlueprint: ProjectBlueprint) {
