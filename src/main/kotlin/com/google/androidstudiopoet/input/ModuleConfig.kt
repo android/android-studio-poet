@@ -31,5 +31,5 @@ open class ModuleConfig(val index: Int, config: ConfigPOJO) {
 
     val dependencies = config.resolvedDependencies[index]?.map { it.to } ?: listOf()
 
-
+    open val extraLines = config.extraBuildFileLines
 }

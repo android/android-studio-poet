@@ -44,7 +44,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
                     Injector.configPojoToBuildTypeConfigsConverter).run()
         }
 
-        @Language("JSON") const val SAMPLE_CONFIG = """
+        @Language("JSON") val SAMPLE_CONFIG = """
             {
               "projectName": "genny",
               "root": "./modules/",
@@ -73,7 +73,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
               ],
               "buildTypes": 6
             }
-            """
+            """.trimIndent()
     }
 
     fun run() {

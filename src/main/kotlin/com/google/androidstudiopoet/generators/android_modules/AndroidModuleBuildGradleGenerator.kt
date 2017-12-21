@@ -20,6 +20,7 @@ import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.utils.isNullOrEmpty
+import com.google.androidstudiopoet.utils.joinLines
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
@@ -87,6 +88,7 @@ dependencies {
 
     ${align(moduleDependencies.trimEnd(),"    ")}
 }
+${blueprint.extraLines.joinLines()}
 """.trim()
 
         fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))
