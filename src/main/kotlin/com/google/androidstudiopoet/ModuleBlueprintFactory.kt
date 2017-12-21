@@ -36,7 +36,7 @@ object ModuleBlueprintFactory {
                 }
         val result = ModuleBlueprint(getModuleNameByIndex(moduleConfig.index), projectRoot, moduleConfig.useKotlin, moduleDependencies,
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
-                moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass)
+                moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.extraLines)
         synchronized(moduleDependencyLock[moduleConfig.index]) {
             if (moduleDependencyCache[moduleConfig.index] == null) {
                 moduleDependencyCache[moduleConfig.index] = ModuleDependency(result.name, result.methodToCallFromOutside)
@@ -69,7 +69,7 @@ object ModuleBlueprintFactory {
          */
         val tempModuleBlueprint = ModuleBlueprint(getModuleNameByIndex(index), projectRoot, useKotlin, listOf(),
                 javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,kotlinClassCount,
-                kotlinMethodsPerClass)
+                kotlinMethodsPerClass, null)
         return ModuleDependency(tempModuleBlueprint.name, tempModuleBlueprint.methodToCallFromOutside)
 
     }
@@ -102,7 +102,8 @@ object ModuleBlueprintFactory {
                 moduleDependencies, androidModuleConfig.productFlavorConfigs, androidModuleConfig.buildTypes,
                 androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
-                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass)
+                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass,
+                androidModuleConfig.extraLines)
     }
 
     private fun getModuleNameByIndex(index: Int) = "module$index"

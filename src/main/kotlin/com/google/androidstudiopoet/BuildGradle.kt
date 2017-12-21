@@ -14,12 +14,14 @@
 
 package com.google.androidstudiopoet
 
+import com.google.androidstudiopoet.utils.joinLines
+
 annotation class Fancy
 
 @Fancy
 object BuildGradle {
 
-    fun print(dependencies: String, useKotlin: Boolean) = "" +
+    fun print(dependencies: String, useKotlin: Boolean, extraLines: List<String>? = null) = "" +
             "apply plugin: 'java-library'\n" +
             (if (useKotlin)
                 "apply plugin: 'kotlin'\n"
@@ -51,7 +53,7 @@ object BuildGradle {
             "repositories {\n" +
             "    mavenCentral()\n" +
             "}\n" +
-            if (useKotlin)
+            (if (useKotlin)
                 "compileKotlin {\n" +
                 "    kotlinOptions {\n" +
                 "        jvmTarget = \"1.8\"\n" +
@@ -63,5 +65,6 @@ object BuildGradle {
                 "    }\n" +
                 "}\n"
             else
-                ""
+                "" ) +
+            extraLines.joinLines()
 }

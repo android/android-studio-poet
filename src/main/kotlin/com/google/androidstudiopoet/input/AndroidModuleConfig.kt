@@ -24,4 +24,5 @@ class AndroidModuleConfig(index: Int, config: ConfigPOJO, val productFlavorConfi
     val hasLaunchActivity = index == 0
     val resourcesConfig = ResourcesConfig(activityCount + 2,
             activityCount + 5, activityCount)
+    override val extraLines = config.extraAndroidBuildFileLines
 }
