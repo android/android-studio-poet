@@ -24,11 +24,12 @@ data class ModuleBlueprint(val name: String,
                            val dependencies: List<ModuleDependency>,
                            private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
                            private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int,
-                           val extraLines: List<String>?) {
+                           val extraLines: List<String>?,
+                           val generateTests : Boolean) {
 
     val moduleRoot = root.joinPath(name)
     val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-            kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, convertDependenciesToMethodsToCall(dependencies))
+            kotlinClassCount, kotlinMethodsPerClass, moduleRoot, name, convertDependenciesToMethodsToCall(dependencies), generateTests)
 
     var methodToCallFromOutside = packagesBlueprint.methodToCallFromOutside
 

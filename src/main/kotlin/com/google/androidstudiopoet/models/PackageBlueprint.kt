@@ -16,12 +16,17 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.utils.joinPaths
+
 data class PackageBlueprint(private val packageIndex: Int, private val classesPerPackage: Int,
-                            private val methodsPerClass: Int, val mainPackage: String, private val moduleName: String,
-                            val language: Language, private val methodsToCallWithinPackage: List<MethodToCall>) {
+                            private val methodsPerClass: Int, val where: String, private val moduleName: String,
+                            val language: Language, private val methodsToCallWithinPackage: List<MethodToCall>,
+                            val generateTests : Boolean) {
 
     val packageName = moduleName + "package" + language.postfix + packageIndex
     val classBlueprints = ArrayList<ClassBlueprint>()
+    val srcFolder = where.joinPaths(listOf("src", "main", "java"))
+    val testFolder = where.joinPaths(listOf("src", "test", "java"))
 
     var methodToCallFromOutside: MethodToCall
 
@@ -40,8 +45,8 @@ data class PackageBlueprint(private val packageIndex: Int, private val classesPe
 
     private fun createClassBlueprint(classIndex: Int, methodsToCallWithinClass: List<MethodToCall>): ClassBlueprint =
             when (language) {
-                Language.JAVA -> JavaClassBlueprint(packageName, classIndex, methodsPerClass, mainPackage, methodsToCallWithinClass)
-                Language.KOTLIN -> KotlinClassBlueprint(packageName, classIndex, methodsPerClass, mainPackage, methodsToCallWithinClass)
+                Language.JAVA -> JavaClassBlueprint(packageName, classIndex, methodsPerClass, where, methodsToCallWithinClass)
+                Language.KOTLIN -> KotlinClassBlueprint(packageName, classIndex, methodsPerClass, where, methodsToCallWithinClass)
             }
 
 }

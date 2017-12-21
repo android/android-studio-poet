@@ -23,6 +23,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
+import org.junit.Test
 import javax.lang.model.element.Modifier
 
 class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
@@ -40,8 +41,24 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
         return blueprint.getMethodToCallFromOutside()
     }
 
+    override fun generateTestClass(blueprint: ClassBlueprint) {
+
+        val classSpec = blueprint.getMethodBlueprints()
+                .map { generateTestMethod(it, blueprint) }
+                .fold(getTestClazz(blueprint)) { acc, methodSpec -> acc.addMethod(methodSpec) }
+                .build()
+
+        val javaFile = JavaFile.builder(blueprint.packageName, classSpec).build()
+
+        writeFile(blueprint.getTestClassPath(), javaFile.toString())
+    }
+
     private fun getClazz(blueprint: ClassBlueprint) =
             TypeSpec.classBuilder(blueprint.className)
+                    .addModifiers(Modifier.PUBLIC)
+
+    private fun getTestClazz(blueprint: ClassBlueprint) =
+            TypeSpec.classBuilder(blueprint.className + "Test")
                     .addModifiers(Modifier.PUBLIC)
 
     private fun generateMethod(blueprint: MethodBlueprint): MethodSpec {
@@ -51,6 +68,18 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
                 .returns(Void.TYPE)
 
         blueprint.statements.forEach { statement -> statement?.let { method.addStatement(it) } }
+
+        return method.build()
+    }
+
+    private fun generateTestMethod(methodBlueprint: MethodBlueprint, classBlueprint: ClassBlueprint): MethodSpec {
+
+        val method = MethodSpec.methodBuilder("test" + methodBlueprint.methodName.capitalize())
+                .addAnnotation(Test::class.java)
+                .addModifiers(Modifier.PUBLIC)
+                .returns(Void.TYPE)
+
+        method.addStatement("new ${classBlueprint.className}().${methodBlueprint.methodName}()")
 
         return method.build()
     }

@@ -44,11 +44,38 @@ class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fil
         return blueprint.getMethodToCallFromOutside()
     }
 
+    override fun generateTestClass(blueprint: ClassBlueprint) {
+        val buff = StringBuilder()
+
+        buff.append("package ${blueprint.packageName};\n\n")
+
+        buff.append("import org.junit.Test\n\n")
+
+        buff.append("public class ${blueprint.className + "Test"} {\n")
+
+        blueprint.getMethodBlueprints()
+                .map { generateTestMethod(it, blueprint) }
+                .fold(buff) { acc, method -> acc.append(method) }
+
+        buff.append("\n}")
+
+        writeFile(blueprint.getTestClassPath(), buff.toString())
+    }
+
     private fun generateMethod(blueprint: MethodBlueprint): String {
         val buff = StringBuilder()
-        buff.append("fun ${blueprint.methodName}(){\n")
+        buff.append("  fun ${blueprint.methodName}(){\n")
         blueprint.statements.forEach { statement -> statement?.let { buff.append(it) } }
-        buff.append("\n}")
+        buff.append("\n  }\n")
+        return buff.toString()
+    }
+
+    private fun generateTestMethod(methodBlueprint: MethodBlueprint, classBlueprint: ClassBlueprint): String {
+        val buff = StringBuilder()
+        buff.append("\n\n  @Test\n")
+        buff.append("  fun test${methodBlueprint.methodName.capitalize()}(){\n")
+        buff.append("    ${classBlueprint.className}().${methodBlueprint.methodName}()\n")
+        buff.append("  }")
         return buff.toString()
     }
 

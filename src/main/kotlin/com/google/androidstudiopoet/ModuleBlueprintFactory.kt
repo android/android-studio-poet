@@ -18,7 +18,10 @@ package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.ModuleConfig
-import com.google.androidstudiopoet.models.*
+import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.models.AndroidModuleDependency
+import com.google.androidstudiopoet.models.ModuleBlueprint
+import com.google.androidstudiopoet.models.ModuleDependency
 
 object ModuleBlueprintFactory {
 
@@ -36,7 +39,7 @@ object ModuleBlueprintFactory {
                 }
         val result = ModuleBlueprint(getModuleNameByIndex(moduleConfig.index), projectRoot, moduleConfig.useKotlin, moduleDependencies,
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
-                moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.extraLines)
+                moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.extraLines, moduleConfig.generateTests)
         synchronized(moduleDependencyLock[moduleConfig.index]) {
             if (moduleDependencyCache[moduleConfig.index] == null) {
                 moduleDependencyCache[moduleConfig.index] = ModuleDependency(result.name, result.methodToCallFromOutside)
@@ -69,7 +72,7 @@ object ModuleBlueprintFactory {
          */
         val tempModuleBlueprint = ModuleBlueprint(getModuleNameByIndex(index), projectRoot, useKotlin, listOf(),
                 javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,kotlinClassCount,
-                kotlinMethodsPerClass, null)
+                kotlinMethodsPerClass, null, false)
         return ModuleDependency(tempModuleBlueprint.name, tempModuleBlueprint.methodToCallFromOutside)
 
     }
@@ -103,7 +106,8 @@ object ModuleBlueprintFactory {
                 androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
                 androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass,
-                androidModuleConfig.extraLines)
+                androidModuleConfig.extraLines,
+                androidModuleConfig.generateTests)
     }
 
     private fun getModuleNameByIndex(index: Int) = "module$index"
