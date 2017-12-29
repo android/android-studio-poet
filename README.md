@@ -1,5 +1,6 @@
 # Android Studio Poet
 
+[![Build Status](https://travis-ci.org/android/android-studio-poet.svg?branch=master)](https://travis-ci.org/android/android-studio-poet)
 
 ![alt text](https://github.com/borisf/java-generator/blob/master/img/generator.png)  
   
