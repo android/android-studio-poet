@@ -17,6 +17,10 @@ Create a real life complexity Android project that mimics your own and observe t
 * Android resources (images, strings,activities, layouts)
 * Configurable version of gradle, kotlin, the android gradle plugin
 
+## Download
+To run, grab the [latest JAR](https://github.com/android/android-studio-poet/releases)
+and run `java -jar as-poet.jar`.
+
 ## Build & Run
 1. Clone the repo
 2. `./gradlew fatJar`
