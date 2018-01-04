@@ -14,6 +14,7 @@
 
 package com.google.androidstudiopoet
 
+import com.google.androidstudiopoet.converters.ConfigPojoToAndroidModuleConfigConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToBuildTypeConfigsConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
 import com.google.androidstudiopoet.models.ConfigPOJO
@@ -34,14 +35,16 @@ import kotlin.system.measureTimeMillis
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
                         private val configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
-                        private val configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter) {
+                        private val configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
+                        private val configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter) {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
                     Injector.configPojoToFlavourConfigsConverter,
-                    Injector.configPojoToBuildTypeConfigsConverter).run()
+                    Injector.configPojoToBuildTypeConfigsConverter,
+                    Injector.configPojoToAndroidModuleConfigConverter).run()
         }
 
         @Language("JSON") val SAMPLE_CONFIG = """
@@ -134,7 +137,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
     private fun processInput(configPOJO: ConfigPOJO) {
         var projectBluePrint: ProjectBlueprint? = null
         val timeSpent = measureTimeMillis {
-            projectBluePrint = ProjectBlueprint(configPOJO, configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter)
+            projectBluePrint = ProjectBlueprint(configPOJO, configPojoToFlavourConfigsConverter,
+                    configPojoToBuildTypeConfigsConverter, configPojoToAndroidModuleConfigConverter)
             modulesWriter.generate(projectBluePrint!!)
         }
         println("Finished in $timeSpent ms")

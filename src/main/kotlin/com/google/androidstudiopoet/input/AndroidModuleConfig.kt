@@ -18,11 +18,13 @@ package com.google.androidstudiopoet.input
 
 import com.google.androidstudiopoet.models.ConfigPOJO
 
-class AndroidModuleConfig(index: Int, config: ConfigPOJO, val productFlavorConfigs: List<FlavorConfig>, val buildTypes: List<BuildTypeConfig>): ModuleConfig(index, config) {
+class AndroidModuleConfig(index: Int, config: ConfigPOJO, val activityCount: Int,
+                          val productFlavorConfigs: List<FlavorConfig>, val buildTypes: List<BuildTypeConfig>,
+                          extraAndroidBuildFileLines: List<String>?)
+    : ModuleConfig(index, config) {
 
-    val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
     val hasLaunchActivity = index == 0
     val resourcesConfig = ResourcesConfig(activityCount + 2,
             activityCount + 5, activityCount)
-    override val extraLines = config.extraAndroidBuildFileLines
+    override val extraLines = extraAndroidBuildFileLines
 }

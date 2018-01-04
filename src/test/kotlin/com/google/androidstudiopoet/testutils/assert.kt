@@ -30,3 +30,5 @@ inline fun <T> Collection<T>.assertSize(expectedSize: Int) {
 inline fun Any.assertEquals(expected: Any) {
     assertEquals(expected, this)
 }
+
+inline fun <T, R> assertOn(receiver: T, block: T.() -> R): R = receiver.block()
