@@ -33,24 +33,20 @@ abstract class PackageGenerator(private val fileWriter: FileWriter) {
 
         srcFolder.mkdirs()
 
-        blueprint.classBlueprints.forEach({ generateClass(it) })
-
         if (blueprint.generateTests) {
             val testFolder = File(blueprint.testFolder, blueprint.packageName)
             if (testFolder.exists()) {
                 testFolder.delete()
             }
             testFolder.mkdirs()
-            blueprint.classBlueprints.forEach({ generateTestClass(it) })
         }
+
+        blueprint.classBlueprints.forEach({ generateClass(it) })
 
         return blueprint.methodToCallFromOutside
     }
 
-
-    abstract fun generateClass(blueprint: ClassBlueprint): MethodToCall
-
-    abstract fun generateTestClass(blueprint: ClassBlueprint)
+    abstract fun generateClass(blueprint: ClassBlueprint): MethodToCall?
 
     protected fun writeFile(path: String, content: String) {
         fileWriter.writeToFile(content, path)

@@ -33,19 +33,12 @@ class JavaClassBlueprint(packageName: String, classNumber: Int, private val meth
 
                     }
 
-                    MethodBlueprint(i, statements)
+                    MethodBlueprint("foo$i", statements)
                 }
     }
 
-    override fun getClassPath(): String {
-        return "$where/src/main/java/$packageName/$className.java"
-    }
+    override fun getClassPath(): String = "$where/$packageName/$className.java"
 
-    override fun getTestClassPath(): String {
-        return "$where/src/test/java/$packageName/${className}Test.java"
-    }
-
-    override fun getMethodToCallFromOutside(): MethodToCall {
-        return MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
-    }
+    override fun getMethodToCallFromOutside(): MethodToCall =
+            MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
 }

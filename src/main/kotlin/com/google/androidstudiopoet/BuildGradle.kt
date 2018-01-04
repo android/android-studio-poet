@@ -67,6 +67,12 @@ object BuildGradle {
                 "    kotlinOptions {\n" +
                 "        jvmTarget = \"1.8\"\n" +
                 "    }\n" +
+                (if (generateTests)
+                    "    dependencies {\n" +
+                    "        testCompile \"junit:junit:4.12\"\n" +
+                    "    }\n"
+                else
+                    "") +
                 "}\n"
             else
                 "" ) +
