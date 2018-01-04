@@ -16,20 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-import com.google.androidstudiopoet.models.ConfigPOJO
-
-open class ModuleConfig(val index: Int, config: ConfigPOJO) {
-
-    val javaPackageCount = config.javaPackageCount!!.toInt()
-    val javaClassCount = config.javaClassCount!!.toInt()
-    val javaMethodsPerClass = config.javaMethodsPerClass
-
-    val kotlinPackageCount = config.kotlinPackageCount!!.toInt()
-    val kotlinClassCount = config.kotlinClassCount!!.toInt()
-    val kotlinMethodsPerClass = config.kotlinMethodsPerClass
-    val useKotlin: Boolean = config.useKotlin
-
-    val dependencies = config.resolvedDependencies[index]?.map { it.to } ?: listOf()
-
-    open val extraLines = config.extraBuildFileLines
-}
+open class ModuleConfig(val index: Int, val javaPackageCount: Int, val javaClassCount: Int,
+                        val javaMethodsPerClass:Int, val kotlinPackageCount : Int, val kotlinClassCount: Int,
+                        val kotlinMethodsPerClass: Int, val useKotlin: Boolean, val extraLines: List<String>?,
+                        val dependencies: List<Int>)

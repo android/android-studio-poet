@@ -20,6 +20,7 @@ import com.google.androidstudiopoet.ModuleBlueprintFactory
 import com.google.androidstudiopoet.converters.ConfigPojoToAndroidModuleConfigConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToBuildTypeConfigsConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
+import com.google.androidstudiopoet.converters.ConfigPojoToModuleConfigConverter
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.utils.joinPath
@@ -29,14 +30,15 @@ import kotlin.system.measureTimeMillis
 class ProjectBlueprint(private val configPOJO: ConfigPOJO,
                        configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
                        configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
-                       configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter) {
+                       configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter,
+                       configPojoToModuleConfigConverter: ConfigPojoToModuleConfigConverter) {
 
     val projectName = configPOJO.projectName
 
     val projectRoot = configPOJO.root.joinPath(projectName)
 
-
-    private val pureModulesConfigs = (0 until configPOJO.numModules).map { ModuleConfig(it, configPOJO) }
+    private val pureModulesConfigs = (0 until configPOJO.numModules)
+            .map { configPojoToModuleConfigConverter.convert(configPOJO, it) }
 
     val androidGradlePluginVersion = configPOJO.androidGradlePluginVersion
     val kotlinVersion = configPOJO.kotlinVersion

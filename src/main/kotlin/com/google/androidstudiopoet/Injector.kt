@@ -19,6 +19,7 @@ package com.google.androidstudiopoet
 import com.google.androidstudiopoet.converters.ConfigPojoToAndroidModuleConfigConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToBuildTypeConfigsConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
+import com.google.androidstudiopoet.converters.ConfigPojoToModuleConfigConverter
 import com.google.androidstudiopoet.generators.BuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.android_modules.*
@@ -53,9 +54,11 @@ object Injector {
     private val manifestGenerator: ManifestGenerator = ManifestGenerator(fileWriter)
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
+
     val configPojoToFlavourConfigsConverter = ConfigPojoToFlavourConfigsConverter()
     val configPojoToBuildTypeConfigsConverter = ConfigPojoToBuildTypeConfigsConverter()
     val configPojoToAndroidModuleConfigConverter = ConfigPojoToAndroidModuleConfigConverter()
+    val configPojoToModuleConfigConverter = ConfigPojoToModuleConfigConverter()
 
     private val androidModuleGenerator =
             AndroidModuleGenerator(
