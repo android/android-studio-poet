@@ -25,20 +25,17 @@ class KotlinClassBlueprint(packageName: String, classNumber: Int, private val me
                 .map { i ->
                     val statements = ArrayList<String>()
                     if (i > 0) {
-                        statements += "foo" + (i - 1) + "()\n"
+                        statements += "foo" + (i - 1) + "()"
                     } else if (!methodsToCallWithinClass.isEmpty()) {
-                        methodsToCallWithinClass.forEach { statements += "${it.className}().${it.methodName}()\n" }
+                        methodsToCallWithinClass.forEach { statements += "${it.className}().${it.methodName}()" }
 
                     }
-                    MethodBlueprint(i, statements)
+                    MethodBlueprint("foo$i", statements)
                 }
     }
 
-    override fun getClassPath(): String {
-        return "$mainPackage/$packageName/$className.kt"
-    }
+    override fun getClassPath(): String = "$mainPackage/$packageName/$className.kt"
 
-    override fun getMethodToCallFromOutside(): MethodToCall {
-        return MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
-    }
+    override fun getMethodToCallFromOutside(): MethodToCall =
+            MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
 }

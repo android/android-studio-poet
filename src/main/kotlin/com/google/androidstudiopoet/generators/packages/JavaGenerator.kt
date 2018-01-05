@@ -23,11 +23,12 @@ import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
+import org.junit.Test
 import javax.lang.model.element.Modifier
 
 class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
 
-    override fun generateClass(blueprint: ClassBlueprint): MethodToCall {
+    override fun generateClass(blueprint: ClassBlueprint): MethodToCall? {
 
         val classSpec = blueprint.getMethodBlueprints()
                 .map { generateMethod(it) }
@@ -50,9 +51,10 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
                 .addModifiers(Modifier.PUBLIC)
                 .returns(Void.TYPE)
 
+        blueprint.annotations.forEach { annotation -> method.addAnnotation(annotation) }
+
         blueprint.statements.forEach { statement -> statement?.let { method.addStatement(it) } }
 
         return method.build()
     }
-
 }

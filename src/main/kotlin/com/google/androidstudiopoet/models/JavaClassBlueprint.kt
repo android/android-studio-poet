@@ -17,7 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 class JavaClassBlueprint(packageName: String, classNumber: Int, private val methodsPerClass: Int,
-                         private val mainPackage: String, private val methodsToCallWithinClass: List<MethodToCall>) :
+                         private val where: String, private val methodsToCallWithinClass: List<MethodToCall>) :
         ClassBlueprint(packageName, "Foo" + classNumber) {
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
@@ -33,15 +33,12 @@ class JavaClassBlueprint(packageName: String, classNumber: Int, private val meth
 
                     }
 
-                    MethodBlueprint(i, statements)
+                    MethodBlueprint("foo$i", statements)
                 }
     }
 
-    override fun getClassPath(): String {
-        return "$mainPackage/$packageName/$className.java"
-    }
+    override fun getClassPath(): String = "$where/$packageName/$className.java"
 
-    override fun getMethodToCallFromOutside(): MethodToCall {
-        return MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
-    }
+    override fun getMethodToCallFromOutside(): MethodToCall =
+            MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
 }

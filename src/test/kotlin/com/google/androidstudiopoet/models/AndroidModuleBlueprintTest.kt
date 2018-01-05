@@ -11,7 +11,7 @@ class AndroidModuleBlueprintTest {
     private val dependency: ModuleDependency = mock()
     private val originalAndroidModuleBlueprint = AndroidModuleBlueprint(1, 1, resourcesConfig,
             "root", true, false, listOf(dependency), null,null,
-            1, 1, 1, 1, 1, 1, null)
+            1, 1, 1, 1, 1, 1, null, true)
 
     @Test
     fun `blueprint create proper activity names`() {
