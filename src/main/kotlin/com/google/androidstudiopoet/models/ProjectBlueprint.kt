@@ -37,7 +37,8 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
 
     val androidGradlePluginVersion = configPOJO.androidGradlePluginVersion
     val kotlinVersion = configPOJO.kotlinVersion
-    val useKotlin = configPOJO.useKotlin
+    val useKotlin = (projectConfig.pureModuleConfigs + projectConfig.androidModuleConfigs)
+            .map { it.useKotlin }.find { it } ?: false
     val gradleVersion = configPOJO.gradleVersion!!
 
     val dependencies = configPOJO.dependencies ?: listOf()
