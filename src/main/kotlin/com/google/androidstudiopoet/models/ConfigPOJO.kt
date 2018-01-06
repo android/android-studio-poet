@@ -63,7 +63,7 @@ class ConfigPOJO {
 
     var dependencies: List<DependencyConfig>? = null
 
-    val androidModules: String? = null
+    var androidModules: String? = null
 
     var numActivitiesPerAndroidModule: String? = null
 

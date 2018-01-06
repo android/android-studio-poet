@@ -14,10 +14,7 @@
 
 package com.google.androidstudiopoet
 
-import com.google.androidstudiopoet.converters.ConfigPojoToAndroidModuleConfigConverter
-import com.google.androidstudiopoet.converters.ConfigPojoToBuildTypeConfigsConverter
-import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
-import com.google.androidstudiopoet.converters.ConfigPojoToModuleConfigConverter
+import com.google.androidstudiopoet.converters.*
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.writers.SourceModuleWriter
@@ -35,19 +32,13 @@ import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
-                        private val configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
-                        private val configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
-                        private val configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter,
-                        private val configPojoToModuleConfigConverter: ConfigPojoToModuleConfigConverter) {
+                        private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter) {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
-                    Injector.configPojoToFlavourConfigsConverter,
-                    Injector.configPojoToBuildTypeConfigsConverter,
-                    Injector.configPojoToAndroidModuleConfigConverter,
-                    Injector.configPojoToModuleConfigConverter).run()
+                    Injector.configPojoToProjectConfigConverter).run()
         }
 
         @Language("JSON") val SAMPLE_CONFIG = """
@@ -141,9 +132,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
     private fun processInput(configPOJO: ConfigPOJO) {
         var projectBluePrint: ProjectBlueprint? = null
         val timeSpent = measureTimeMillis {
-            projectBluePrint = ProjectBlueprint(configPOJO, configPojoToFlavourConfigsConverter,
-                    configPojoToBuildTypeConfigsConverter, configPojoToAndroidModuleConfigConverter,
-                    configPojoToModuleConfigConverter)
+            projectBluePrint = ProjectBlueprint(configPOJO, configPojoToProjectConfigConverter.convert(configPOJO))
             modulesWriter.generate(projectBluePrint!!)
         }
         println("Finished in $timeSpent ms")
