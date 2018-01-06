@@ -22,3 +22,15 @@ fun <T> Collection<T>?.joinLines(separator: CharSequence = "\n") : String {
     }
     return this.joinToString(separator = separator)
 }
+
+fun <T> MutableMap<T, Int>.increase(key : T) : Int {
+    val newValue = this.getOrDefault(key, 0) + 1
+    this.put(key, newValue)
+    return newValue
+}
+
+fun <T> MutableMap<T, Int>.decrease(key : T) : Int {
+    val newValue = this.getOrDefault(key, 0) - 1
+    this.put(key, newValue)
+    return newValue
+}

@@ -38,7 +38,7 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
 
     fun generate(projectBlueprint: ProjectBlueprint) = runBlocking {
 
-        if (!dependencyValidator.isValid(projectBlueprint.dependencies, projectBlueprint.moduleCount)) {
+        if (!dependencyValidator.isValid(projectBlueprint.dependencies, projectBlueprint.moduleCount, projectBlueprint.androidModuleCount)) {
             throw IllegalStateException("Incorrect dependencies")
         }
 
