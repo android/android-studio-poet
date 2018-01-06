@@ -35,7 +35,7 @@ private const val JAVA_METHOD_COUNT = 7
 private const val KOTLIN_PACKAGE_COUNT = 8
 private const val KOTLIN_CLASS_COUNT = 9
 
-
+private const val GENERATE_TESTS = true
 
 class ConfigPojoToAndroidModuleConfigConverterTest {
     private val index = 3
@@ -58,6 +58,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
 
         extraAndroidBuildFileLines = extraLinesForAndroidBuildFile
 
+        generateTests = GENERATE_TESTS
     }
 
     private val converter = ConfigPojoToAndroidModuleConfigConverter()
@@ -78,6 +79,8 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
             kotlinMethodsPerClass.assertEquals(configPOJO.kotlinMethodsPerClass)
 
             useKotlin.assertEquals(configPOJO.useKotlin)
+
+            generateTests.assertEquals(GENERATE_TESTS)
         }
     }
 

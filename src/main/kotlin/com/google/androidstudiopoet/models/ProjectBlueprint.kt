@@ -52,6 +52,7 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO,
     val moduleBlueprints : List<ModuleBlueprint>
     val androidModuleBlueprints : List<AndroidModuleBlueprint>
     val allModulesNames : List<String>
+    val generateTests = configPOJO.generateTests
 
     init  {
         var temporaryModuleBlueprints : List<ModuleBlueprint> = listOf()

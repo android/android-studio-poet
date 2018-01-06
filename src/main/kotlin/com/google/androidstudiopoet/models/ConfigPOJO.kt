@@ -83,6 +83,8 @@ class ConfigPOJO {
 
     var extraAndroidBuildFileLines : List<String>? = null
 
+    var generateTests : Boolean = false
+
     override fun toString(): String = toJson()
 
     private fun toJson(): String {

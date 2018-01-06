@@ -23,6 +23,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.squareup:javapoet:1.9.0'
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.2"
+    compile 'junit:junit:4.12'
 
     compile group: 'commons-io', name: 'commons-io', version: '2.0.1'
 

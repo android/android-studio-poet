@@ -32,8 +32,10 @@ class ConfigPojoToModuleConfigConverter {
 
         val extraLines = config.extraBuildFileLines
 
+        val generateTests = config.generateTests
+
         val dependencies = config.resolvedDependencies[index]?.map { it.to } ?: listOf()
         return ModuleConfig(index, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraLines, dependencies)
+                kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraLines, dependencies, generateTests)
     }
 }

@@ -34,7 +34,8 @@ data class AndroidModuleBlueprint(val index: Int,
                                   private val buildTypeConfigs: List<BuildTypeConfig>?,
                                   private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
                                   private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int,
-                                  val extraLines: List<String>?
+                                  val extraLines: List<String>?,
+                                  val generateTests : Boolean
 ) : Blueprint {
 
     val name = "androidAppModule" + index
@@ -50,7 +51,7 @@ data class AndroidModuleBlueprint(val index: Int,
 
     val packagesBlueprint by lazy {
         PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, moduleRoot + "/src/main/java/", name, methodsToCallWithIn)
+                kotlinClassCount, kotlinMethodsPerClass, moduleRoot, name, methodsToCallWithIn, generateTests)
     }
 
     private val resourcesToReferWithin = dependencies

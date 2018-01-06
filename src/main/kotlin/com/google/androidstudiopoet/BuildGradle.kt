@@ -21,7 +21,7 @@ annotation class Fancy
 @Fancy
 object BuildGradle {
 
-    fun print(dependencies: String, useKotlin: Boolean, extraLines: List<String>? = null) = "" +
+    fun print(dependencies: String, useKotlin: Boolean, generateTests: Boolean, extraLines: List<String>? = null) = "" +
             "apply plugin: 'java-library'\n" +
             (if (useKotlin)
                 "apply plugin: 'kotlin'\n"
@@ -32,6 +32,10 @@ object BuildGradle {
             "    implementation fileTree(dir: 'libs', include: ['*.jar'])\n" +
             (if (useKotlin)
                 "    compile \"org.jetbrains.kotlin:kotlin-stdlib-jre8:\$kotlin_version\"\n"
+            else
+                "") +
+            (if (generateTests)
+                "    testCompile \"junit:junit:4.12\"\n"
             else
                 "") +
             dependencies +
@@ -63,6 +67,12 @@ object BuildGradle {
                 "    kotlinOptions {\n" +
                 "        jvmTarget = \"1.8\"\n" +
                 "    }\n" +
+                (if (generateTests)
+                    "    dependencies {\n" +
+                    "        testCompile \"junit:junit:4.12\"\n" +
+                    "    }\n"
+                else
+                    "") +
                 "}\n"
             else
                 "" ) +

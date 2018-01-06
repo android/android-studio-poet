@@ -20,9 +20,9 @@ class AndroidModuleConfig(index: Int, val activityCount: Int,
                           val productFlavorConfigs: List<FlavorConfig>, val buildTypes: List<BuildTypeConfig>,
                           extraAndroidBuildFileLines: List<String>?, javaPackageCount: Int, javaClassCount: Int,
                           javaMethodsPerClass: Int, kotlinPackageCount: Int, kotlinClassCount: Int,
-                          kotlinMethodsPerClass: Int, useKotlin: Boolean)
+                          kotlinMethodsPerClass: Int, useKotlin: Boolean, generateTests: Boolean)
     : ModuleConfig(index, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-        kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraAndroidBuildFileLines, listOf()) {
+        kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraAndroidBuildFileLines, listOf(), generateTests) {
 
     val hasLaunchActivity = index == 0
     val resourcesConfig = ResourcesConfig(activityCount + 2,

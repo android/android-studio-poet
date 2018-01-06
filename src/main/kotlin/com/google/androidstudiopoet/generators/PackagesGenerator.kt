@@ -16,7 +16,6 @@ package com.google.androidstudiopoet.generators
 
 import com.google.androidstudiopoet.generators.packages.JavaGenerator
 import com.google.androidstudiopoet.generators.packages.KotlinGenerator
-import com.google.androidstudiopoet.models.PackageBlueprint
 import com.google.androidstudiopoet.models.PackagesBlueprint
 import java.io.File
 
@@ -26,8 +25,7 @@ class PackagesGenerator(private val javaGenerator: JavaGenerator,
     fun writePackages(blueprint: PackagesBlueprint) {
         val packagesRoot = File(blueprint.where)
         packagesRoot.mkdirs()
-        blueprint.javaPackageBlueprints.map { javaGenerator.generatePackage(it) }
-                .last()
+        blueprint.javaPackageBlueprints.forEach({javaGenerator.generatePackage(it) })
         blueprint.kotlinPackageBlueprints.forEach({ kotlinGenerator.generatePackage(it) })
     }
 }

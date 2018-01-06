@@ -19,4 +19,4 @@ package com.google.androidstudiopoet.input
 open class ModuleConfig(val index: Int, val javaPackageCount: Int, val javaClassCount: Int,
                         val javaMethodsPerClass:Int, val kotlinPackageCount : Int, val kotlinClassCount: Int,
                         val kotlinMethodsPerClass: Int, val useKotlin: Boolean, val extraLines: List<String>?,
-                        val dependencies: List<Int>)
+                        val dependencies: List<Int>, val generateTests: Boolean)

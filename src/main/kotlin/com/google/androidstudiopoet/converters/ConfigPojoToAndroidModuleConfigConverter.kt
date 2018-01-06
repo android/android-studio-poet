@@ -37,8 +37,10 @@ class ConfigPojoToAndroidModuleConfigConverter {
 
         val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
 
+        val generateTests = config.generateTests
+
         return AndroidModuleConfig(index, activityCount, productFlavorConfigs, buildTypes,
                 config.extraAndroidBuildFileLines, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, useKotlin)
+                kotlinClassCount, kotlinMethodsPerClass, useKotlin, generateTests)
     }
 }

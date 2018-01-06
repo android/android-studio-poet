@@ -33,6 +33,8 @@ private const val JAVA_METHOD_COUNT = 7
 private const val KOTLIN_PACKAGE_COUNT = 8
 private const val KOTLIN_CLASS_COUNT = 9
 
+private const val GENERATE_TESTS = true
+
 class ConfigPojoToModuleConfigConverterTest {
     private val index = 3
 
@@ -51,6 +53,8 @@ class ConfigPojoToModuleConfigConverterTest {
         numActivitiesPerAndroidModule = "$ACTIVITY_COUNT"
 
         extraBuildFileLines = extraLinesForBuildFile
+
+        generateTests = GENERATE_TESTS
 
     }
 
@@ -71,6 +75,7 @@ class ConfigPojoToModuleConfigConverterTest {
             useKotlin.assertEquals(configPOJO.useKotlin)
 
             extraLines!!.assertEquals(extraLinesForBuildFile)
+            generateTests.assertEquals(GENERATE_TESTS)
         }
     }
 
