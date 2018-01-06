@@ -28,10 +28,7 @@ import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.*
 import kotlin.system.measureTimeMillis
 
-class ProjectBlueprint(private val configPOJO: ConfigPOJO,
-                       configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
-                       configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
-                       configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter,
+class ProjectBlueprint(configPOJO: ConfigPOJO,
                        private val projectConfig: ProjectConfig) {
 
     val projectName = projectConfig.projectName
@@ -45,7 +42,7 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO,
 
     val dependencies = configPOJO.dependencies ?: listOf()
 
-    val moduleCount = configPOJO.numModules
+    val moduleCount = projectConfig.pureModuleConfigs.size
 
     val moduleBlueprints : List<ModuleBlueprint>
     val androidModuleBlueprints : List<AndroidModuleBlueprint>
@@ -54,7 +51,7 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO,
     init  {
         var temporaryModuleBlueprints : List<ModuleBlueprint> = listOf()
         val timeModels = measureTimeMillis {
-            ModuleBlueprintFactory.initCache(configPOJO.numModules)
+            ModuleBlueprintFactory.initCache(moduleCount)
             runBlocking {
                 val deferred = projectConfig.pureModuleConfigs.map {
                     async {
@@ -67,14 +64,12 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO,
         moduleBlueprints = temporaryModuleBlueprints
         println("Time to create model blueprints: $timeModels")
 
-        val productFlavors = configPojoToFlavourConfigsConverter.convert(configPOJO)
-        val buildTypes = configPojoToBuildTypeConfigsConverter.convert(configPOJO)
         var temporaryAndroidBlueprints : List<AndroidModuleBlueprint> = listOf()
         val timeAndroidModels = measureTimeMillis {
-            temporaryAndroidBlueprints = (0 until configPOJO.androidModules!!.toInt()).map { i ->
+            temporaryAndroidBlueprints = (0 until projectConfig.androidModuleConfigs.size).map { i ->
                 ModuleBlueprintFactory.createAndroidModule(projectRoot, projectConfig.pureModuleConfigs.map { it.index },
-                        configPojoToAndroidModuleConfigConverter.convert(configPOJO, i, productFlavors, buildTypes),
-                        (i + 1 until configPOJO.androidModules.toInt()).toList().map { configPojoToAndroidModuleConfigConverter.convert(configPOJO, it, productFlavors, buildTypes) })
+                        projectConfig.androidModuleConfigs[i],
+                        (i + 1 until projectConfig.androidModuleConfigs.size).map { projectConfig.androidModuleConfigs[i] })
             }
         }
         androidModuleBlueprints = temporaryAndroidBlueprints

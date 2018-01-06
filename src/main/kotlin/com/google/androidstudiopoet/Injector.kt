@@ -52,11 +52,12 @@ object Injector {
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
 
-    val configPojoToFlavourConfigsConverter = ConfigPojoToFlavourConfigsConverter()
-    val configPojoToBuildTypeConfigsConverter = ConfigPojoToBuildTypeConfigsConverter()
-    val configPojoToAndroidModuleConfigConverter = ConfigPojoToAndroidModuleConfigConverter()
-    val configPojoToModuleConfigConverter = ConfigPojoToModuleConfigConverter()
-    val configPojoToProjectConfigConverter = ConfigPojoToProjectConfigConverter(configPojoToModuleConfigConverter)
+    private val configPojoToFlavourConfigsConverter = ConfigPojoToFlavourConfigsConverter()
+    private val configPojoToBuildTypeConfigsConverter = ConfigPojoToBuildTypeConfigsConverter()
+    private val configPojoToAndroidModuleConfigConverter = ConfigPojoToAndroidModuleConfigConverter()
+    private val configPojoToModuleConfigConverter = ConfigPojoToModuleConfigConverter()
+    val configPojoToProjectConfigConverter = ConfigPojoToProjectConfigConverter(configPojoToModuleConfigConverter,
+            configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter, configPojoToAndroidModuleConfigConverter)
 
     private val androidModuleGenerator =
             AndroidModuleGenerator(

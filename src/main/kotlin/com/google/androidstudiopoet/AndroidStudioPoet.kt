@@ -32,18 +32,12 @@ import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
-                        private val configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
-                        private val configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
-                        private val configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter,
                         private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter) {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
-                    Injector.configPojoToFlavourConfigsConverter,
-                    Injector.configPojoToBuildTypeConfigsConverter,
-                    Injector.configPojoToAndroidModuleConfigConverter,
                     Injector.configPojoToProjectConfigConverter).run()
         }
 
@@ -138,9 +132,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
     private fun processInput(configPOJO: ConfigPOJO) {
         var projectBluePrint: ProjectBlueprint? = null
         val timeSpent = measureTimeMillis {
-            projectBluePrint = ProjectBlueprint(configPOJO, configPojoToFlavourConfigsConverter,
-                    configPojoToBuildTypeConfigsConverter, configPojoToAndroidModuleConfigConverter,
-                    configPojoToProjectConfigConverter.convert(configPOJO))
+            projectBluePrint = ProjectBlueprint(configPOJO, configPojoToProjectConfigConverter.convert(configPOJO))
             modulesWriter.generate(projectBluePrint!!)
         }
         println("Finished in $timeSpent ms")
