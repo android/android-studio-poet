@@ -16,13 +16,15 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-import com.google.androidstudiopoet.models.ConfigPOJO
+class AndroidModuleConfig(index: Int, val activityCount: Int,
+                          val productFlavorConfigs: List<FlavorConfig>, val buildTypes: List<BuildTypeConfig>,
+                          extraAndroidBuildFileLines: List<String>?, javaPackageCount: Int, javaClassCount: Int,
+                          javaMethodsPerClass: Int, kotlinPackageCount: Int, kotlinClassCount: Int,
+                          kotlinMethodsPerClass: Int, useKotlin: Boolean, generateTests: Boolean)
+    : ModuleConfig(index, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+        kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraAndroidBuildFileLines, listOf(), generateTests) {
 
-class AndroidModuleConfig(index: Int, config: ConfigPOJO, val productFlavorConfigs: List<FlavorConfig>, val buildTypes: List<BuildTypeConfig>): ModuleConfig(index, config) {
-
-    val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
     val hasLaunchActivity = index == 0
     val resourcesConfig = ResourcesConfig(activityCount + 2,
             activityCount + 5, activityCount)
-    override val extraLines = config.extraAndroidBuildFileLines
 }

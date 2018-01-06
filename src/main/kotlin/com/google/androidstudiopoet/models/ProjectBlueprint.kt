@@ -17,23 +17,28 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.ModuleBlueprintFactory
+import com.google.androidstudiopoet.converters.ConfigPojoToAndroidModuleConfigConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToBuildTypeConfigsConverter
 import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
+import com.google.androidstudiopoet.converters.ConfigPojoToModuleConfigConverter
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.*
 import kotlin.system.measureTimeMillis
 
-class ProjectBlueprint(private val configPOJO: ConfigPOJO, configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
-                       configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter) {
+class ProjectBlueprint(private val configPOJO: ConfigPOJO,
+                       configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
+                       configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
+                       configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter,
+                       configPojoToModuleConfigConverter: ConfigPojoToModuleConfigConverter) {
 
     val projectName = configPOJO.projectName
 
     val projectRoot = configPOJO.root.joinPath(projectName)
 
-
-    private val pureModulesConfigs = (0 until configPOJO.numModules).map { ModuleConfig(it, configPOJO) }
+    private val pureModulesConfigs = (0 until configPOJO.numModules)
+            .map { configPojoToModuleConfigConverter.convert(configPOJO, it) }
 
     val androidGradlePluginVersion = configPOJO.androidGradlePluginVersion
     val kotlinVersion = configPOJO.kotlinVersion
@@ -71,8 +76,8 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO, configPojoToFlavourCo
         val timeAndroidModels = measureTimeMillis {
             temporaryAndroidBlueprints = (0 until configPOJO.androidModules!!.toInt()).map { i ->
                 ModuleBlueprintFactory.createAndroidModule(projectRoot, pureModulesConfigs.map { it.index },
-                        AndroidModuleConfig(i, configPOJO, productFlavors, buildTypes),
-                        (i + 1 until configPOJO.androidModules.toInt()).toList().map { AndroidModuleConfig(it, configPOJO, productFlavors, buildTypes) })
+                        configPojoToAndroidModuleConfigConverter.convert(configPOJO, i, productFlavors, buildTypes),
+                        (i + 1 until configPOJO.androidModules.toInt()).toList().map { configPojoToAndroidModuleConfigConverter.convert(configPOJO, it, productFlavors, buildTypes) })
             }
         }
         androidModuleBlueprints = temporaryAndroidBlueprints

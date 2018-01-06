@@ -65,7 +65,7 @@ class ConfigPOJO {
 
     val androidModules: String? = null
 
-    val numActivitiesPerAndroidModule: String? = null
+    var numActivitiesPerAndroidModule: String? = null
 
     val productFlavors: List<Int>? = null
 
@@ -77,13 +77,13 @@ class ConfigPOJO {
 
     val androidGradlePluginVersion: String? = null
 
-    val topologies: List<Map<String, String>>? = null
+    private val topologies: List<Map<String, String>>? = null
 
-    val extraBuildFileLines : List<String>? = null
+    var extraBuildFileLines : List<String>? = null
 
-    val extraAndroidBuildFileLines : List<String>? = null
+    var extraAndroidBuildFileLines : List<String>? = null
 
-    val generateTests : Boolean = false
+    var generateTests : Boolean = false
 
     override fun toString(): String = toJson()
 
