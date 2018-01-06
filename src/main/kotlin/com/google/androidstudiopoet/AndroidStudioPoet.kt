@@ -35,7 +35,6 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
                         private val configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
                         private val configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
                         private val configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter,
-                        private val configPojoToModuleConfigConverter: ConfigPojoToModuleConfigConverter,
                         private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter) {
 
     companion object {
@@ -45,7 +44,6 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
                     Injector.configPojoToFlavourConfigsConverter,
                     Injector.configPojoToBuildTypeConfigsConverter,
                     Injector.configPojoToAndroidModuleConfigConverter,
-                    Injector.configPojoToModuleConfigConverter,
                     Injector.configPojoToProjectConfigConverter).run()
         }
 
@@ -142,7 +140,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         val timeSpent = measureTimeMillis {
             projectBluePrint = ProjectBlueprint(configPOJO, configPojoToFlavourConfigsConverter,
                     configPojoToBuildTypeConfigsConverter, configPojoToAndroidModuleConfigConverter,
-                    configPojoToModuleConfigConverter, configPojoToProjectConfigConverter.convert(configPOJO))
+                    configPojoToProjectConfigConverter.convert(configPOJO))
             modulesWriter.generate(projectBluePrint!!)
         }
         println("Finished in $timeSpent ms")
