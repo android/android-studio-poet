@@ -23,6 +23,7 @@ import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConvert
 import com.google.androidstudiopoet.converters.ConfigPojoToModuleConfigConverter
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.ModuleConfig
+import com.google.androidstudiopoet.input.ProjectConfig
 import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.*
 import kotlin.system.measureTimeMillis
@@ -31,7 +32,8 @@ class ProjectBlueprint(private val configPOJO: ConfigPOJO,
                        configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
                        configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
                        configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter,
-                       configPojoToModuleConfigConverter: ConfigPojoToModuleConfigConverter) {
+                       configPojoToModuleConfigConverter: ConfigPojoToModuleConfigConverter,
+                       projectConfig: ProjectConfig) {
 
     val projectName = configPOJO.projectName
 
