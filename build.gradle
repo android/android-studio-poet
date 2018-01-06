@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.squareup:javapoet:1.9.0'
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.2"
@@ -30,6 +30,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-inline:2.10.0"
     testCompile "com.nhaarman:mockito-kotlin:1.5.0"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 
 task runGenerator(type: JavaExec) {
