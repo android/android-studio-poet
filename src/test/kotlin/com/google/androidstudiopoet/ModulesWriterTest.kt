@@ -50,7 +50,7 @@ class ModulesWriterTest {
 
     @Test(expected = IllegalStateException::class)
     fun `generate throws ISE when input is invalid`() {
-        whenever(dependencyValidator.isValid(any(), any())).thenReturn(false)
+        whenever(dependencyValidator.isValid(any(), any(), any())).thenReturn(false)
         modulesWriter.generate(projectBlueprint)
     }
 }

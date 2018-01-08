@@ -21,7 +21,7 @@ class AndroidModuleConfig(index: Int, val activityCount: Int,
                           extraAndroidBuildFileLines: List<String>?, javaPackageCount: Int, javaClassCount: Int,
                           javaMethodsPerClass: Int, kotlinPackageCount: Int, kotlinClassCount: Int,
                           kotlinMethodsPerClass: Int, useKotlin: Boolean, generateTests: Boolean)
-    : ModuleConfig(index, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+    : ModuleConfig("androidAppModule$index", javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
         kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraAndroidBuildFileLines, listOf(), generateTests) {
 
     val hasLaunchActivity = index == 0

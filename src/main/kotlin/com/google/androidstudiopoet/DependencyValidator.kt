@@ -18,14 +18,63 @@ package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.models.DependencyConfig
 
+private const val ANDROID_TYPE: String = "androidAppModule"
+private const val MODULE_TYPE = "module"
+
 class DependencyValidator {
-    fun isValid(dependencies: List<DependencyConfig>, moduleCount: Int): Boolean {
+    fun isValid(dependencies: List<DependencyConfig>, moduleCount: Int, androidModuleCount: Int): Boolean {
+        for (dependency in dependencies) {
+            if (badDependency(dependency, moduleCount, androidModuleCount)) {
+                return false
+            }
+        }
         //TODO Add check for cycle dependencies and proper reporting
-        return correctAmountOfModules(dependencies, moduleCount)
+        return true
     }
 
-    private fun correctAmountOfModules(dependencies: List<DependencyConfig>, moduleCount: Int): Boolean {
-        return dependencies.none { it.to >= moduleCount || it.from >= moduleCount }
+    private fun badDependency(dependency: DependencyConfig, moduleCount: Int, androidModuleCount: Int): Boolean {
+        val from = ModuleSplit(dependency.from)
+        if (badIndexByType(from, moduleCount, androidModuleCount)) {
+            return true
+        }
+        val to = ModuleSplit(dependency.to)
+        if (badIndexByType(to, moduleCount, androidModuleCount)) {
+            return true
+        }
+        if (javaDependsOnAndroid(from, to)) {
+            return true
+        }
+        if (isApp(to)) {
+            return true
+        }
+        return false
     }
 
+    private fun badIndexByType(moduleSplit: ModuleSplit, moduleCount: Int, androidModuleCount: Int): Boolean =
+            when(moduleSplit.type) {
+                MODULE_TYPE -> badIndex(moduleSplit.index, moduleCount)
+                ANDROID_TYPE -> badIndex(moduleSplit.index, androidModuleCount)
+                else -> true
+            }
+
+    private fun badIndex(index: Int, count: Int) = (index < 0) || (index >= count)
+
+    private fun javaDependsOnAndroid(from: ModuleSplit, to: ModuleSplit): Boolean =
+            from.type.equals(MODULE_TYPE) && to.type.equals(ANDROID_TYPE)
+
+    private fun isApp(to: ModuleSplit): Boolean = to.index == 0 && to.type.equals(ANDROID_TYPE)
+
+    private class ModuleSplit(moduleName : String){
+        val type: String
+        val index: Int
+
+        init {
+            var firstChar = moduleName.length - 1
+            while ((firstChar >= 0) && moduleName[firstChar].isDigit()) {
+                firstChar--
+            }
+            type = moduleName.substring(0, firstChar + 1)
+            index = moduleName.substring(firstChar + 1).toInt()
+        }
+    }
 }

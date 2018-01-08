@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.Blueprint
 import com.google.androidstudiopoet.utils.joinPath
 
 data class ModuleBlueprint(val name: String,

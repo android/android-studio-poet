@@ -52,7 +52,7 @@ class ConfigPojoToProjectConfigConverterTest {
         projectName = PROJECT_NAME
         root = ROOT
         numModules = NUMBER_OF_PURE_MODULES
-        androidModules = "$NUMBER_OF_ANDROID_MODULES"
+        androidModules = NUMBER_OF_ANDROID_MODULES
     }
 
     private val configPojoToProjectConfigConverter = ConfigPojoToProjectConfigConverter(configPojoToModuleConfigConverter,

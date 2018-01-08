@@ -17,15 +17,12 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.ModuleBlueprintFactory
-import com.google.androidstudiopoet.converters.ConfigPojoToAndroidModuleConfigConverter
-import com.google.androidstudiopoet.converters.ConfigPojoToBuildTypeConfigsConverter
-import com.google.androidstudiopoet.converters.ConfigPojoToFlavourConfigsConverter
-import com.google.androidstudiopoet.converters.ConfigPojoToModuleConfigConverter
-import com.google.androidstudiopoet.input.AndroidModuleConfig
-import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.input.ProjectConfig
+import com.google.androidstudiopoet.utils.decrease
+import com.google.androidstudiopoet.utils.increase
 import com.google.androidstudiopoet.utils.joinPath
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 import kotlin.system.measureTimeMillis
 
 class ProjectBlueprint(configPOJO: ConfigPOJO,
@@ -44,15 +41,18 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
     val dependencies = configPOJO.dependencies ?: listOf()
 
     val moduleCount = projectConfig.pureModuleConfigs.size
+    val androidModuleCount = projectConfig.androidModuleConfigs.size
 
     val moduleBlueprints : List<ModuleBlueprint>
     val androidModuleBlueprints : List<AndroidModuleBlueprint>
     val allModulesNames : List<String>
+    val generateTests = configPOJO.generateTests
+    val allDependencies = configPOJO.resolvedDependencies
 
     init  {
         var temporaryModuleBlueprints : List<ModuleBlueprint> = listOf()
         val timeModels = measureTimeMillis {
-            ModuleBlueprintFactory.initCache(moduleCount)
+            ModuleBlueprintFactory.initCache()
             runBlocking {
                 val deferred = projectConfig.pureModuleConfigs.map {
                     async {
@@ -67,10 +67,8 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
 
         var temporaryAndroidBlueprints : List<AndroidModuleBlueprint> = listOf()
         val timeAndroidModels = measureTimeMillis {
-            temporaryAndroidBlueprints = (0 until projectConfig.androidModuleConfigs.size).map { i ->
-                ModuleBlueprintFactory.createAndroidModule(projectRoot, projectConfig.pureModuleConfigs.map { it.index },
-                        projectConfig.androidModuleConfigs[i],
-                        (i + 1 until projectConfig.androidModuleConfigs.size).map { projectConfig.androidModuleConfigs[i] })
+            temporaryAndroidBlueprints = (0 until configPOJO.androidModules).map { i ->
+                ModuleBlueprintFactory.createAndroidModule(projectRoot, projectConfig.androidModuleConfigs[i])
             }
         }
         androidModuleBlueprints = temporaryAndroidBlueprints
@@ -81,33 +79,43 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
 
     fun printDependencies() {
         println("digraph $projectName {")
-        for (module in projectConfig.pureModuleConfigs) {
-            val list = if (module.dependencies.isNotEmpty()) " -> ${module.dependencies.sorted().joinToString()}" else ""
-            println("  ${module.index}$list;")
+        for (module in allModulesNames.sorted()) {
+            var list = ""
+	    val dependencies = allDependencies[module]
+	    if ((dependencies != null) && (dependencies.isNotEmpty())) {
+	        list = " -> ${dependencies.map { dep -> dep.to }.sorted().joinToString()}"
+	    }
+            println("  $module$list;")
         }
         println("}")
     }
 
     fun hasCircularDependencies() : Boolean {
-        // Try to find a topological order (it will be stored in withZero)
-        val dependencyCounter : MutableList<Int> = mutableListOf()
-        projectConfig.pureModuleConfigs.mapTo(dependencyCounter, {_ -> 0})
+        // Try to find a topological order (it will be stored in topologicalOrder)
+        val dependencyCounter : MutableMap<String, Int> = mutableMapOf()
+        for (moduleName in allModulesNames) {
+            dependencyCounter.put(moduleName, 0)
+        }
         // Count how many modules depend on each
-        projectConfig.pureModuleConfigs.flatMap { it.dependencies }.forEach { dependencyCounter[it]++ }
+        for ((_, dependencies) in allDependencies) {
+            for (dependency in dependencies) {
+                dependencyCounter.increase(dependency.to)
+            }
+        }
         // Try to generate a topological order
-        val topologicalOrder = dependencyCounter.withIndex().filter { pair -> pair.value == 0 }.map { it -> it.index }.toMutableList()
+        val topologicalOrder = dependencyCounter.filter { (_, counter) -> counter == 0 }.map { it -> it.key }.toMutableList()
         var index = 0
-        while (index < topologicalOrder.size && topologicalOrder.size < projectConfig.pureModuleConfigs.size) {
+        while (index < topologicalOrder.size && topologicalOrder.size < allModulesNames.size) {
             val from = topologicalOrder[index]
-            for (to in projectConfig.pureModuleConfigs[from].dependencies) {
-                dependencyCounter[to]--
-                if (dependencyCounter[to] == 0) {
-                    topologicalOrder.add(to)
+            for (dependency in allDependencies[from]!!) {
+                val count = dependencyCounter.decrease(dependency.to)
+                if (count == 0) {
+                    topologicalOrder.add(dependency.to)
                 }
             }
             index++
         }
         // No circular dependencies if and only if all modules can be sorted
-        return topologicalOrder.size != projectConfig.pureModuleConfigs.size
+        return topologicalOrder.size != allModulesNames.size
     }
 }

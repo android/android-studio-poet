@@ -23,7 +23,7 @@ import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
 
-data class AndroidModuleBlueprint(val index: Int,
+data class AndroidModuleBlueprint(val name: String,
                                   val numOfActivities: Int,
                                   private val resourcesConfig: ResourcesConfig,
                                   private val projectRoot: String,
@@ -38,7 +38,6 @@ data class AndroidModuleBlueprint(val index: Int,
                                   val generateTests : Boolean
 ) : Blueprint {
 
-    val name = "androidAppModule" + index
     val packageName = "com.$name"
     val moduleRoot = projectRoot.joinPath(name)
     val srcPath = moduleRoot.joinPath("src")

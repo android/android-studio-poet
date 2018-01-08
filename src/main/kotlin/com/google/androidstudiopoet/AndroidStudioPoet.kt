@@ -14,7 +14,7 @@
 
 package com.google.androidstudiopoet
 
-import com.google.androidstudiopoet.converters.*
+import com.google.androidstudiopoet.converters.ConfigPojoToProjectConfigConverter
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.writers.SourceModuleWriter
@@ -61,12 +61,12 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
                   2, 3
                ],
                "topologies": [
-                  {"type": "random", "seed": "2"}
+                  {"type": "random_connected", "seed": "2"}
                ],
               "dependencies": [
-                {"from": 3, "to": 2},
-                {"from": 4, "to": 2},
-                {"from": 4, "to": 3}
+                {"from": "module2", "to": "module3"},
+                {"from": "module2", "to": "module4"},
+                {"from": "module3", "to": "module4"}
               ],
               "buildTypes": 6,
               "generateTests": true
@@ -108,7 +108,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
 
                 } catch (e: Exception) {
                     println("ERROR: the generation failed due to JSON script errors - " +
-                            "please fix and try again ")
+                            "please fix and try again")
+                    e.printStackTrace()
                 }
             }
         }
