@@ -16,10 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.converters
 
-import com.google.androidstudiopoet.input.AndroidModuleConfig
-import com.google.androidstudiopoet.input.BuildTypeConfig
-import com.google.androidstudiopoet.input.FlavorConfig
-import com.google.androidstudiopoet.input.ModuleConfig
+import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.assertOn
@@ -38,6 +35,7 @@ class ConfigPojoToProjectConfigConverterTest {
     private val configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter = mock()
     private val configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter = mock()
     private val configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter = mock()
+    private val configPojoToBuildSystemConfigConverter: ConfigPojoToBuildSystemConfigConverter = mock()
 
     private val moduleConfig0: ModuleConfig = mock()
     private val moduleConfig1: ModuleConfig = mock()
@@ -48,6 +46,8 @@ class ConfigPojoToProjectConfigConverterTest {
     private val flavours: List<FlavorConfig> = mock()
     private val buildTypes: List<BuildTypeConfig> = mock()
 
+    private val buildSystemConfig0: BuildSystemConfig = mock()
+
     private val configPojo = ConfigPOJO().apply {
         projectName = PROJECT_NAME
         root = ROOT
@@ -56,7 +56,8 @@ class ConfigPojoToProjectConfigConverterTest {
     }
 
     private val configPojoToProjectConfigConverter = ConfigPojoToProjectConfigConverter(configPojoToModuleConfigConverter,
-            configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter, configPojoToAndroidModuleConfigConverter)
+            configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter, configPojoToAndroidModuleConfigConverter,
+            configPojoToBuildSystemConfigConverter)
 
     @Before
     fun setUp() {
@@ -66,16 +67,18 @@ class ConfigPojoToProjectConfigConverterTest {
         whenever(configPojoToAndroidModuleConfigConverter.convert(configPojo, 1, flavours, buildTypes)).thenReturn(androidModuleConfig1)
         whenever(configPojoToFlavourConfigsConverter.convert(configPojo)).thenReturn(flavours)
         whenever(configPojoToBuildTypeConfigsConverter.convert(configPojo)).thenReturn(buildTypes)
+        whenever(configPojoToBuildSystemConfigConverter.convert(configPojo)).thenReturn(buildSystemConfig0)
     }
 
     @Test
-    fun `convert should pass projectName, root and create module configs for ProjectConfig`() {
+    fun `convert should pass projectName, root and create module and build system configs for ProjectConfig`() {
         val projectConfig = configPojoToProjectConfigConverter.convert(configPojo)
         assertOn(projectConfig) {
             projectName.assertEquals(PROJECT_NAME)
             root.assertEquals(ROOT)
             pureModuleConfigs.assertEquals(listOf(moduleConfig0, moduleConfig1))
             androidModuleConfigs.assertEquals(listOf(androidModuleConfig0, androidModuleConfig1))
+            buildSystemConfig.assertEquals(buildSystemConfig0)
         }
     }
 }

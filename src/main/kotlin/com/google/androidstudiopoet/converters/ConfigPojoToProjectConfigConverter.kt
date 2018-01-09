@@ -23,7 +23,8 @@ import com.google.androidstudiopoet.models.ConfigPOJO
 class ConfigPojoToProjectConfigConverter(private val configPojoToModuleConfigConverter: ConfigPojoToModuleConfigConverter,
                                          private val configPojoToFlavourConfigsConverter: ConfigPojoToFlavourConfigsConverter,
                                          private val configPojoToBuildTypeConfigsConverter: ConfigPojoToBuildTypeConfigsConverter,
-                                         private val configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter) {
+                                         private val configPojoToAndroidModuleConfigConverter: ConfigPojoToAndroidModuleConfigConverter,
+                                         private val configPojoToBuildSystemConfigConverter: ConfigPojoToBuildSystemConfigConverter) {
     fun convert(configPojo: ConfigPOJO): ProjectConfig {
         val pureModulesConfigs = (0 until configPojo.numModules)
                 .map { configPojoToModuleConfigConverter.convert(configPojo, it) }
@@ -33,6 +34,9 @@ class ConfigPojoToProjectConfigConverter(private val configPojoToModuleConfigCon
 
         val androidModulesConfigs = (0 until configPojo.androidModules)
                 .map { configPojoToAndroidModuleConfigConverter.convert(configPojo, it, productFlavors, buildTypes) }
-        return ProjectConfig(configPojo.projectName, configPojo.root, pureModulesConfigs, androidModulesConfigs, BuildSystemConfig(null, null, null))
+
+        val buildSystemConfig = configPojoToBuildSystemConfigConverter.convert(configPojo)
+        return ProjectConfig(configPojo.projectName, configPojo.root, pureModulesConfigs, androidModulesConfigs,
+                buildSystemConfig)
     }
 }
