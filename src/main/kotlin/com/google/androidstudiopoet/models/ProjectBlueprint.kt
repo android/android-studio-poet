@@ -38,14 +38,14 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
             .map { it.useKotlin }.find { it } ?: false
     val gradleVersion = projectConfig.buildSystemConfig.version!!
 
-    val moduleBlueprints : List<ModuleBlueprint>
-    val androidModuleBlueprints : List<AndroidModuleBlueprint>
-    val allModulesNames : List<String>
+    val moduleBlueprints: List<ModuleBlueprint>
+    val androidModuleBlueprints: List<AndroidModuleBlueprint>
+    val allModulesNames: List<String>
     val generateTests = configPOJO.generateTests
     private val allDependencies = configPOJO.resolvedDependencies
 
-    init  {
-        var temporaryModuleBlueprints : List<ModuleBlueprint> = listOf()
+    init {
+        var temporaryModuleBlueprints: List<ModuleBlueprint> = listOf()
         val timeModels = measureTimeMillis {
             ModuleBlueprintFactory.initCache()
             runBlocking {
@@ -54,13 +54,13 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
                         ModuleBlueprintFactory.create(it, projectRoot)
                     }
                 }
-                temporaryModuleBlueprints = deferred.map {it.await()}
+                temporaryModuleBlueprints = deferred.map { it.await() }
             }
         }
         moduleBlueprints = temporaryModuleBlueprints
         println("Time to create model blueprints: $timeModels")
 
-        var temporaryAndroidBlueprints : List<AndroidModuleBlueprint> = listOf()
+        var temporaryAndroidBlueprints: List<AndroidModuleBlueprint> = listOf()
         val timeAndroidModels = measureTimeMillis {
             temporaryAndroidBlueprints = (0 until configPOJO.androidModules).map { i ->
                 ModuleBlueprintFactory.createAndroidModule(projectRoot, projectConfig.androidModuleConfigs[i])
@@ -72,22 +72,43 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
         allModulesNames = moduleBlueprints.map { it.name } + androidModuleBlueprints.map { it.name }
     }
 
-    fun printDependencies() {
+    fun printDeps() {
         println("digraph $projectName {")
         for (module in allModulesNames.sorted()) {
             var list = ""
-	    val dependencies = allDependencies[module]
-	    if ((dependencies != null) && (dependencies.isNotEmpty())) {
-	        list = " -> ${dependencies.map { dep -> dep.to }.sorted().joinToString()}"
-	    }
+            val dependencies = allDependencies[module]
+            if ((dependencies != null) && (dependencies.isNotEmpty())) {
+                list = " -> ${dependencies.map { dep -> dep.to }.sorted().joinToString()}"
+            }
             println("  $module$list;")
         }
         println("}")
     }
 
-    fun hasCircularDependencies() : Boolean {
+    fun printDependencies() {
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("digraph $projectName {\n")
+        androidModuleBlueprints.map { getDependencyForModuleAsString(it.name, it.dependencies) }
+                .forEach({ stringBuilder.append("$it\n") })
+        moduleBlueprints.map { getDependencyForModuleAsString(it.name, it.dependencies) }
+                .forEach({ stringBuilder.append("$it\n") })
+        stringBuilder.append("}\n")
+
+        print(stringBuilder.toString())
+    }
+
+    private fun getDependencyForModuleAsString(name: String, dependencies: List<ModuleDependency>) {
+        var list = ""
+        if (dependencies.isNotEmpty()) {
+            list = " -> ${dependencies.map { it.name }.sorted().joinToString()}"
+        }
+
+        println("  $name$list;")
+    }
+
+    fun hasCircularDependencies(): Boolean {
         // Try to find a topological order (it will be stored in topologicalOrder)
-        val dependencyCounter : MutableMap<String, Int> = mutableMapOf()
+        val dependencyCounter: MutableMap<String, Int> = mutableMapOf()
         for (moduleName in allModulesNames) {
             dependencyCounter.put(moduleName, 0)
         }
