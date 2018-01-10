@@ -32,13 +32,15 @@ import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
-                        private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter) {
+                        private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter,
+                        private val dependencyValidator: DependencyValidator) {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
-                    Injector.configPojoToProjectConfigConverter).run()
+                    Injector.configPojoToProjectConfigConverter,
+                    Injector.dependencyValidator).run()
         }
 
         @Language("JSON") val SAMPLE_CONFIG = """
@@ -131,6 +133,11 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
     }
 
     private fun processInput(configPOJO: ConfigPOJO) {
+
+        if (!dependencyValidator.isValid(configPOJO.dependencies ?: listOf(), configPOJO.numModules, configPOJO.androidModules)) {
+            throw IllegalStateException("Incorrect dependencies")
+        }
+
         var projectBluePrint: ProjectBlueprint? = null
         val timeSpent = measureTimeMillis {
             projectBluePrint = ProjectBlueprint(configPOJO, configPojoToProjectConfigConverter.convert(configPOJO))

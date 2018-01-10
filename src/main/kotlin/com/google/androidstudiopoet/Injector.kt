@@ -35,7 +35,7 @@ import com.google.androidstudiopoet.writers.SourceModuleWriter
 object Injector {
 
     private val fileWriter = FileWriter()
-    private val dependencyValidator = DependencyValidator()
+    val dependencyValidator = DependencyValidator()
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
     private val buildGradleGenerator = BuildGradleGenerator()
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
@@ -71,6 +71,6 @@ object Injector {
                     fileWriter)
 
     val modulesWriter =
-            SourceModuleWriter(dependencyValidator, buildGradleGenerator, gradleSettingsGenerator,
+            SourceModuleWriter(buildGradleGenerator, gradleSettingsGenerator,
                     projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator, fileWriter)
 }

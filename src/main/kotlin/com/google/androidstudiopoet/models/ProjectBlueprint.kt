@@ -38,16 +38,11 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
             .map { it.useKotlin }.find { it } ?: false
     val gradleVersion = projectConfig.buildSystemConfig.version!!
 
-    val dependencies = configPOJO.dependencies ?: listOf()
-
-    val moduleCount = projectConfig.pureModuleConfigs.size
-    val androidModuleCount = projectConfig.androidModuleConfigs.size
-
     val moduleBlueprints : List<ModuleBlueprint>
     val androidModuleBlueprints : List<AndroidModuleBlueprint>
     val allModulesNames : List<String>
     val generateTests = configPOJO.generateTests
-    val allDependencies = configPOJO.resolvedDependencies
+    private val allDependencies = configPOJO.resolvedDependencies
 
     init  {
         var temporaryModuleBlueprints : List<ModuleBlueprint> = listOf()
