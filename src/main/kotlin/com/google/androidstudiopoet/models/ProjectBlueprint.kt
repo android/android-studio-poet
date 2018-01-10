@@ -40,6 +40,7 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
 
     val moduleBlueprints: List<ModuleBlueprint>
     val androidModuleBlueprints: List<AndroidModuleBlueprint>
+    val allModuleBlueprints: List<ModuleBlueprint>
     val allModulesNames: List<String>
     val generateTests = configPOJO.generateTests
     private val allDependencies = configPOJO.resolvedDependencies
@@ -68,42 +69,22 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
         }
         androidModuleBlueprints = temporaryAndroidBlueprints
         println("Time to create Android model blueprints: $timeAndroidModels")
-
-        allModulesNames = moduleBlueprints.map { it.name } + androidModuleBlueprints.map { it.name }
-    }
-
-    fun printDeps() {
-        println("digraph $projectName {")
-        for (module in allModulesNames.sorted()) {
-            var list = ""
-            val dependencies = allDependencies[module]
-            if ((dependencies != null) && (dependencies.isNotEmpty())) {
-                list = " -> ${dependencies.map { dep -> dep.to }.sorted().joinToString()}"
-            }
-            println("  $module$list;")
-        }
-        println("}")
+        allModuleBlueprints = androidModuleBlueprints + moduleBlueprints
+        allModulesNames = allModuleBlueprints.map { it.name }
     }
 
     fun printDependencies() {
-        val stringBuilder = StringBuilder()
-        stringBuilder.append("digraph $projectName {\n")
-        androidModuleBlueprints.map { getDependencyForModuleAsString(it.name, it.dependencies) }
-                .forEach({ stringBuilder.append("$it\n") })
-        moduleBlueprints.map { getDependencyForModuleAsString(it.name, it.dependencies) }
-                .forEach({ stringBuilder.append("$it\n") })
-        stringBuilder.append("}\n")
-
-        print(stringBuilder.toString())
+        println(allModuleBlueprints.map { getDependencyForModuleAsString(it.name, it.dependencies) }
+                .joinToString("\n", "digraph $projectName {\n", "}"))
     }
 
-    private fun getDependencyForModuleAsString(name: String, dependencies: List<ModuleDependency>) {
+    private fun getDependencyForModuleAsString(name: String, dependencies: List<ModuleDependency>): String {
         var list = ""
         if (dependencies.isNotEmpty()) {
             list = " -> ${dependencies.map { it.name }.sorted().joinToString()}"
         }
 
-        println("  $name$list;")
+        return "  $name$list;"
     }
 
     fun hasCircularDependencies(): Boolean {

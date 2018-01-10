@@ -16,42 +16,34 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-import com.google.androidstudiopoet.Blueprint
 import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
 
-data class AndroidModuleBlueprint(val name: String,
+class AndroidModuleBlueprint(name: String,
                                   val numOfActivities: Int,
                                   private val resourcesConfig: ResourcesConfig,
-                                  private val projectRoot: String,
+                                  projectRoot: String,
                                   val hasLaunchActivity: Boolean,
-                                  val useKotlin: Boolean,
-                                  val dependencies: List<ModuleDependency>,
-                                  private val productFlavorConfigs: List<FlavorConfig>?,
-                                  private val buildTypeConfigs: List<BuildTypeConfig>?,
-                                  private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
-                                  private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int,
-                                  val extraLines: List<String>?,
-                                  val generateTests : Boolean
-) : Blueprint {
+                                  useKotlin: Boolean,
+                                  dependencies: List<ModuleDependency>,
+                                  productFlavorConfigs: List<FlavorConfig>?,
+                                  buildTypeConfigs: List<BuildTypeConfig>?,
+                                  javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
+                                  kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
+                                  extraLines: List<String>?,
+                                  generateTests : Boolean
+) : ModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
+        javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
 
     val packageName = "com.$name"
-    val moduleRoot = projectRoot.joinPath(name)
     val srcPath = moduleRoot.joinPath("src")
     val mainPath = srcPath.joinPath("main")
     val resDirPath = mainPath.joinPath("res")
     val codePath = mainPath.joinPath("java")
     val packagePath = codePath.joinPaths(packageName.split("."))
-
-    private val methodsToCallWithIn = dependencies.map { it.methodToCall }
-
-    val packagesBlueprint by lazy {
-        PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, moduleRoot, name, methodsToCallWithIn, generateTests)
-    }
 
     private val resourcesToReferWithin = dependencies
             .filterIsInstance<AndroidModuleDependency>()
@@ -68,9 +60,6 @@ data class AndroidModuleBlueprint(val name: String,
     }
     val activityNames = 0.until(numOfActivities).map { "Activity$it" }
 
-    val methodToCallFromOutside by lazy {
-        packagesBlueprint.methodToCallFromOutside
-    }
     val resourcesToReferFromOutside by lazy {
         resourcesBlueprint.resourcesToReferFromOutside
     }
