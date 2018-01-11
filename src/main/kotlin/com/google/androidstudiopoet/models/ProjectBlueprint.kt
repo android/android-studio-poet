@@ -25,8 +25,7 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import kotlin.system.measureTimeMillis
 
-class ProjectBlueprint(configPOJO: ConfigPOJO,
-                       private val projectConfig: ProjectConfig) {
+class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val projectName = projectConfig.projectName
 
@@ -40,10 +39,9 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
 
     val moduleBlueprints: List<ModuleBlueprint>
     val androidModuleBlueprints: List<AndroidModuleBlueprint>
-    val allModuleBlueprints: List<ModuleBlueprint>
+    private val allModuleBlueprints: List<ModuleBlueprint>
     val allModulesNames: List<String>
-    val generateTests = configPOJO.generateTests
-    private val allDependencies = configPOJO.resolvedDependencies
+    private val allDependencies: Map<String, List<ModuleDependency>>
 
     init {
         var temporaryModuleBlueprints: List<ModuleBlueprint> = listOf()
@@ -63,19 +61,21 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
 
         var temporaryAndroidBlueprints: List<AndroidModuleBlueprint> = listOf()
         val timeAndroidModels = measureTimeMillis {
-            temporaryAndroidBlueprints = (0 until configPOJO.androidModules).map { i ->
-                ModuleBlueprintFactory.createAndroidModule(projectRoot, projectConfig.androidModuleConfigs[i])
+            temporaryAndroidBlueprints = projectConfig.androidModuleConfigs.map {
+                ModuleBlueprintFactory.createAndroidModule(projectRoot, it)
             }
         }
         androidModuleBlueprints = temporaryAndroidBlueprints
         println("Time to create Android model blueprints: $timeAndroidModels")
         allModuleBlueprints = androidModuleBlueprints + moduleBlueprints
         allModulesNames = allModuleBlueprints.map { it.name }
+        allDependencies = allModuleBlueprints.associate { it -> Pair(it.name, it.dependencies) }
     }
 
     fun printDependencies() {
-        println(allModuleBlueprints.map { getDependencyForModuleAsString(it.name, it.dependencies) }
-                .joinToString("\n", "digraph $projectName {\n", "}"))
+        println(allModuleBlueprints.joinToString("\n", "digraph $projectName {\n", "\n}") {
+            getDependencyForModuleAsString(it.name, it.dependencies)
+        })
     }
 
     private fun getDependencyForModuleAsString(name: String, dependencies: List<ModuleDependency>): String {
@@ -96,7 +96,7 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
         // Count how many modules depend on each
         for ((_, dependencies) in allDependencies) {
             for (dependency in dependencies) {
-                dependencyCounter.increase(dependency.to)
+                dependencyCounter.increase(dependency.name)
             }
         }
         // Try to generate a topological order
@@ -105,9 +105,9 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
         while (index < topologicalOrder.size && topologicalOrder.size < allModulesNames.size) {
             val from = topologicalOrder[index]
             for (dependency in allDependencies[from]!!) {
-                val count = dependencyCounter.decrease(dependency.to)
+                val count = dependencyCounter.decrease(dependency.name)
                 if (count == 0) {
-                    topologicalOrder.add(dependency.to)
+                    topologicalOrder.add(dependency.name)
                 }
             }
             index++

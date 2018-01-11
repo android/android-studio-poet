@@ -140,7 +140,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
 
         var projectBluePrint: ProjectBlueprint? = null
         val timeSpent = measureTimeMillis {
-            projectBluePrint = ProjectBlueprint(configPOJO, configPojoToProjectConfigConverter.convert(configPOJO))
+            projectBluePrint = ProjectBlueprint(configPojoToProjectConfigConverter.convert(configPOJO))
             modulesWriter.generate(projectBluePrint!!)
         }
         println("Finished in $timeSpent ms")
