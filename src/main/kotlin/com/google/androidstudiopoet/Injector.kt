@@ -56,8 +56,10 @@ object Injector {
     private val configPojoToBuildTypeConfigsConverter = ConfigPojoToBuildTypeConfigsConverter()
     private val configPojoToAndroidModuleConfigConverter = ConfigPojoToAndroidModuleConfigConverter()
     private val configPojoToModuleConfigConverter = ConfigPojoToModuleConfigConverter()
+    private val configPojoToBuildSystemConfigConverter = ConfigPojoToBuildSystemConfigConverter()
     val configPojoToProjectConfigConverter = ConfigPojoToProjectConfigConverter(configPojoToModuleConfigConverter,
-            configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter, configPojoToAndroidModuleConfigConverter)
+            configPojoToFlavourConfigsConverter, configPojoToBuildTypeConfigsConverter,
+            configPojoToAndroidModuleConfigConverter, configPojoToBuildSystemConfigConverter)
 
     private val androidModuleGenerator =
             AndroidModuleGenerator(

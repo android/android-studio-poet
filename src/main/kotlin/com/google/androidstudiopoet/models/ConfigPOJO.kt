@@ -71,11 +71,11 @@ class ConfigPOJO {
 
     val buildTypes: Int? = null
 
-    val gradleVersion: String? = ""
+    var gradleVersion: String? = ""
 
-    val kotlinVersion: String? = null
+    var kotlinVersion: String? = null
 
-    val androidGradlePluginVersion: String? = null
+    var androidGradlePluginVersion: String? = null
 
     private val topologies: List<Map<String, String>>? = null
 
