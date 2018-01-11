@@ -1,5 +1,6 @@
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.testutils.assertEquals
@@ -7,15 +8,12 @@ import com.google.androidstudiopoet.testutils.mock
 import org.junit.Test
 
 class AndroidModuleBlueprintTest {
-    private val resourcesConfig: ResourcesConfig = mock()
+    private val resourcesConfig0: ResourcesConfig = mock()
     private val dependency: ModuleDependency = mock()
-    private val originalAndroidModuleBlueprint = AndroidModuleBlueprint("androidAppModule1", 1, resourcesConfig,
-            "root", true, false, listOf(dependency), null,null,
-            1, 1, 1, 1, 1, 1, null, true)
 
     @Test
     fun `blueprint create proper activity names`() {
-        val blueprint = originalAndroidModuleBlueprint.copy(numOfActivities = 2)
+        val blueprint = getAndroidModuleBlueprint(numOfActivities = 2)
 
         blueprint.activityNames.assertEquals(listOf("Activity0", "Activity1"))
     }
@@ -31,7 +29,7 @@ class AndroidModuleBlueprintTest {
                 FlavorConfig(flavorName1, dimension1),
                 FlavorConfig(flavorName2, dimension1),
                 FlavorConfig(flavorName3, dimension2))
-        val blueprint = originalAndroidModuleBlueprint.copy(productFlavorConfigs = flavorConfigs)
+        val blueprint = getAndroidModuleBlueprint(productFlavorConfigs = flavorConfigs)
 
         blueprint.flavorDimensions!!.assertEquals(setOf(dimension1, dimension2))
         blueprint.productFlavors!!.assertEquals(setOf(
@@ -40,4 +38,27 @@ class AndroidModuleBlueprintTest {
                 Flavor(flavorName3, dimension2)
         ))
     }
+
+
+    private fun getAndroidModuleBlueprint(
+            name: String = "androidAppModule1",
+            numOfActivities: Int = 1,
+            resourcesConfig: ResourcesConfig = resourcesConfig0,
+            projectRoot: String = "root",
+            hasLaunchActivity: Boolean = true,
+            useKotlin: Boolean = false,
+            dependencies: List<ModuleDependency> = listOf(dependency),
+            productFlavorConfigs: List<FlavorConfig>? = null,
+            buildTypeConfigs: List<BuildTypeConfig>? = null,
+            javaPackageCount: Int = 1,
+            javaClassCount: Int = 1,
+            javaMethodsPerClass: Int = 1,
+            kotlinPackageCount: Int = 1,
+            kotlinClassCount: Int = 1,
+            kotlinMethodsPerClass: Int = 1,
+            extraLines: List<String>? = null,
+            generateTests: Boolean = true
+    ) = AndroidModuleBlueprint(name, numOfActivities, resourcesConfig, projectRoot, hasLaunchActivity, useKotlin,
+            dependencies, productFlavorConfigs, buildTypeConfigs, javaPackageCount, javaClassCount, javaMethodsPerClass,
+            kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests)
 }

@@ -35,6 +35,7 @@ open class ModuleBlueprint(val name: String,
                 kotlinClassCount, kotlinMethodsPerClass, moduleRoot, name, methodsToCallWithIn, generateTests)
     }
 
-    var methodToCallFromOutside = packagesBlueprint.methodToCallFromOutside
-
+    val methodToCallFromOutside by lazy {
+        packagesBlueprint.methodToCallFromOutside
+    }
 }
