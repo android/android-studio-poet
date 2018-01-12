@@ -24,7 +24,7 @@ class ConfigPojoToBuildSystemConfigConverterTest {
         assertOn(buildSystemConfig) {
             kotlinVersion!!.assertEquals(KOTLIN_VERSION)
             agpVersion!!.assertEquals(AGP_VERSION)
-            version!!.assertEquals(GRADLE_VERSION)
+            buildSystemVersion!!.assertEquals(GRADLE_VERSION)
         }
     }
 

@@ -14,10 +14,9 @@
 
 package com.google.androidstudiopoet.writers
 
-import com.google.androidstudiopoet.DependencyValidator
-import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.BuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
+import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
@@ -28,8 +27,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
 
-class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
-                         private val buildGradleGenerator: BuildGradleGenerator,
+class SourceModuleWriter(private val buildGradleGenerator: BuildGradleGenerator,
                          private val gradleSettingsGenerator: GradleSettingsGenerator,
                          private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
                          private val androidModuleGenerator: AndroidModuleGenerator,
@@ -37,10 +35,6 @@ class SourceModuleWriter(private val dependencyValidator: DependencyValidator,
                          private val fileWriter: FileWriter) {
 
     fun generate(projectBlueprint: ProjectBlueprint) = runBlocking {
-
-        if (!dependencyValidator.isValid(projectBlueprint.dependencies, projectBlueprint.moduleCount, projectBlueprint.androidModuleCount)) {
-            throw IllegalStateException("Incorrect dependencies")
-        }
 
         fileWriter.delete(projectBlueprint.projectRoot)
         fileWriter.mkdir(projectBlueprint.projectRoot)

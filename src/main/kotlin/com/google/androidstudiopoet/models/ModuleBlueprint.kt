@@ -16,24 +16,26 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-import com.google.androidstudiopoet.Blueprint
 import com.google.androidstudiopoet.utils.joinPath
 
-data class ModuleBlueprint(val name: String,
-                           private val root: String,
+open class ModuleBlueprint(val name: String,
+                           root: String,
                            val useKotlin: Boolean,
                            val dependencies: List<ModuleDependency>,
-                           private val javaPackageCount: Int, private val javaClassCount: Int, private val javaMethodsPerClass: Int,
-                           private val kotlinPackageCount: Int, private val kotlinClassCount: Int, private val kotlinMethodsPerClass: Int,
+                           javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
+                           kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
                            val extraLines: List<String>?,
                            val generateTests : Boolean) {
 
     val moduleRoot = root.joinPath(name)
-    val packagesBlueprint = PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-            kotlinClassCount, kotlinMethodsPerClass, moduleRoot, name, convertDependenciesToMethodsToCall(dependencies), generateTests)
+    private val methodsToCallWithIn = dependencies.map { it.methodToCall }
 
-    var methodToCallFromOutside = packagesBlueprint.methodToCallFromOutside
+    val packagesBlueprint by lazy {
+        PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+                kotlinClassCount, kotlinMethodsPerClass, moduleRoot, name, methodsToCallWithIn, generateTests)
+    }
 
-    private fun convertDependenciesToMethodsToCall(dependencies: List<ModuleDependency>): List<MethodToCall> = dependencies.map { it.methodToCall }
-
+    val methodToCallFromOutside by lazy {
+        packagesBlueprint.methodToCallFromOutside
+    }
 }
