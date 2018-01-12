@@ -62,7 +62,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         var temporaryAndroidBlueprints: List<AndroidModuleBlueprint> = listOf()
         val timeAndroidModels = measureTimeMillis {
             temporaryAndroidBlueprints = projectConfig.androidModuleConfigs.map {
-                ModuleBlueprintFactory.createAndroidModule(projectRoot, it)
+                ModuleBlueprintFactory.createAndroidModule(projectRoot, it, projectConfig.moduleConfigs)
             }
         }
         androidModuleBlueprints = temporaryAndroidBlueprints
