@@ -21,6 +21,7 @@ import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.assertOn
 import com.google.androidstudiopoet.testutils.mock
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
 import org.junit.Test
@@ -63,8 +64,8 @@ class ConfigPojoToProjectConfigConverterTest {
     fun setUp() {
         whenever(configPojoToModuleConfigConverter.convert(configPojo, 0)).thenReturn(moduleConfig0)
         whenever(configPojoToModuleConfigConverter.convert(configPojo, 1)).thenReturn(moduleConfig1)
-        whenever(configPojoToAndroidModuleConfigConverter.convert(configPojo, 0, flavours, buildTypes)).thenReturn(androidModuleConfig0)
-        whenever(configPojoToAndroidModuleConfigConverter.convert(configPojo, 1, flavours, buildTypes)).thenReturn(androidModuleConfig1)
+        whenever(configPojoToAndroidModuleConfigConverter.convert(configPojo, 0, flavours, buildTypes, any())).thenReturn(androidModuleConfig0)
+        whenever(configPojoToAndroidModuleConfigConverter.convert(configPojo, 1, flavours, buildTypes, any())).thenReturn(androidModuleConfig1)
         whenever(configPojoToFlavourConfigsConverter.convert(configPojo)).thenReturn(flavours)
         whenever(configPojoToBuildTypeConfigsConverter.convert(configPojo)).thenReturn(buildTypes)
         whenever(configPojoToBuildSystemConfigConverter.convert(configPojo)).thenReturn(buildSystemConfig0)

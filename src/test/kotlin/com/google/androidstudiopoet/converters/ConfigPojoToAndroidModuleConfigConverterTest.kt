@@ -35,8 +35,13 @@ private const val KOTLIN_CLASS_COUNT = 9
 
 private const val GENERATE_TESTS = true
 
-private const val INDEX = 3
-private const val ANDROID_MODULE_NAME = "androidAppModule3"
+private const val ANDROID_MODULE_COUNT = 2
+private const val INDEX_1 = 1
+private const val ANDROID_MODULE_NAME_1 = "androidAppModule1"
+private const val MODULE_NAME_0 = "module0"
+private const val MODULE_NAME_1 = "module1"
+
+private val PURE_MODULE_LIST = listOf(MODULE_NAME_0, MODULE_NAME_1)
 
 class ConfigPojoToAndroidModuleConfigConverterTest {
 
@@ -60,15 +65,16 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
         extraAndroidBuildFileLines = extraLinesForAndroidBuildFile
 
         generateTests = GENERATE_TESTS
+        androidModules = ANDROID_MODULE_COUNT
     }
 
     private val converter = ConfigPojoToAndroidModuleConfigConverter()
 
     @Test
     fun `convert passes correct values to result AndroidModuleConfig`() {
-        val androidModuleConfig = converter.convert(configPOJO, INDEX, productFlavorConfigs, buildTypes)
+        val androidModuleConfig = converter.convert(configPOJO, INDEX_1, productFlavorConfigs, buildTypes, PURE_MODULE_LIST)
         assertOn(androidModuleConfig) {
-            moduleName.assertEquals(ANDROID_MODULE_NAME)
+            moduleName.assertEquals(ANDROID_MODULE_NAME_1)
             activityCount.assertEquals(ACTIVITY_COUNT)
             extraLines!!.assertEquals(extraLinesForAndroidBuildFile)
 
@@ -84,13 +90,17 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
 
             generateTests.assertEquals(GENERATE_TESTS)
             hasLaunchActivity.assertFalse()
+            dependencies.assertEquals(PURE_MODULE_LIST)
         }
     }
 
     @Test
     fun `convert result AndroidModuleConfig that has launch activity when index == 0`() {
-        val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes)
-        androidModuleConfig.hasLaunchActivity.assertTrue()
+        val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes, PURE_MODULE_LIST)
+        assertOn(androidModuleConfig) {
+            hasLaunchActivity.assertTrue()
+            dependencies.assertEquals(listOf(ANDROID_MODULE_NAME_1) + PURE_MODULE_LIST)
+        }
     }
 
 }
