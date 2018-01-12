@@ -107,7 +107,7 @@ class ProjectBlueprint(configPOJO: ConfigPOJO,
         var index = 0
         while (index < topologicalOrder.size && topologicalOrder.size < allModulesNames.size) {
             val from = topologicalOrder[index]
-            for (dependency in allDependencies[from]!!) {
+            for (dependency in allDependencies[from]?: listOf<DependencyConfig>()) {
                 val count = dependencyCounter.decrease(dependency.to)
                 if (count == 0) {
                     topologicalOrder.add(dependency.to)
