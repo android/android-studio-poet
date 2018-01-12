@@ -16,13 +16,13 @@ limitations under the License.
 
 package com.google.androidstudiopoet
 
-import com.google.androidstudiopoet.models.DependencyConfig
+import com.google.androidstudiopoet.models.FromToDependencyConfig
 
 private const val ANDROID_TYPE: String = "androidAppModule"
 private const val MODULE_TYPE = "module"
 
 class DependencyValidator {
-    fun isValid(dependencies: List<DependencyConfig>, moduleCount: Int, androidModuleCount: Int): Boolean {
+    fun isValid(dependencies: List<FromToDependencyConfig>, moduleCount: Int, androidModuleCount: Int): Boolean {
         for (dependency in dependencies) {
             if (badDependency(dependency, moduleCount, androidModuleCount)) {
                 return false
@@ -32,7 +32,7 @@ class DependencyValidator {
         return true
     }
 
-    private fun badDependency(dependency: DependencyConfig, moduleCount: Int, androidModuleCount: Int): Boolean {
+    private fun badDependency(dependency: FromToDependencyConfig, moduleCount: Int, androidModuleCount: Int): Boolean {
         val from = ModuleSplit(dependency.from)
         if (badIndexByType(from, moduleCount, androidModuleCount)) {
             return true
