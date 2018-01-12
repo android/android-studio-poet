@@ -26,6 +26,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int, productFlavorConfigs: List<FlavorConfig>,
                 buildTypes: List<BuildTypeConfig>): AndroidModuleConfig {
 
+        val moduleName = "androidAppModule$index"
         val javaPackageCount = config.javaPackageCount!!.toInt()
         val javaClassCount = config.javaClassCount!!.toInt()
         val javaMethodsPerClass = config.javaMethodsPerClass
@@ -38,9 +39,10 @@ class ConfigPojoToAndroidModuleConfigConverter {
         val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
 
         val generateTests = config.generateTests
+        val hasLaunchActivity = index == 0
 
-        return AndroidModuleConfig(index, activityCount, productFlavorConfigs, buildTypes,
+        return AndroidModuleConfig(moduleName, activityCount, productFlavorConfigs, buildTypes,
                 config.extraAndroidBuildFileLines, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, useKotlin, generateTests)
+                kotlinClassCount, kotlinMethodsPerClass, useKotlin, generateTests, hasLaunchActivity)
     }
 }

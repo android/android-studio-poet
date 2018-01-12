@@ -19,9 +19,7 @@ package com.google.androidstudiopoet.converters
 import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.models.ConfigPOJO
-import com.google.androidstudiopoet.testutils.assertEquals
-import com.google.androidstudiopoet.testutils.assertOn
-import com.google.androidstudiopoet.testutils.mock
+import com.google.androidstudiopoet.testutils.*
 import org.junit.Test
 
 private const val ACTIVITY_COUNT = 4
@@ -37,8 +35,11 @@ private const val KOTLIN_CLASS_COUNT = 9
 
 private const val GENERATE_TESTS = true
 
+private const val INDEX = 3
+private const val ANDROID_MODULE_NAME = "androidAppModule3"
+
 class ConfigPojoToAndroidModuleConfigConverterTest {
-    private val index = 3
+
     private val productFlavorConfigs: List<FlavorConfig> = mock()
     private val buildTypes: List<BuildTypeConfig> = mock()
 
@@ -65,8 +66,9 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
 
     @Test
     fun `convert passes correct values to result AndroidModuleConfig`() {
-        val androidModuleConfig = converter.convert(configPOJO, index, productFlavorConfigs, buildTypes)
+        val androidModuleConfig = converter.convert(configPOJO, INDEX, productFlavorConfigs, buildTypes)
         assertOn(androidModuleConfig) {
+            moduleName.assertEquals(ANDROID_MODULE_NAME)
             activityCount.assertEquals(ACTIVITY_COUNT)
             extraLines!!.assertEquals(extraLinesForAndroidBuildFile)
 
@@ -81,7 +83,14 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
             useKotlin.assertEquals(configPOJO.useKotlin)
 
             generateTests.assertEquals(GENERATE_TESTS)
+            hasLaunchActivity.assertFalse()
         }
+    }
+
+    @Test
+    fun `convert result AndroidModuleConfig that has launch activity when index == 0`() {
+        val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes)
+        androidModuleConfig.hasLaunchActivity.assertTrue()
     }
 
 }
