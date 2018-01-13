@@ -19,13 +19,13 @@ package com.google.androidstudiopoet.converters
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
-import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.models.ConfigPOJO
 
 class ConfigPojoToAndroidModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int, productFlavorConfigs: List<FlavorConfig>,
-                buildTypes: List<BuildTypeConfig>): AndroidModuleConfig {
+                buildTypes: List<BuildTypeConfig>, pureModuleDependencies: List<String>): AndroidModuleConfig {
 
+        val moduleName = getAndroidModuleName(index)
         val javaPackageCount = config.javaPackageCount!!.toInt()
         val javaClassCount = config.javaClassCount!!.toInt()
         val javaMethodsPerClass = config.javaMethodsPerClass
@@ -38,9 +38,16 @@ class ConfigPojoToAndroidModuleConfigConverter {
         val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
 
         val generateTests = config.generateTests
+        val hasLaunchActivity = index == 0
 
-        return AndroidModuleConfig(index, activityCount, productFlavorConfigs, buildTypes,
+        val androidDependencies = (index + 1 until config.androidModules).map { getAndroidModuleName(it) }
+
+        val resultDependencies = androidDependencies + pureModuleDependencies
+
+        return AndroidModuleConfig(moduleName, activityCount, productFlavorConfigs, buildTypes,
                 config.extraAndroidBuildFileLines, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, useKotlin, generateTests)
+                kotlinClassCount, kotlinMethodsPerClass, useKotlin, generateTests, hasLaunchActivity, resultDependencies)
     }
+
+    private fun getAndroidModuleName(index: Int) = "androidAppModule$index"
 }

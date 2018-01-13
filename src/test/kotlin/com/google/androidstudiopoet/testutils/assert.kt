@@ -18,6 +18,7 @@ package com.google.androidstudiopoet.testutils
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
 
 fun <T> Collection<T>.assertEmpty() {
     assertTrue(this.isEmpty())
@@ -32,3 +33,11 @@ fun Any.assertEquals(expected: Any) {
 }
 
 inline fun <T, R> assertOn(receiver: T, block: T.() -> R): R = receiver.block()
+
+fun Boolean.assertTrue() {
+    assertTrue(this)
+}
+
+fun Boolean.assertFalse() {
+    assertFalse(this)
+}

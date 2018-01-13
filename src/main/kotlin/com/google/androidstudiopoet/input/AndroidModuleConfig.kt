@@ -16,15 +16,15 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-class AndroidModuleConfig(index: Int, val activityCount: Int,
+class AndroidModuleConfig(moduleName: String, val activityCount: Int,
                           val productFlavorConfigs: List<FlavorConfig>, val buildTypes: List<BuildTypeConfig>,
                           extraAndroidBuildFileLines: List<String>?, javaPackageCount: Int, javaClassCount: Int,
                           javaMethodsPerClass: Int, kotlinPackageCount: Int, kotlinClassCount: Int,
-                          kotlinMethodsPerClass: Int, useKotlin: Boolean, generateTests: Boolean)
-    : ModuleConfig("androidAppModule$index", javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-        kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraAndroidBuildFileLines, listOf(), generateTests) {
+                          kotlinMethodsPerClass: Int, useKotlin: Boolean, generateTests: Boolean,
+                          val hasLaunchActivity: Boolean, dependencies: List<String>)
+    : ModuleConfig(moduleName, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
+        kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraAndroidBuildFileLines, dependencies, generateTests) {
 
-    val hasLaunchActivity = index == 0
     val resourcesConfig = ResourcesConfig(activityCount + 2,
             activityCount + 5, activityCount)
 }

@@ -17,4 +17,6 @@ limitations under the License.
 package com.google.androidstudiopoet.input
 
 data class ProjectConfig(val projectName: String, val root: String, val pureModuleConfigs: List<ModuleConfig>,
-                         val androidModuleConfigs: List<AndroidModuleConfig>, val buildSystemConfig: BuildSystemConfig)
+                         val androidModuleConfigs: List<AndroidModuleConfig>, val buildSystemConfig: BuildSystemConfig) {
+    val moduleConfigs = pureModuleConfigs + androidModuleConfigs
+}
