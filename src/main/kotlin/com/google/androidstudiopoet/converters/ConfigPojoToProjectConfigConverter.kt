@@ -38,10 +38,11 @@ class ConfigPojoToProjectConfigConverter(private val configPojoToModuleConfigCon
                 }
 
         val buildSystemConfig = configPojoToBuildSystemConfigConverter.convert(configPojo)
-        return ProjectConfig(pureModulesConfigs, androidModulesConfigs).apply {
+        return ProjectConfig().apply {
             projectName = configPojo.projectName
             root = configPojo.root
             this.buildSystemConfig = buildSystemConfig
+            moduleConfigs = pureModulesConfigs + androidModulesConfigs
         }
     }
 }

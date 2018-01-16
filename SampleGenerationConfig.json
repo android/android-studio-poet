@@ -3,6 +3,9 @@
   "projectConfig": {
     "projectName": "genny",
     "root": "./modules/",
-    "buildSystemConfig": {}
+    "buildSystemConfig": {
+      "buildSystemVersion": "4.3.1"
+    },
+    "moduleConfigs": []
   }
 }

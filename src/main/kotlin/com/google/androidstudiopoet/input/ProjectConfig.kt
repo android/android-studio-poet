@@ -16,10 +16,12 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-data class ProjectConfig(val pureModuleConfigs: List<ModuleConfig>,
-                         val androidModuleConfigs: List<AndroidModuleConfig>) {
+class ProjectConfig {
     lateinit var projectName: String
     lateinit var root: String
     lateinit var buildSystemConfig: BuildSystemConfig
-    val moduleConfigs = pureModuleConfigs + androidModuleConfigs
+    lateinit var moduleConfigs: List<ModuleConfig>
+
+    val pureModuleConfigs : List<ModuleConfig> by lazy { moduleConfigs.filter { it !is AndroidModuleConfig } }
+    val androidModuleConfigs: List<AndroidModuleConfig> by lazy { moduleConfigs.filterIsInstance<AndroidModuleConfig>() }
 }
