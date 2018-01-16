@@ -33,8 +33,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val androidGradlePluginVersion = projectConfig.buildSystemConfig.agpVersion
     val kotlinVersion = projectConfig.buildSystemConfig.kotlinVersion
-    val useKotlin = (projectConfig.pureModuleConfigs + projectConfig.androidModuleConfigs)
-            .map { it.useKotlin }.find { it } ?: false
+    val useKotlin = projectConfig.moduleConfigs.map { it.useKotlin }.find { it } ?: false
     val gradleVersion = projectConfig.buildSystemConfig.buildSystemVersion!!
 
     val moduleBlueprints: List<ModuleBlueprint>
