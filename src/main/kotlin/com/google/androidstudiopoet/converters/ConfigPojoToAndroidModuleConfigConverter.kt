@@ -24,29 +24,30 @@ import com.google.androidstudiopoet.models.ConfigPOJO
 class ConfigPojoToAndroidModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int, productFlavorConfigs: List<FlavorConfig>,
                 buildTypes: List<BuildTypeConfig>, pureModuleDependencies: List<String>): AndroidModuleConfig {
+        return AndroidModuleConfig().apply {
+            moduleName = getAndroidModuleName(index)
+            javaPackageCount = config.javaPackageCount!!.toInt()
+            javaClassCount = config.javaClassCount!!.toInt()
+            javaMethodsPerClass = config.javaMethodsPerClass
 
-        val moduleName = getAndroidModuleName(index)
-        val javaPackageCount = config.javaPackageCount!!.toInt()
-        val javaClassCount = config.javaClassCount!!.toInt()
-        val javaMethodsPerClass = config.javaMethodsPerClass
+            kotlinPackageCount = config.kotlinPackageCount!!.toInt()
+            kotlinClassCount = config.kotlinClassCount!!.toInt()
+            kotlinMethodsPerClass = config.kotlinMethodsPerClass
+            useKotlin = config.useKotlin
 
-        val kotlinPackageCount = config.kotlinPackageCount!!.toInt()
-        val kotlinClassCount = config.kotlinClassCount!!.toInt()
-        val kotlinMethodsPerClass = config.kotlinMethodsPerClass
-        val useKotlin: Boolean = config.useKotlin
+            activityCount = config.numActivitiesPerAndroidModule!!.toInt()
 
-        val activityCount = config.numActivitiesPerAndroidModule!!.toInt()
+            generateTests = config.generateTests
+            hasLaunchActivity = index == 0
 
-        val generateTests = config.generateTests
-        val hasLaunchActivity = index == 0
+            val androidDependencies = (index + 1 until config.androidModules).map { getAndroidModuleName(it) }
 
-        val androidDependencies = (index + 1 until config.androidModules).map { getAndroidModuleName(it) }
+            dependencies = androidDependencies + pureModuleDependencies
 
-        val resultDependencies = androidDependencies + pureModuleDependencies
-
-        return AndroidModuleConfig(moduleName, activityCount, productFlavorConfigs, buildTypes,
-                config.extraAndroidBuildFileLines, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, useKotlin, generateTests, hasLaunchActivity, resultDependencies)
+            this.buildTypes = buildTypes
+            this.productFlavorConfigs = productFlavorConfigs
+            extraLines = config.extraAndroidBuildFileLines
+        }
     }
 
     private fun getAndroidModuleName(index: Int) = "androidAppModule$index"

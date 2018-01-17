@@ -16,15 +16,14 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-class AndroidModuleConfig(moduleName: String, val activityCount: Int,
-                          val productFlavorConfigs: List<FlavorConfig>, val buildTypes: List<BuildTypeConfig>,
-                          extraAndroidBuildFileLines: List<String>?, javaPackageCount: Int, javaClassCount: Int,
-                          javaMethodsPerClass: Int, kotlinPackageCount: Int, kotlinClassCount: Int,
-                          kotlinMethodsPerClass: Int, useKotlin: Boolean, generateTests: Boolean,
-                          val hasLaunchActivity: Boolean, dependencies: List<String>)
-    : ModuleConfig(moduleName, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-        kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraAndroidBuildFileLines, dependencies, generateTests) {
+class AndroidModuleConfig : ModuleConfig() {
 
-    val resourcesConfig = ResourcesConfig(activityCount + 2,
-            activityCount + 5, activityCount)
+    var activityCount: Int = 0
+    var productFlavorConfigs: List<FlavorConfig>? = null
+    var buildTypes: List<BuildTypeConfig>? = null
+    var hasLaunchActivity: Boolean = false
+
+    val resourcesConfig by lazy {
+        ResourcesConfig(activityCount + 2, activityCount + 5, activityCount)
+    }
 }

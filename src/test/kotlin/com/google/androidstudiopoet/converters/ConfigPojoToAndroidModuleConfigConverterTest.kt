@@ -90,7 +90,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
 
             generateTests.assertEquals(GENERATE_TESTS)
             hasLaunchActivity.assertFalse()
-            dependencies.assertEquals(PURE_MODULE_LIST)
+            dependencies!!.assertEquals(PURE_MODULE_LIST)
         }
     }
 
@@ -99,7 +99,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
         val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes, PURE_MODULE_LIST)
         assertOn(androidModuleConfig) {
             hasLaunchActivity.assertTrue()
-            dependencies.assertEquals(listOf(ANDROID_MODULE_NAME_1) + PURE_MODULE_LIST)
+            dependencies!!.assertEquals(listOf(ANDROID_MODULE_NAME_1) + PURE_MODULE_LIST)
         }
     }
 
