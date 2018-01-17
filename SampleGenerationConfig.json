@@ -1,0 +1,11 @@
+{
+  "inputVersion": "0.1",
+  "projectConfig": {
+    "projectName": "genny",
+    "root": "./modules/",
+    "buildSystemConfig": {
+      "buildSystemVersion": "4.3.1"
+    },
+    "moduleConfigs": []
+  }
+}

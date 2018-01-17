@@ -15,10 +15,14 @@
 package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.converters.ConfigPojoToProjectConfigConverter
+import com.google.androidstudiopoet.input.GenerationConfig
+import com.google.androidstudiopoet.input.ProjectConfig
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.writers.SourceModuleWriter
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import org.intellij.lang.annotations.Language
 import java.awt.BorderLayout
@@ -43,7 +47,8 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
                     Injector.dependencyValidator).run()
         }
 
-        @Language("JSON") val SAMPLE_CONFIG = """
+        @Language("JSON")
+        val SAMPLE_CONFIG = """
             {
               "projectName": "genny",
               "root": "./modules/",
@@ -77,11 +82,9 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
     }
 
     fun run() {
-
-        val configPOJO = fromFile(filename)
-        when (configPOJO) {
-            null -> showUI(SAMPLE_CONFIG)
-            else -> processInput(configPOJO)
+        when {
+            filename != null -> processFile(filename)
+            else -> showUI(SAMPLE_CONFIG)
         }
     }
 
@@ -106,7 +109,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
                 try {
                     val text = textArea.text
                     println(text)
-                    processInput(configFrom(text)!!)
+                    processInput(text)
 
                 } catch (e: Exception) {
                     println("ERROR: the generation failed due to JSON script errors - " +
@@ -132,15 +135,35 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         return frame
     }
 
+    private fun processInput(jsonText: String) {
+        val input = parseInput(jsonText)
+        when (input) {
+            is GenerationConfig -> processInput(input)
+            is ConfigPOJO -> processInput(input)
+            else -> println("Can't parse json")
+        }
+    }
+
+    private fun processInput(config: GenerationConfig) {
+        println("Input version: ${config.inputVersion}")
+        startGeneration(config.projectConfig)
+    }
+
     private fun processInput(configPOJO: ConfigPOJO) {
 
         if (!dependencyValidator.isValid(configPOJO.dependencies ?: listOf(), configPOJO.numModules, configPOJO.androidModules)) {
             throw IllegalStateException("Incorrect dependencies")
         }
 
+        val projectConfig = configPojoToProjectConfigConverter.convert(configPOJO)
+
+        startGeneration(projectConfig)
+    }
+
+    private fun startGeneration(projectConfig: ProjectConfig) {
         var projectBluePrint: ProjectBlueprint? = null
         val timeSpent = measureTimeMillis {
-            projectBluePrint = ProjectBlueprint(configPojoToProjectConfigConverter.convert(configPOJO))
+            projectBluePrint = ProjectBlueprint(projectConfig)
             modulesWriter.generate(projectBluePrint!!)
         }
         println("Finished in $timeSpent ms")
@@ -170,24 +193,36 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         }
     }
 
-    private fun fromFile(filename: String?): ConfigPOJO? = when {
+    private fun processFile(filename: String?): Any? = when {
         filename == null -> null
         !File(filename).canRead() -> null
-        else -> File(filename).readText().let {
-            return configFrom(it)
+        else -> File(filename).readText().let { processInput(it) }
+    }
+
+    private fun parseInput(json: String): Any? {
+        val gson = Gson()
+        val configJsonObject = JsonParser().parse(json).asJsonObject
+        return when {
+            configJsonObject.has("inputVersion") -> generationConfigFrom(configJsonObject, gson)
+            else -> configPojoFrom(configJsonObject, gson)
         }
     }
 
-
-    private fun configFrom(json: String): ConfigPOJO? {
-
-        val gson = Gson()
-
-        try {
-            return gson.fromJson(json, ConfigPOJO::class.java)
+    private fun configPojoFrom(configJsonObject: JsonObject, gson: Gson): ConfigPOJO? {
+        return try {
+            gson.fromJson(configJsonObject, ConfigPOJO::class.java)
         } catch (js: JsonSyntaxException) {
             System.err.println("Cannot parse json: $js")
-            return null
+            null
+        }
+    }
+
+    private fun generationConfigFrom(configJsonObject: JsonObject, gson: Gson): GenerationConfig? {
+        return try {
+            gson.fromJson(configJsonObject, GenerationConfig::class.java)
+        } catch (js: JsonSyntaxException) {
+            System.err.println("Cannot parse json as GenerationConfig: $js")
+            null
         }
     }
 }

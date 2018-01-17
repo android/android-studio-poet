@@ -16,7 +16,6 @@ limitations under the License.
 
 package com.google.androidstudiopoet.converters
 
-import com.google.androidstudiopoet.input.BuildSystemConfig
 import com.google.androidstudiopoet.input.ProjectConfig
 import com.google.androidstudiopoet.models.ConfigPOJO
 
@@ -33,11 +32,17 @@ class ConfigPojoToProjectConfigConverter(private val configPojoToModuleConfigCon
         val buildTypes = configPojoToBuildTypeConfigsConverter.convert(configPojo)
 
         val androidModulesConfigs = (0 until configPojo.androidModules)
-                .map { configPojoToAndroidModuleConfigConverter.convert(configPojo, it, productFlavors, buildTypes,
-                        pureModulesConfigs.map { it.moduleName }) }
+                .map {
+                    configPojoToAndroidModuleConfigConverter.convert(configPojo, it, productFlavors, buildTypes,
+                            pureModulesConfigs.map { it.moduleName })
+                }
 
         val buildSystemConfig = configPojoToBuildSystemConfigConverter.convert(configPojo)
-        return ProjectConfig(configPojo.projectName, configPojo.root, pureModulesConfigs, androidModulesConfigs,
-                buildSystemConfig)
+        return ProjectConfig().apply {
+            projectName = configPojo.projectName
+            root = configPojo.root
+            this.buildSystemConfig = buildSystemConfig
+            moduleConfigs = pureModulesConfigs + androidModulesConfigs
+        }
     }
 }
