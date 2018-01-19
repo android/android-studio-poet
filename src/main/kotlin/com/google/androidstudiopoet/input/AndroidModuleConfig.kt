@@ -23,7 +23,5 @@ class AndroidModuleConfig : ModuleConfig() {
     var buildTypes: List<BuildTypeConfig>? = null
     var hasLaunchActivity: Boolean = false
 
-    val resourcesConfig by lazy {
-        ResourcesConfig(activityCount + 2, activityCount + 5, activityCount)
-    }
+    var resourcesConfig: ResourcesConfig? = null
 }

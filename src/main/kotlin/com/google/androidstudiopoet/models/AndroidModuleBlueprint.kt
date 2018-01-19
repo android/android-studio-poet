@@ -24,7 +24,7 @@ import com.google.androidstudiopoet.utils.joinPaths
 
 class AndroidModuleBlueprint(name: String,
                                   val numOfActivities: Int,
-                                  private val resourcesConfig: ResourcesConfig,
+                                  private val resourcesConfig: ResourcesConfig?,
                                   projectRoot: String,
                                   val hasLaunchActivity: Boolean,
                                   useKotlin: Boolean,
@@ -51,17 +51,20 @@ class AndroidModuleBlueprint(name: String,
             .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer -> resourcesToRefer.combine(acc) }
 
     val resourcesBlueprint by lazy {
-        ResourcesBlueprint(name, resDirPath, resourcesConfig.stringCount ?: 0,
-                resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin)
+        when (resourcesConfig) {
+            null -> null
+            else -> ResourcesBlueprint(name, resDirPath, resourcesConfig.stringCount ?: 0,
+                    resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin)
+        }
     }
 
     val layoutNames by lazy {
-        resourcesBlueprint.layoutNames
+        resourcesBlueprint?.layoutNames ?: listOf()
     }
     val activityNames = 0.until(numOfActivities).map { "Activity$it" }
 
     val resourcesToReferFromOutside by lazy {
-        resourcesBlueprint.resourcesToReferFromOutside
+        resourcesBlueprint?.resourcesToReferFromOutside ?: ResourcesToRefer(listOf(), listOf(), listOf())
     }
 
     val productFlavors = productFlavorConfigs?.map { Flavor(it.name, it.dimension) }?.toSet()

@@ -38,7 +38,7 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
 
         proguardGenerator.generate(blueprint)
         buildGradleGenerator.generate(blueprint)
-        resourcesGenerator.generate(blueprint.resourcesBlueprint)
+        blueprint.resourcesBlueprint?.let { resourcesGenerator.generate(it) }
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
         activityGenerator.generate(blueprint)
         manifestGenerator.generate(blueprint)

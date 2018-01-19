@@ -19,6 +19,7 @@ package com.google.androidstudiopoet.converters
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
+import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.models.ConfigPOJO
 
 class ConfigPojoToAndroidModuleConfigConverter {
@@ -47,6 +48,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs
             extraLines = config.extraAndroidBuildFileLines
+            resourcesConfig = ResourcesConfig(activityCount + 2, activityCount + 5, activityCount)
         }
     }
 

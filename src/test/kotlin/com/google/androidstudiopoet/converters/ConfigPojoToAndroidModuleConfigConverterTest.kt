@@ -18,6 +18,7 @@ package com.google.androidstudiopoet.converters
 
 import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
+import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.models.ConfigPOJO
 import com.google.androidstudiopoet.testutils.*
 import org.junit.Test
@@ -100,6 +101,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
         assertOn(androidModuleConfig) {
             hasLaunchActivity.assertTrue()
             dependencies!!.assertEquals(listOf(ANDROID_MODULE_NAME_1) + PURE_MODULE_LIST)
+            resourcesConfig!!.assertEquals(ResourcesConfig(ACTIVITY_COUNT + 2, ACTIVITY_COUNT + 5, ACTIVITY_COUNT))
         }
     }
 
