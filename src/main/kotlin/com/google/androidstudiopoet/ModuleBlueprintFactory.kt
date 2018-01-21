@@ -32,7 +32,7 @@ object ModuleBlueprintFactory {
                 ?.map {
                     getModuleDependency(it, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
                             moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
-                            moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin)
+                            moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin, DependencyMethod.IMPLEMENTATION)
                 } ?: listOf()
         val result = ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, moduleDependencies,
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
@@ -46,14 +46,14 @@ object ModuleBlueprintFactory {
     }
 
     private fun getModuleDependency(moduleName: String, projectRoot: String, javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
-                                    kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int, useKotlin: Boolean): ModuleDependency {
+                                    kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int, useKotlin: Boolean, dependencyMethod: DependencyMethod): ModuleDependency {
         synchronized(moduleDependencyLock.getOrPut(moduleName, { moduleName })) {
             val cachedMethod = moduleDependencyCache[moduleName]
             if (cachedMethod != null) {
                 return cachedMethod
             }
             val newMethodDependency = getDependencyForModule(moduleName, projectRoot, javaPackageCount, javaClassCount,
-                    javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, useKotlin)
+                    javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, useKotlin, dependencyMethod)
             moduleDependencyCache[moduleName] = newMethodDependency
             return newMethodDependency
         }
@@ -61,7 +61,7 @@ object ModuleBlueprintFactory {
 
     private fun getDependencyForModule(moduleName: String, projectRoot: String, javaPackageCount: Int, javaClassCount: Int,
                                        javaMethodsPerClass: Int, kotlinPackageCount: Int, kotlinClassCount: Int,
-                                       kotlinMethodsPerClass: Int, useKotlin: Boolean): ModuleDependency {
+                                       kotlinMethodsPerClass: Int, useKotlin: Boolean, dependencyMethod: DependencyMethod): ModuleDependency {
         /*
             Because method to call from outside doesn't depend on the dependencies, we can create ModuleBlueprint for
             dependency, return methodToCallFromOutside and forget about this module blueprint.
@@ -70,11 +70,11 @@ object ModuleBlueprintFactory {
         val tempModuleBlueprint = ModuleBlueprint(moduleName, projectRoot, useKotlin, listOf(),
                 javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount,
                 kotlinMethodsPerClass, null, false)
-        return ModuleDependency(tempModuleBlueprint.name, tempModuleBlueprint.methodToCallFromOutside, DependencyMethod.IMPLEMENTATION)
+        return ModuleDependency(tempModuleBlueprint.name, tempModuleBlueprint.methodToCallFromOutside, dependencyMethod)
 
     }
 
-    private fun getAndroidModuleDependency(projectRoot: String, androidModuleConfig: AndroidModuleConfig): AndroidModuleDependency {
+    private fun getAndroidModuleDependency(projectRoot: String, androidModuleConfig: AndroidModuleConfig, dependencyMethod: DependencyMethod): AndroidModuleDependency {
         /*
             Because method to call from outside and resources to refer don't depend on the dependencies, we can create AndroidModuleBlueprint for
             dependency, return methodToCallFromOutside with resourcesToRefer and forget about this module blueprint.
@@ -82,7 +82,7 @@ object ModuleBlueprintFactory {
         */
 
         val moduleBlueprint = createAndroidModule(projectRoot, androidModuleConfig, listOf())
-        return AndroidModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside, DependencyMethod.IMPLEMENTATION,
+        return AndroidModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside, dependencyMethod,
                 moduleBlueprint.resourcesToReferFromOutside)
     }
 
@@ -93,10 +93,10 @@ object ModuleBlueprintFactory {
                 ?.mapNotNull { dependencyName -> moduleConfigs.find { it.moduleName == dependencyName } }
                 ?.map {
                     when (it) {
-                        is AndroidModuleConfig -> return@map getAndroidModuleDependency(projectRoot, it)
+                        is AndroidModuleConfig -> return@map getAndroidModuleDependency(projectRoot, it, DependencyMethod.IMPLEMENTATION)
                         else -> return@map getModuleDependency(it.moduleName, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
                                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
-                                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin)
+                                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin, DependencyMethod.IMPLEMENTATION)
                     }
                 } ?: listOf()
 
