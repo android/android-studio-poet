@@ -15,7 +15,19 @@
         "kotlinClassCount": "10",
         "kotlinMethodsPerClass": "10",
         "useKotlin": true,
-        "moduleName": "pureModule"
+        "moduleName": "pureModule2"
+      },{
+        "javaPackageCount": "10",
+        "javaClassCount": "10",
+        "javaMethodsPerClass": "10",
+        "kotlinPackageCount": "10",
+        "kotlinClassCount": "10",
+        "kotlinMethodsPerClass": "10",
+        "useKotlin": true,
+        "moduleName": "pureModule",
+        "dependencies": [
+          "pureModule2"
+        ]
       },
       {
         "moduleType": "android",
