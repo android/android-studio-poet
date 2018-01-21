@@ -21,22 +21,22 @@ import com.google.androidstudiopoet.models.ConfigPOJO
 
 class ConfigPojoToModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int): ModuleConfig {
-        val javaPackageCount = config.javaPackageCount!!.toInt()
-        val javaClassCount = config.javaClassCount!!.toInt()
-        val javaMethodsPerClass = config.javaMethodsPerClass
+        return ModuleConfig().apply {
+             javaPackageCount = config.javaPackageCount!!.toInt()
+             javaClassCount = config.javaClassCount!!.toInt()
+             javaMethodsPerClass = config.javaMethodsPerClass
 
-        val kotlinPackageCount = config.kotlinPackageCount!!.toInt()
-        val kotlinClassCount = config.kotlinClassCount!!.toInt()
-        val kotlinMethodsPerClass = config.kotlinMethodsPerClass
-        val useKotlin: Boolean = config.useKotlin
+             kotlinPackageCount = config.kotlinPackageCount!!.toInt()
+             kotlinClassCount = config.kotlinClassCount!!.toInt()
+             kotlinMethodsPerClass = config.kotlinMethodsPerClass
+             useKotlin = config.useKotlin
 
-        val extraLines = config.extraBuildFileLines
+             extraLines = config.extraBuildFileLines
 
-        val generateTests = config.generateTests
+             generateTests = config.generateTests
 
-        val name = "module$index"
-        val dependencies = config.resolvedDependencies[name]?.map { it.to } ?: listOf()
-        return ModuleConfig(name, javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, useKotlin, extraLines, dependencies, generateTests)
+             moduleName = "module$index"
+             dependencies = config.resolvedDependencies[moduleName]?.map { it.to } ?: listOf()
+        }
     }
 }

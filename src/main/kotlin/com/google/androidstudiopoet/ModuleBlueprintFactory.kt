@@ -32,11 +32,11 @@ object ModuleBlueprintFactory {
 
     fun create(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
         val moduleDependencies = moduleConfig.dependencies
-                .map {
+                ?.map {
                     getModuleDependency(it, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
                             moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
                             moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin)
-                }
+                } ?: listOf()
         val result = ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, moduleDependencies,
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
                 moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.extraLines, moduleConfig.generateTests)
@@ -92,17 +92,15 @@ object ModuleBlueprintFactory {
             AndroidModuleBlueprint {
 
         val moduleDependencies = androidModuleConfig.dependencies
-                .map { dependencyName -> moduleConfigs.find { it.moduleName == dependencyName } }
-                .filterNotNull()
-                .map {
-                    when(it) {
+                ?.mapNotNull { dependencyName -> moduleConfigs.find { it.moduleName == dependencyName } }
+                ?.map {
+                    when (it) {
                         is AndroidModuleConfig -> return@map getAndroidModuleDependency(projectRoot, it)
                         else -> return@map getModuleDependency(it.moduleName, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
                                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
                                 androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin)
                     }
-
-                }
+                } ?: listOf()
 
         return AndroidModuleBlueprint(androidModuleConfig.moduleName,
                 androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,

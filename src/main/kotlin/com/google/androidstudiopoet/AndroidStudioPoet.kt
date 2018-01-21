@@ -37,14 +37,14 @@ import kotlin.system.measureTimeMillis
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
                         private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter,
-                        private val dependencyValidator: DependencyValidator) {
+                        private val dependencyValidator: DependencyValidator, private val gson: Gson) {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             AndroidStudioPoet(Injector.modulesWriter, args.firstOrNull(),
                     Injector.configPojoToProjectConfigConverter,
-                    Injector.dependencyValidator).run()
+                    Injector.dependencyValidator, Injector.gson).run()
         }
 
         @Language("JSON")
@@ -200,7 +200,6 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
     }
 
     private fun parseInput(json: String): Any? {
-        val gson = Gson()
         val configJsonObject = JsonParser().parse(json).asJsonObject
         return when {
             configJsonObject.has("inputVersion") -> generationConfigFrom(configJsonObject, gson)

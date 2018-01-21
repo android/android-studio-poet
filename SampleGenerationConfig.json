@@ -6,6 +6,58 @@
     "buildSystemConfig": {
       "buildSystemVersion": "4.3.1"
     },
-    "moduleConfigs": []
+    "moduleConfigs": [
+      {
+        "javaPackageCount": "10",
+        "javaClassCount": "10",
+        "javaMethodsPerClass": "10",
+        "kotlinPackageCount": "10",
+        "kotlinClassCount": "10",
+        "kotlinMethodsPerClass": "10",
+        "useKotlin": true,
+        "moduleName": "pureModule"
+      },
+      {
+        "moduleType": "android",
+        "javaPackageCount": 10,
+        "javaClassCount": 10,
+        "javaMethodsPerClass": 10,
+        "kotlinPackageCount": 10,
+        "kotlinClassCount": 10,
+        "kotlinMethodsPerClass": 10,
+        "useKotlin": true,
+        "moduleName": "applicationModule",
+        "activityCount": 5,
+        "hasLaunchActivity": true,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "dependencies": [
+          "pureModule", "libraryModule"
+        ]
+      },
+      {
+        "moduleType": "android",
+        "javaPackageCount": 10,
+        "javaClassCount": 10,
+        "javaMethodsPerClass": 10,
+        "kotlinPackageCount": 10,
+        "kotlinClassCount": 10,
+        "kotlinMethodsPerClass": 10,
+        "useKotlin": true,
+        "moduleName": "libraryModule",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "dependencies": [
+          "pureModule"
+        ]
+      }
+    ]
   }
 }
