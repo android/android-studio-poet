@@ -26,6 +26,6 @@ open class ModuleConfig {
     var kotlinMethodsPerClass: Int = 0
     var useKotlin: Boolean = false
     var extraLines: List<String>? = null
-    var dependencies: List<String>? = null
+    var dependencies: List<DependencyConfig>? = null
     var generateTests: Boolean = true
 }

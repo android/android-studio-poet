@@ -16,10 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.converters
 
-import com.google.androidstudiopoet.input.AndroidModuleConfig
-import com.google.androidstudiopoet.input.BuildTypeConfig
-import com.google.androidstudiopoet.input.FlavorConfig
-import com.google.androidstudiopoet.input.ResourcesConfig
+import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.models.ConfigPOJO
 
 class ConfigPojoToAndroidModuleConfigConverter {
@@ -41,9 +38,10 @@ class ConfigPojoToAndroidModuleConfigConverter {
             generateTests = config.generateTests
             hasLaunchActivity = index == 0
 
-            val androidDependencies = (index + 1 until config.androidModules).map { getAndroidModuleName(it) }
+            val androidDependencies = (index + 1 until config.androidModules)
+                    .map { getAndroidModuleName(it) }
 
-            dependencies = androidDependencies + pureModuleDependencies
+            dependencies = (androidDependencies + pureModuleDependencies).map { DependencyConfig(it) }
 
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs

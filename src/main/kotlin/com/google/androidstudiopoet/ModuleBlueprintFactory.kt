@@ -30,7 +30,7 @@ object ModuleBlueprintFactory {
     fun create(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
         val moduleDependencies = moduleConfig.dependencies
                 ?.map {
-                    getModuleDependency(it, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
+                    getModuleDependency(it.moduleName, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
                             moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
                             moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin, DependencyMethod.IMPLEMENTATION)
                 } ?: listOf()
@@ -90,7 +90,7 @@ object ModuleBlueprintFactory {
             AndroidModuleBlueprint {
 
         val moduleDependencies = androidModuleConfig.dependencies
-                ?.mapNotNull { dependencyName -> moduleConfigs.find { it.moduleName == dependencyName } }
+                ?.mapNotNull { dependency -> moduleConfigs.find { it.moduleName == dependency.moduleName } }
                 ?.map {
                     when (it) {
                         is AndroidModuleConfig -> return@map getAndroidModuleDependency(projectRoot, it, DependencyMethod.IMPLEMENTATION)

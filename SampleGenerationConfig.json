@@ -16,7 +16,8 @@
         "kotlinMethodsPerClass": "10",
         "useKotlin": true,
         "moduleName": "pureModule2"
-      },{
+      },
+      {
         "javaPackageCount": "10",
         "javaClassCount": "10",
         "javaMethodsPerClass": "10",
@@ -26,7 +27,9 @@
         "useKotlin": true,
         "moduleName": "pureModule",
         "dependencies": [
-          "pureModule2"
+          {
+            "moduleName": "pureModule2"
+          }
         ]
       },
       {
@@ -47,7 +50,12 @@
           "layoutCount": 5
         },
         "dependencies": [
-          "pureModule", "libraryModule"
+          {
+            "moduleName": "pureModule"
+          },
+          {
+            "moduleName": "libraryModule"
+          }
         ]
       },
       {
@@ -67,7 +75,9 @@
           "layoutCount": 5
         },
         "dependencies": [
-          "pureModule"
+          {
+            "moduleName": "pureModule"
+          }
         ]
       }
     ]
