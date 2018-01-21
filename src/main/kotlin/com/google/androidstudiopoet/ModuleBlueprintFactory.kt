@@ -18,10 +18,7 @@ package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.ModuleConfig
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
-import com.google.androidstudiopoet.models.AndroidModuleDependency
-import com.google.androidstudiopoet.models.ModuleBlueprint
-import com.google.androidstudiopoet.models.ModuleDependency
+import com.google.androidstudiopoet.models.*
 
 object ModuleBlueprintFactory {
 
@@ -42,7 +39,7 @@ object ModuleBlueprintFactory {
                 moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.extraLines, moduleConfig.generateTests)
         synchronized(moduleDependencyLock.getOrPut(moduleConfig.moduleName, { moduleConfig.moduleName })) {
             if (moduleDependencyCache[moduleConfig.moduleName] == null) {
-                moduleDependencyCache[moduleConfig.moduleName] = ModuleDependency(result.name, result.methodToCallFromOutside)
+                moduleDependencyCache[moduleConfig.moduleName] = ModuleDependency(result.name, result.methodToCallFromOutside, DependencyMethod.IMPLEMENTATION)
             }
         }
         return result
@@ -73,7 +70,7 @@ object ModuleBlueprintFactory {
         val tempModuleBlueprint = ModuleBlueprint(moduleName, projectRoot, useKotlin, listOf(),
                 javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount,
                 kotlinMethodsPerClass, null, false)
-        return ModuleDependency(tempModuleBlueprint.name, tempModuleBlueprint.methodToCallFromOutside)
+        return ModuleDependency(tempModuleBlueprint.name, tempModuleBlueprint.methodToCallFromOutside, DependencyMethod.IMPLEMENTATION)
 
     }
 
@@ -85,7 +82,8 @@ object ModuleBlueprintFactory {
         */
 
         val moduleBlueprint = createAndroidModule(projectRoot, androidModuleConfig, listOf())
-        return AndroidModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside, moduleBlueprint.resourcesToReferFromOutside)
+        return AndroidModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside, DependencyMethod.IMPLEMENTATION,
+                moduleBlueprint.resourcesToReferFromOutside)
     }
 
     fun createAndroidModule(projectRoot: String, androidModuleConfig: AndroidModuleConfig, moduleConfigs: List<ModuleConfig>):
