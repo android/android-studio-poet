@@ -28,7 +28,8 @@
         "moduleName": "pureModule",
         "dependencies": [
           {
-            "moduleName": "pureModule2"
+            "moduleName": "pureModule2",
+            "method": "api"
           }
         ]
       },
@@ -54,7 +55,8 @@
             "moduleName": "pureModule"
           },
           {
-            "moduleName": "libraryModule"
+            "moduleName": "libraryModule",
+            "method": "api"
           }
         ]
       },

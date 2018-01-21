@@ -32,7 +32,8 @@ object ModuleBlueprintFactory {
                 ?.map {
                     getModuleDependency(it.moduleName, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
                             moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
-                            moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin, DependencyMethod.IMPLEMENTATION)
+                            moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin,
+                            it.method.toDependencyMethod())
                 } ?: listOf()
         val result = ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, moduleDependencies,
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
@@ -90,14 +91,16 @@ object ModuleBlueprintFactory {
             AndroidModuleBlueprint {
 
         val moduleDependencies = androidModuleConfig.dependencies
-                ?.mapNotNull { dependency -> moduleConfigs.find { it.moduleName == dependency.moduleName } }
-                ?.map {
-                    when (it) {
-                        is AndroidModuleConfig -> return@map getAndroidModuleDependency(projectRoot, it, DependencyMethod.IMPLEMENTATION)
-                        else -> return@map getModuleDependency(it.moduleName, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
+                ?.mapNotNull { dependencyConfig ->
+                    val moduleConfigToDependOn = moduleConfigs.find { it.moduleName == dependencyConfig.moduleName }
+                    return@mapNotNull when (moduleConfigToDependOn) {
+                        is AndroidModuleConfig -> getAndroidModuleDependency(projectRoot, moduleConfigToDependOn, dependencyConfig.method.toDependencyMethod())
+                        is ModuleConfig -> getModuleDependency(moduleConfigToDependOn.moduleName, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
                                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
-                                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin, DependencyMethod.IMPLEMENTATION)
+                                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin, dependencyConfig.method.toDependencyMethod())
+                        else -> null
                     }
+
                 } ?: listOf()
 
         return AndroidModuleBlueprint(androidModuleConfig.moduleName,
@@ -115,5 +118,9 @@ object ModuleBlueprintFactory {
         moduleDependencyCache = mutableMapOf()
         moduleDependencyLock = mutableMapOf()
     }
+
 }
+
+private fun String?.toDependencyMethod(): DependencyMethod =
+        DependencyMethod.values().find { it.value == this } ?: DependencyMethod.IMPLEMENTATION
 
