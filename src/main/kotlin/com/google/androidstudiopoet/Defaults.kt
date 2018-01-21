@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.input
+package com.google.androidstudiopoet
 
-data class DependencyConfig(val moduleName: String, val method: String? = null)
+val DEFAULT_KOTLIN_VERSION = "1.1.60"
+val DEFAULT_AGP_VERSION = "3.0.1"
+

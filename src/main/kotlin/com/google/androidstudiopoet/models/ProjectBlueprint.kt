@@ -16,6 +16,8 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.DEFAULT_AGP_VERSION
+import com.google.androidstudiopoet.DEFAULT_KOTLIN_VERSION
 import com.google.androidstudiopoet.ModuleBlueprintFactory
 import com.google.androidstudiopoet.input.ProjectConfig
 import com.google.androidstudiopoet.utils.decrease
@@ -31,8 +33,8 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val projectRoot = projectConfig.root.joinPath(projectName)
 
-    val androidGradlePluginVersion = projectConfig.buildSystemConfig.agpVersion
-    val kotlinVersion = projectConfig.buildSystemConfig.kotlinVersion
+    val androidGradlePluginVersion = projectConfig.buildSystemConfig.agpVersion ?: DEFAULT_AGP_VERSION
+    val kotlinVersion = projectConfig.buildSystemConfig.kotlinVersion ?: DEFAULT_KOTLIN_VERSION
     val useKotlin = projectConfig.moduleConfigs.map { it.useKotlin }.find { it } ?: false
     val gradleVersion = projectConfig.buildSystemConfig.buildSystemVersion!!
 
