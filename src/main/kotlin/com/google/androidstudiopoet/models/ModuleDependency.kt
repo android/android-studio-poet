@@ -16,8 +16,12 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-open class ModuleDependency(val name: String, val methodToCall: MethodToCall)
+open class ModuleDependency(val name: String, val methodToCall: MethodToCall, val method: DependencyMethod)
 
-class AndroidModuleDependency(name: String, methodToCall: MethodToCall, val resourcesToRefer: ResourcesToRefer)
-    : ModuleDependency(name, methodToCall)
+class AndroidModuleDependency(name: String, methodToCall: MethodToCall, method: DependencyMethod, val resourcesToRefer: ResourcesToRefer)
+    : ModuleDependency(name, methodToCall, method)
 
+enum class DependencyMethod(val value: String) {
+    API("api"),
+    IMPLEMENTATION("implementation")
+}

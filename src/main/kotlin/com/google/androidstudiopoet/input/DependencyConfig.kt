@@ -16,16 +16,4 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-open class ModuleConfig {
-    lateinit var moduleName: String
-    var javaPackageCount: Int = 0
-    var javaClassCount: Int = 0
-    var javaMethodsPerClass: Int = 0
-    var kotlinPackageCount: Int = 0
-    var kotlinClassCount: Int = 0
-    var kotlinMethodsPerClass: Int = 0
-    var useKotlin: Boolean = false
-    var extraLines: List<String>? = null
-    var dependencies: List<DependencyConfig>? = null
-    var generateTests: Boolean = true
-}
+data class DependencyConfig(val moduleName: String, val method: String? = null)

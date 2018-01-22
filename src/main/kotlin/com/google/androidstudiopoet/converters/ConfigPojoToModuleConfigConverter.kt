@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.converters
 
+import com.google.androidstudiopoet.input.DependencyConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.models.ConfigPOJO
 
@@ -36,7 +37,7 @@ class ConfigPojoToModuleConfigConverter {
              generateTests = config.generateTests
 
              moduleName = "module$index"
-             dependencies = config.resolvedDependencies[moduleName]?.map { it.to } ?: listOf()
+             dependencies = config.resolvedDependencies[moduleName]?.map { DependencyConfig(it.to) } ?: listOf()
         }
     }
 }

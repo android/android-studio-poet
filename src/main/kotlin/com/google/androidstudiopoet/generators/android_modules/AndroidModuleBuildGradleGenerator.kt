@@ -31,7 +31,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
         val androidPlugin = if (blueprint.hasLaunchActivity) "application" else "library"
         val applicationId = if (blueprint.hasLaunchActivity) "applicationId \"${blueprint.packageName}\"" else ""
 
-        val moduleDependencies = blueprint.dependencies.map { "implementation project(':${it.name}')\n" }.fold()
+        val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
 
         val flavorsSection = createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 

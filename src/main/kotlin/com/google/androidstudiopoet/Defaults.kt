@@ -14,18 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.input
+package com.google.androidstudiopoet
 
-open class ModuleConfig {
-    lateinit var moduleName: String
-    var javaPackageCount: Int = 0
-    var javaClassCount: Int = 0
-    var javaMethodsPerClass: Int = 0
-    var kotlinPackageCount: Int = 0
-    var kotlinClassCount: Int = 0
-    var kotlinMethodsPerClass: Int = 0
-    var useKotlin: Boolean = false
-    var extraLines: List<String>? = null
-    var dependencies: List<DependencyConfig>? = null
-    var generateTests: Boolean = true
-}
+val DEFAULT_KOTLIN_VERSION = "1.1.60"
+val DEFAULT_AGP_VERSION = "3.0.1"
+

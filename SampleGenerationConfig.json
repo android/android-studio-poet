@@ -15,7 +15,23 @@
         "kotlinClassCount": "10",
         "kotlinMethodsPerClass": "10",
         "useKotlin": true,
-        "moduleName": "pureModule"
+        "moduleName": "pureModule2"
+      },
+      {
+        "javaPackageCount": "10",
+        "javaClassCount": "10",
+        "javaMethodsPerClass": "10",
+        "kotlinPackageCount": "10",
+        "kotlinClassCount": "10",
+        "kotlinMethodsPerClass": "10",
+        "useKotlin": true,
+        "moduleName": "pureModule",
+        "dependencies": [
+          {
+            "moduleName": "pureModule2",
+            "method": "api"
+          }
+        ]
       },
       {
         "moduleType": "android",
@@ -35,7 +51,13 @@
           "layoutCount": 5
         },
         "dependencies": [
-          "pureModule", "libraryModule"
+          {
+            "moduleName": "pureModule"
+          },
+          {
+            "moduleName": "libraryModule",
+            "method": "api"
+          }
         ]
       },
       {
@@ -55,7 +77,9 @@
           "layoutCount": 5
         },
         "dependencies": [
-          "pureModule"
+          {
+            "moduleName": "pureModule"
+          }
         ]
       }
     ]
