@@ -24,4 +24,5 @@ class AndroidModuleConfig : ModuleConfig() {
     var hasLaunchActivity: Boolean = false
 
     var resourcesConfig: ResourcesConfig? = null
+    var dataBindingConfig: DataBindingConfig? = null
 }
