@@ -17,30 +17,11 @@ limitations under the License.
 package com.google.androidstudiopoet.generators.android_modules
 
 import com.google.androidstudiopoet.models.ActivityBlueprint
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
-import java.io.File
 
 class ActivityGenerator(var fileWriter: FileWriter) {
 
-    /**
-     * generates activity classes by blueprint, list of layouts and methods to call.
-     */
-    fun generate(blueprint: AndroidModuleBlueprint) {
-
-
-        File(blueprint.packagePath).mkdirs()
-
-        (0..blueprint.numOfActivities)
-                .map { ActivityBlueprint(blueprint.activityNames[it], blueprint.layoutNames[it], blueprint.packagePath, blueprint.packageName) }
-                .forEach({ generateClass(it) })
-
-    }
-
-    private fun generateClass(blueprint: ActivityBlueprint) {
-
-        // TODO add methods
-        // TODO move to java poet
+    fun generate(blueprint: ActivityBlueprint) {
         val classText =
                 "package ${blueprint.packageName};\n" +
                         "import android.app.Activity;\n" +
@@ -64,11 +45,10 @@ class ActivityGenerator(var fileWriter: FileWriter) {
                         "        setContentView(R.layout." + blueprint.layout + ");\n" +
                         "    }\n" +
                         "}\n"
-
         println("${blueprint.where}/${blueprint.className}.java")
-
         fileWriter.writeToFile(classText, "${blueprint.where}/${blueprint.className}.java")
 
     }
+
 }
 
