@@ -72,6 +72,13 @@ class AndroidModuleBlueprint(name: String,
 
     val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
     val activityBlueprints by lazy {
-        (0..numOfActivities).map { ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName) }
+        (0..numOfActivities).map { ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
+                classToReferFromActivity) }
+    }
+
+    private val classToReferFromActivity: ClassBlueprint by lazy {
+        (packagesBlueprint.javaPackageBlueprints.asSequence() + packagesBlueprint.kotlinPackageBlueprints.asSequence())
+                .flatMap { it.classBlueprints.asSequence() }
+                .first()
     }
 }
