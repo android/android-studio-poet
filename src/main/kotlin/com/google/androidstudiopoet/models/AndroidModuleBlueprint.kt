@@ -61,7 +61,7 @@ class AndroidModuleBlueprint(name: String,
     private val layoutNames by lazy {
         resourcesBlueprint?.layoutNames ?: listOf()
     }
-    val activityNames = 0.until(numOfActivities).map { "Activity$it" }
+    val activityNames = (0 until numOfActivities).map { "Activity$it" }
 
     val resourcesToReferFromOutside by lazy {
         resourcesBlueprint?.resourcesToReferFromOutside ?: ResourcesToRefer(listOf(), listOf(), listOf())
@@ -72,7 +72,7 @@ class AndroidModuleBlueprint(name: String,
 
     val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
     val activityBlueprints by lazy {
-        (0..numOfActivities).map { ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
+        (0 until numOfActivities).map { ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
                 classToReferFromActivity) }
     }
 
