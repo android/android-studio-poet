@@ -25,23 +25,30 @@ data class ResourcesBlueprint(private val moduleName: String,
                               private val imageCount: Int,
                               private val layoutCount: Int,
                               private val resourcesToReferWithin: ResourcesToRefer) : Blueprint {
-    val stringNames = (0..stringCount).map { "${moduleName}string$it" }
+    val stringNames = (0 until stringCount).map { "${moduleName}string$it" }
     val imageNames = (0 until imageCount).map { "${moduleName.toLowerCase()}image$it" }
 
     val layoutNames = (0 until layoutCount).map { "${moduleName.toLowerCase()}activity_main$it" }
 
     val layoutsDir = resDirPath.joinPath("layout")
 
-    private val stringsPerLayout = (stringNames + resourcesToReferWithin.strings).splitPerLayout(layoutCount)
-    private val imagesPerLayout = (imageNames + resourcesToReferWithin.images).splitPerLayout(layoutCount)
+    private val stringsPerLayout by lazy {
+        (stringNames + resourcesToReferWithin.strings).splitPerLayout(layoutCount)
+    }
+    private val imagesPerLayout by lazy {
+        (imageNames + resourcesToReferWithin.images).splitPerLayout(layoutCount)
+    }
 
     val layoutBlueprints = layoutNames.mapIndexed { index, layoutName ->
         LayoutBlueprint(layoutsDir.joinPath(layoutName) + ".xml",
                 stringsPerLayout.getOrElse(index, { listOf() }),
                 imagesPerLayout.getOrElse(index, { listOf() }),
-                if (index == 0) resourcesToReferWithin.layouts else listOf()) }
+                if (index == 0) resourcesToReferWithin.layouts else listOf())
+    }
 
-    var resourcesToReferFromOutside = ResourcesToRefer(listOf(stringNames.last()), listOf(imageNames.last()), listOf(layoutNames.last()))
+    val resourcesToReferFromOutside by lazy {
+        ResourcesToRefer(listOf(stringNames.last()), listOf(imageNames.last()), listOf(layoutNames.last()))
+    }
 }
 
 fun List<String>.splitPerLayout(limit: Int) =

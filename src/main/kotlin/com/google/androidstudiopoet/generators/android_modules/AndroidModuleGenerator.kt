@@ -40,7 +40,7 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
         buildGradleGenerator.generate(blueprint)
         blueprint.resourcesBlueprint?.let { resourcesGenerator.generate(it) }
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
-        activityGenerator.generate(blueprint)
+        blueprint.activityBlueprints.forEach({ activityGenerator.generate(it) })
         manifestGenerator.generate(blueprint)
     }
 
@@ -52,5 +52,6 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
         fileWriter.mkdir(blueprint.mainPath)
         fileWriter.mkdir(blueprint.codePath)
         fileWriter.mkdir(blueprint.resDirPath)
+        fileWriter.mkdir(blueprint.packagePath)
     }
 }
