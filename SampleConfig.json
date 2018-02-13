@@ -1,6 +1,6 @@
 {
-  "projectName": "gennyCLI",
-  "root": "./modules/",
+  "projectName": "genny",
+  "root": "././",
   "gradleVersion": "4.3.1",
   "androidGradlePluginVersion": "3.0.1",
   "kotlinVersion": "1.1.60",
@@ -13,18 +13,17 @@
   "kotlinClassCount": "8",
   "androidModules": "2",
   "numActivitiesPerAndroidModule": "8",
+  "productFlavors": [
+    2, 3
+  ],
+  "topologies": [
+    {"type": "random_connected", "seed": "2"}
+  ],
   "dependencies": [
-    {
-      "from": 3,
-      "to": 2
-    },
-    {
-      "from": 4,
-      "to": 2
-    },
-    {
-      "from": 4,
-      "to": 3
-    }
-  ]
+    {"from": "module2", "to": "module3"},
+    {"from": "module2", "to": "module4"},
+    {"from": "module3", "to": "module4"}
+  ],
+  "buildTypes": 6,
+  "generateTests": true
 }

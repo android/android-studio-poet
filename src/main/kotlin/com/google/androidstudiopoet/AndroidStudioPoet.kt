@@ -25,15 +25,13 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import org.intellij.lang.annotations.Language
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.EventQueue
-import java.awt.Font
+import java.awt.*
 import java.io.File
 import javax.swing.*
 import javax.swing.JFrame.EXIT_ON_CLOSE
 import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
+
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
                         private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter,
@@ -51,7 +49,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         val SAMPLE_CONFIG = """
             {
               "projectName": "genny",
-              "root": "./modules/",
+              "root": "././",
               "gradleVersion": "4.3.1",
               "androidGradlePluginVersion": "3.0.1",
               "kotlinVersion": "1.1.60",
@@ -127,11 +125,15 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
             add(btnGenerate, BorderLayout.SOUTH)
         }
 
+        val dim = Toolkit.getDefaultToolkit().screenSize
+
+        frame.setLocation((dim.width - frame.size.width)/3,
+                (dim.height - frame.height)/5 )
+
         frame.defaultCloseOperation = EXIT_ON_CLOSE
-
         frame.contentPane = contentPane
-
         frame.pack()
+
         return frame
     }
 
