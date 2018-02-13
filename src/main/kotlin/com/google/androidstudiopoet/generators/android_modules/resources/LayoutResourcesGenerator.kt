@@ -27,14 +27,16 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
         val textViews = generateTextViews(blueprint.stringNamesToUse)
         val imageViews = generateImageViews(blueprint.imagesToUse)
         val includeLayoutTags = generateIncludeLayoutTags(blueprint.layoutsToInclude)
-        @Language("XML") val layoutText = getLayoutViews(textViews, imageViews, includeLayoutTags)
+        val layoutText = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                getLayoutViews(textViews, imageViews, includeLayoutTags, true)
         fileWriter.writeToFile(layoutText, blueprint.filePath)
     }
 
-    private fun getLayoutViews(textViews: String, imageViews: String, includeLayoutTags: String): String {
-        return """<?xml version="1.0" encoding="utf-8"?>
+    private fun getLayoutViews(textViews: String, imageViews: String, includeLayoutTags: String,
+                               isNotInsideLayoutTag: Boolean): String {
+        return """
     <ScrollView
-            xmlns:android="http://schemas.android.com/apk/res/android"
+            ${if (isNotInsideLayoutTag)  "xmlns:android=\"http://schemas.android.com/apk/res/android\"" else ""}
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <LinearLayout
