@@ -16,63 +16,54 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules
 
-import com.google.androidstudiopoet.GenerationResult
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.models.ActivityBlueprint
+import com.google.androidstudiopoet.models.ClassBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
-import java.io.File
+import com.squareup.javapoet.*
+import javax.lang.model.element.Modifier
+
 
 class ActivityGenerator(var fileWriter: FileWriter) {
 
-    /**
-     * generates activity classes by blueprint, list of layouts and methods to call.
-     */
-    fun generate(blueprint: AndroidModuleBlueprint) {
+    fun generate(blueprint: ActivityBlueprint) {
 
-        // generate activities
-        var index = 0
+        val classBlueprint = blueprint.classBlueprint
+        val onCreateMethodStatements = getMethodStatementFromClassToCall(classBlueprint)?.let { listOf(it) } ?: listOf()
 
-        File(blueprint.packagePath).mkdirs()
+        val onCreateMethod = getOnCreateMethod(blueprint.layout, onCreateMethodStatements)
 
-        while (index < blueprint.numOfActivities) {
-            generateClass(blueprint.activityNames[index], blueprint.layoutNames[index], blueprint.packagePath, blueprint.packageName)
-            index++
-        }
-    }
+        val activityClass = getClazzSpec(blueprint.className)
+                .addMethod(onCreateMethod)
+                .build()
 
-    private fun generateClass(className: String, layout: String, where: String, packageName: String) {
+        val javaFile = JavaFile.builder(blueprint.packageName, activityClass).build()
 
-        // TODO add methods
-        // TODO move to java poet
-        val classText =
-                "package $packageName;\n" +
-                        "import android.app.Activity;\n" +
-                        "import android.os.Bundle;\n" +
-                        "import $packageName.R;\n" +
-                        "\n" +
-                        "\n" +
-                        "public class " + className + " extends Activity {\n" +
-                        "    public $className() {\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    /**\n" +
-                        "     * Called with the activity is first created.\n" +
-                        "     */\n" +
-                        "    @Override\n" +
-                        "    public void onCreate(Bundle savedInstanceState) {\n" +
-                        "        super.onCreate(savedInstanceState);\n" +
-                        "\n" +
-                        "        // Set the layout for this activity.  You can find it\n" +
-                        "        // in res/layout/hello_activity.xml\n" +
-                        "        setContentView(R.layout." + layout + ");\n" +
-                        "    }\n" +
-                        "}\n"
-
-        println("$where/$className.java")
-
-        fileWriter.writeToFile(classText, "$where/$className.java")
+        println("${blueprint.where}/${blueprint.className}.java")
+        fileWriter.writeToFile(javaFile.toString(), "${blueprint.where}/${blueprint.className}.java")
 
     }
 
-    data class ActivityGenerationResult(val activityNames: List<String>) : GenerationResult
+    private fun getMethodStatementFromClassToCall(classBlueprint: ClassBlueprint) =
+            classBlueprint.getMethodToCallFromOutside()?.let { "new ${it.className}().${it.methodName}()" }
+
+    private fun getClazzSpec(activityClassName: String) =
+            TypeSpec.classBuilder(activityClassName)
+                    .superclass(TypeVariableName.get("android.app.Activity"))
+                    .addModifiers(Modifier.PUBLIC)
+
+    private fun getOnCreateMethod(layout: String, statements: List<String>): MethodSpec {
+
+        val builder = MethodSpec.methodBuilder("onCreate")
+                .addAnnotation(Override::class.java)
+                .addModifiers(Modifier.PUBLIC)
+                .returns(Void.TYPE)
+                .addParameter(TypeVariableName.get("android.os.Bundle"), "savedInstanceState")
+                .addStatement("super.onCreate(savedInstanceState)")
+                .addStatement("setContentView(R.layout.$layout)")
+
+        statements.forEach { builder.addStatement(it) }
+        return builder.build();
+    }
+
 }
 

@@ -4,12 +4,13 @@ import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.testutils.assertEquals
+import com.google.androidstudiopoet.testutils.assertOn
 import com.google.androidstudiopoet.testutils.mock
+import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Test
 
 class AndroidModuleBlueprintTest {
     private val resourcesConfig0: ResourcesConfig = mock()
-    private val dependency: ModuleDependency = mock()
 
     @Test
     fun `blueprint create proper activity names`() {
@@ -39,6 +40,38 @@ class AndroidModuleBlueprintTest {
         ))
     }
 
+    @Test
+    fun `blueprint creates activity blueprint with java class when java code exists`() {
+        whenever(resourcesConfig0.layoutCount).thenReturn(1)
+
+        val androidModuleBlueprint = getAndroidModuleBlueprint()
+
+        assertOn(androidModuleBlueprint) {
+            activityBlueprints.assertEquals(listOf(ActivityBlueprint(
+                    "Activity0",
+                    androidModuleBlueprint.resourcesBlueprint!!.layoutNames[0],
+                    androidModuleBlueprint.packagePath,
+                    androidModuleBlueprint.packageName,
+                    androidModuleBlueprint.packagesBlueprint.javaPackageBlueprints[0].classBlueprints[0])))
+        }
+    }
+
+    @Test
+    fun `blueprint creates activity blueprint with koltin class when java code doesn't exist`() {
+        whenever(resourcesConfig0.layoutCount).thenReturn(1)
+
+        val androidModuleBlueprint = getAndroidModuleBlueprint(
+                javaClassCount = 0,
+                javaMethodsPerClass = 0,
+                javaPackageCount = 0
+        )
+
+        assertOn(androidModuleBlueprint) {
+            activityBlueprints[0].classBlueprint.assertEquals(
+                    androidModuleBlueprint.packagesBlueprint.kotlinPackageBlueprints[0].classBlueprints[0])
+        }
+    }
+
 
     private fun getAndroidModuleBlueprint(
             name: String = "androidAppModule1",
@@ -47,7 +80,7 @@ class AndroidModuleBlueprintTest {
             projectRoot: String = "root",
             hasLaunchActivity: Boolean = true,
             useKotlin: Boolean = false,
-            dependencies: List<ModuleDependency> = listOf(dependency),
+            dependencies: List<ModuleDependency> = listOf(),
             productFlavorConfigs: List<FlavorConfig>? = null,
             buildTypeConfigs: List<BuildTypeConfig>? = null,
             javaPackageCount: Int = 1,

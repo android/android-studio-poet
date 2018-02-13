@@ -23,18 +23,18 @@ import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
 
 class AndroidModuleBlueprint(name: String,
-                                  val numOfActivities: Int,
-                                  private val resourcesConfig: ResourcesConfig?,
-                                  projectRoot: String,
-                                  val hasLaunchActivity: Boolean,
-                                  useKotlin: Boolean,
-                                  dependencies: List<ModuleDependency>,
-                                  productFlavorConfigs: List<FlavorConfig>?,
-                                  buildTypeConfigs: List<BuildTypeConfig>?,
-                                  javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
-                                  kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
-                                  extraLines: List<String>?,
-                                  generateTests : Boolean
+                             val numOfActivities: Int,
+                             private val resourcesConfig: ResourcesConfig?,
+                             projectRoot: String,
+                             val hasLaunchActivity: Boolean,
+                             useKotlin: Boolean,
+                             dependencies: List<ModuleDependency>,
+                             productFlavorConfigs: List<FlavorConfig>?,
+                             buildTypeConfigs: List<BuildTypeConfig>?,
+                             javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
+                             kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
+                             extraLines: List<String>?,
+                             generateTests: Boolean
 ) : ModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
         javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
 
@@ -58,10 +58,10 @@ class AndroidModuleBlueprint(name: String,
         }
     }
 
-    val layoutNames by lazy {
+    private val layoutNames by lazy {
         resourcesBlueprint?.layoutNames ?: listOf()
     }
-    val activityNames = 0.until(numOfActivities).map { "Activity$it" }
+    val activityNames = (0 until numOfActivities).map { "Activity$it" }
 
     val resourcesToReferFromOutside by lazy {
         resourcesBlueprint?.resourcesToReferFromOutside ?: ResourcesToRefer(listOf(), listOf(), listOf())
@@ -70,5 +70,15 @@ class AndroidModuleBlueprint(name: String,
     val productFlavors = productFlavorConfigs?.map { Flavor(it.name, it.dimension) }?.toSet()
     val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()
 
-    val buildTypes = buildTypeConfigs?.map {BuildType(it.name, it.body)}?.toSet()
+    val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
+    val activityBlueprints by lazy {
+        (0 until numOfActivities).map { ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
+                classToReferFromActivity) }
+    }
+
+    private val classToReferFromActivity: ClassBlueprint by lazy {
+        (packagesBlueprint.javaPackageBlueprints.asSequence() + packagesBlueprint.kotlinPackageBlueprints.asSequence())
+                .flatMap { it.classBlueprints.asSequence() }
+                .first()
+    }
 }
