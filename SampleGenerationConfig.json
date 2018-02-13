@@ -2,7 +2,7 @@
   "inputVersion": "0.1",
   "projectConfig": {
     "projectName": "genny",
-    "root": "../",
+    "root": "./modules/",
     "buildSystemConfig": {
       "buildSystemVersion": "4.3.1"
     },
@@ -50,7 +50,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "dataBindingConfig": { },
+        "dataBindingConfig": {
+          "listenerCount": 1
+        },
         "dependencies": [
           {
             "moduleName": "pureModule"

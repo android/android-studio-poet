@@ -70,6 +70,8 @@ android {
 
     ${align(flavorsSection, "    ")}
 
+    ${if (blueprint.hasDataBinding) "dataBinding {\n        enabled = true\n    }" else ""}
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
