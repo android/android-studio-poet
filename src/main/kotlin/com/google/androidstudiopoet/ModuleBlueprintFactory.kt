@@ -111,7 +111,8 @@ object ModuleBlueprintFactory {
                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
                 androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass,
                 androidModuleConfig.extraLines,
-                androidModuleConfig.generateTests)
+                androidModuleConfig.generateTests,
+                androidModuleConfig.dataBindingConfig)
     }
 
     fun initCache() {

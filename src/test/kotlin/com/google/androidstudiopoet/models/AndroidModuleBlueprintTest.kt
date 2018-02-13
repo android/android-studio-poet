@@ -1,11 +1,10 @@
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.input.BuildTypeConfig
+import com.google.androidstudiopoet.input.DataBindingConfig
 import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.input.ResourcesConfig
-import com.google.androidstudiopoet.testutils.assertEquals
-import com.google.androidstudiopoet.testutils.assertOn
-import com.google.androidstudiopoet.testutils.mock
+import com.google.androidstudiopoet.testutils.*
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Test
 
@@ -72,6 +71,33 @@ class AndroidModuleBlueprintTest {
         }
     }
 
+    @Test
+    fun `dataBindingConfig is false when data binding config is null`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = null)
+
+        androidModuleBlueprint.hasDataBinding.assertFalse()
+    }
+
+    @Test
+    fun `dataBindingConfig is false when data binding config has zero listener count`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = 0))
+
+        androidModuleBlueprint.hasDataBinding.assertFalse()
+    }
+
+    @Test
+    fun `dataBindingConfig is true when data binding config has positive listener count`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = 2))
+
+        androidModuleBlueprint.hasDataBinding.assertTrue()
+    }
+
+    @Test
+    fun `dataBindingConfig is false when data binding config has negative listener count`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = -1))
+
+        androidModuleBlueprint.hasDataBinding.assertFalse()
+    }
 
     private fun getAndroidModuleBlueprint(
             name: String = "androidAppModule1",
@@ -90,8 +116,9 @@ class AndroidModuleBlueprintTest {
             kotlinClassCount: Int = 1,
             kotlinMethodsPerClass: Int = 1,
             extraLines: List<String>? = null,
-            generateTests: Boolean = true
+            generateTests: Boolean = true,
+            dataBindingConfig: DataBindingConfig? = null
     ) = AndroidModuleBlueprint(name, numOfActivities, resourcesConfig, projectRoot, hasLaunchActivity, useKotlin,
             dependencies, productFlavorConfigs, buildTypeConfigs, javaPackageCount, javaClassCount, javaMethodsPerClass,
-            kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests)
+            kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests, dataBindingConfig)
 }
