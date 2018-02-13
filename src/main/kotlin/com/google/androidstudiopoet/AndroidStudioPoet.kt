@@ -46,34 +46,32 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         }
 
         @Language("JSON")
-        val SAMPLE_CONFIG = """
+        val CONFIG_COMPACT = """
             {
-              "projectName": "genny",
-              "root": "././",
+              "projectName": "GeneratedASProject",
+              "root": "./../",
               "gradleVersion": "4.3.1",
               "androidGradlePluginVersion": "3.0.1",
               "kotlinVersion": "1.1.60",
-              "numModules": "5",
-              "allMethods": "4000",
-              "javaPackageCount": "20",
-              "javaClassCount": "8",
-              "javaMethodCount": "2000",
-              "kotlinPackageCount": "20",
-              "kotlinClassCount": "8",
+              "numModules": "2",
+              "allMethods": "40",
+              "javaPackageCount": "1",
+              "javaClassCount": "4",
+              "javaMethodCount": "20",
+              "kotlinPackageCount": "1",
+              "kotlinClassCount": "4",
               "androidModules": "2",
-              "numActivitiesPerAndroidModule": "8",
+              "numActivitiesPerAndroidModule": "2",
               "productFlavors": [
                   2, 3
                ],
                "topologies": [
-                  {"type": "random_connected", "seed": "2"}
+                  {"type": "star", "seed": "2"}
                ],
               "dependencies": [
-                {"from": "module2", "to": "module3"},
-                {"from": "module2", "to": "module4"},
-                {"from": "module3", "to": "module4"}
+                {"from": "module1", "to": "module0"}
               ],
-              "buildTypes": 6,
+              "buildTypes": 2,
               "generateTests": true
             }
             """.trimIndent()
@@ -82,7 +80,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
     fun run() {
         when {
             filename != null -> processFile(filename)
-            else -> showUI(SAMPLE_CONFIG)
+            else -> showUI(CONFIG_COMPACT)
         }
     }
 
