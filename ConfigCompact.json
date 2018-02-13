@@ -1,0 +1,27 @@
+{
+  "projectName": "GeneratedASProject",
+  "root": "./../",
+  "gradleVersion": "4.3.1",
+  "androidGradlePluginVersion": "3.0.1",
+  "kotlinVersion": "1.1.60",
+  "numModules": "2",
+  "allMethods": "40",
+  "javaPackageCount": "1",
+  "javaClassCount": "4",
+  "javaMethodCount": "20",
+  "kotlinPackageCount": "1",
+  "kotlinClassCount": "4",
+  "androidModules": "2",
+  "numActivitiesPerAndroidModule": "2",
+  "productFlavors": [
+    2, 3
+  ],
+  "topologies": [
+    {"type": "star", "seed": "2"}
+  ],
+  "dependencies": [
+    {"from": "module1", "to": "module0"}
+  ],
+  "buildTypes": 2,
+  "generateTests": true
+}

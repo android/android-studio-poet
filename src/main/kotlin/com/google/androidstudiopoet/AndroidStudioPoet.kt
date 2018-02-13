@@ -25,15 +25,13 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import org.intellij.lang.annotations.Language
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.EventQueue
-import java.awt.Font
+import java.awt.*
 import java.io.File
 import javax.swing.*
 import javax.swing.JFrame.EXIT_ON_CLOSE
 import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
+
 
 class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
                         private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter,
@@ -48,34 +46,32 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         }
 
         @Language("JSON")
-        val SAMPLE_CONFIG = """
+        val CONFIG_COMPACT = """
             {
-              "projectName": "genny",
-              "root": "./modules/",
+              "projectName": "GeneratedASProject",
+              "root": "./../",
               "gradleVersion": "4.3.1",
               "androidGradlePluginVersion": "3.0.1",
               "kotlinVersion": "1.1.60",
-              "numModules": "5",
-              "allMethods": "4000",
-              "javaPackageCount": "20",
-              "javaClassCount": "8",
-              "javaMethodCount": "2000",
-              "kotlinPackageCount": "20",
-              "kotlinClassCount": "8",
+              "numModules": "2",
+              "allMethods": "40",
+              "javaPackageCount": "1",
+              "javaClassCount": "4",
+              "javaMethodCount": "20",
+              "kotlinPackageCount": "1",
+              "kotlinClassCount": "4",
               "androidModules": "2",
-              "numActivitiesPerAndroidModule": "8",
+              "numActivitiesPerAndroidModule": "2",
               "productFlavors": [
                   2, 3
                ],
                "topologies": [
-                  {"type": "random_connected", "seed": "2"}
+                  {"type": "star", "seed": "2"}
                ],
               "dependencies": [
-                {"from": "module2", "to": "module3"},
-                {"from": "module2", "to": "module4"},
-                {"from": "module3", "to": "module4"}
+                {"from": "module1", "to": "module0"}
               ],
-              "buildTypes": 6,
+              "buildTypes": 2,
               "generateTests": true
             }
             """.trimIndent()
@@ -84,7 +80,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
     fun run() {
         when {
             filename != null -> processFile(filename)
-            else -> showUI(SAMPLE_CONFIG)
+            else -> showUI(CONFIG_COMPACT)
         }
     }
 
@@ -127,11 +123,15 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
             add(btnGenerate, BorderLayout.SOUTH)
         }
 
+        val dim = Toolkit.getDefaultToolkit().screenSize
+
+        frame.setLocation((dim.width - frame.size.width)/3,
+                (dim.height - frame.height)/5 )
+
         frame.defaultCloseOperation = EXIT_ON_CLOSE
-
         frame.contentPane = contentPane
-
         frame.pack()
+
         return frame
     }
 
