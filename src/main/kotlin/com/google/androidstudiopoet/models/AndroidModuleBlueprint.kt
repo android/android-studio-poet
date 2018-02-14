@@ -56,7 +56,8 @@ class AndroidModuleBlueprint(name: String,
         when (resourcesConfig) {
             null -> null
             else -> ResourcesBlueprint(name, resDirPath, resourcesConfig.stringCount ?: 0,
-                    resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin)
+                    resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin,
+                    listenerClassesForDataBinding)
         }
     }
 
@@ -74,15 +75,24 @@ class AndroidModuleBlueprint(name: String,
 
     val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
     val activityBlueprints by lazy {
-        (0 until numOfActivities).map { ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
-                classToReferFromActivity) }
+        (0 until numOfActivities).map {
+            ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
+                    classToReferFromActivity)
+        }
+    }
+
+    private val classBlueprintSequence: Sequence<ClassBlueprint> by lazy {
+        (packagesBlueprint.javaPackageBlueprints.asSequence() + packagesBlueprint.kotlinPackageBlueprints.asSequence())
+                .flatMap { it.classBlueprints.asSequence() }
     }
 
     private val classToReferFromActivity: ClassBlueprint by lazy {
-        (packagesBlueprint.javaPackageBlueprints.asSequence() + packagesBlueprint.kotlinPackageBlueprints.asSequence())
-                .flatMap { it.classBlueprints.asSequence() }
-                .first()
+        classBlueprintSequence.first()
     }
 
     val hasDataBinding: Boolean = dataBindingConfig?.listenerCount?.let { it > 0 } ?: false
+    private val listenerClassesForDataBinding: List<ClassBlueprint> by lazy {
+        classBlueprintSequence.filter { it.getMethodToCallFromOutside() != null }
+                .take(dataBindingConfig?.listenerCount ?: 0).toList()
+    }
 }

@@ -24,7 +24,7 @@ data class ResourcesBlueprint(private val moduleName: String,
                               private val stringCount: Int,
                               private val imageCount: Int,
                               private val layoutCount: Int,
-                              private val resourcesToReferWithin: ResourcesToRefer) : Blueprint {
+                              private val resourcesToReferWithin: ResourcesToRefer, val listenerClassesForDataBinding: List<ClassBlueprint>) : Blueprint {
     val stringNames = (0 until stringCount).map { "${moduleName}string$it" }
     val imageNames = (0 until imageCount).map { "${moduleName.toLowerCase()}image$it" }
 
