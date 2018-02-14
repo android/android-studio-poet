@@ -24,13 +24,24 @@ data class ResourcesBlueprint(private val moduleName: String,
                               private val stringCount: Int,
                               private val imageCount: Int,
                               private val layoutCount: Int,
-                              private val resourcesToReferWithin: ResourcesToRefer, val listenerClassesForDataBinding: List<ClassBlueprint>) : Blueprint {
+                              private val resourcesToReferWithin: ResourcesToRefer,
+                              private val listenerClassesForDataBinding: List<ClassBlueprint>) : Blueprint {
     val stringNames = (0 until stringCount).map { "${moduleName}string$it" }
     val imageNames = (0 until imageCount).map { "${moduleName.toLowerCase()}image$it" }
 
     val layoutNames = (0 until layoutCount).map { "${moduleName.toLowerCase()}activity_main$it" }
 
     val layoutsDir = resDirPath.joinPath("layout")
+
+    private val stringNamesWithDataBindingListeners: List<Pair<String, ClassBlueprint?>> = (stringNames + resourcesToReferWithin.strings)
+            .mapIndexed { index, stringName ->
+                Pair(stringName, listenerClassesForDataBinding.getOrNull(index))
+            }
+
+    private val imageNamesWithDataBindingListeners: List<Pair<String, ClassBlueprint?>> = (imageNames + resourcesToReferWithin.images)
+            .mapIndexed { index, stringName ->
+                Pair(stringName, listenerClassesForDataBinding.getOrNull(index + stringNames.size))
+            }
 
     private val stringsPerLayout by lazy {
         (stringNames + resourcesToReferWithin.strings).splitPerLayout(layoutCount)
@@ -39,10 +50,20 @@ data class ResourcesBlueprint(private val moduleName: String,
         (imageNames + resourcesToReferWithin.images).splitPerLayout(layoutCount)
     }
 
+    private val stringsWithDataBindingListenersPerLayout by lazy {
+        stringNamesWithDataBindingListeners.splitPerLayout(layoutCount)
+    }
+
+    private val imagesWithDataBindingListenersPerLayout by lazy {
+        imageNamesWithDataBindingListeners.splitPerLayout(layoutCount)
+    }
+
     val layoutBlueprints = layoutNames.mapIndexed { index, layoutName ->
         LayoutBlueprint(layoutsDir.joinPath(layoutName) + ".xml",
                 stringsPerLayout.getOrElse(index, { listOf() }),
+                stringsWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
                 imagesPerLayout.getOrElse(index, { listOf() }),
+                imagesWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
                 if (index == 0) resourcesToReferWithin.layouts else listOf())
     }
 
@@ -51,8 +72,8 @@ data class ResourcesBlueprint(private val moduleName: String,
     }
 }
 
-fun List<String>.splitPerLayout(limit: Int) =
-        this.foldIndexed(mutableListOf<List<String>>()) { index, acc, stringName ->
+fun <T> List<T>.splitPerLayout(limit: Int) =
+        this.foldIndexed(mutableListOf<List<T>>()) { index, acc, stringName ->
             if (index < limit) {
                 acc.add(listOf(stringName))
             } else {
