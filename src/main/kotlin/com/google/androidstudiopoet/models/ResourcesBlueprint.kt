@@ -40,7 +40,7 @@ data class ResourcesBlueprint(private val moduleName: String,
 
     private val imageNamesWithDataBindingListeners: List<Pair<String, ClassBlueprint?>> = (imageNames + resourcesToReferWithin.images)
             .mapIndexed { index, stringName ->
-                Pair(stringName, listenerClassesForDataBinding.getOrNull(index + stringNames.size))
+                Pair(stringName, listenerClassesForDataBinding.getOrNull(index + stringNamesWithDataBindingListeners.size))
             }
 
     private val stringsPerLayout by lazy {
@@ -60,9 +60,7 @@ data class ResourcesBlueprint(private val moduleName: String,
 
     val layoutBlueprints = layoutNames.mapIndexed { index, layoutName ->
         LayoutBlueprint(layoutsDir.joinPath(layoutName) + ".xml",
-                stringsPerLayout.getOrElse(index, { listOf() }),
                 stringsWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
-                imagesPerLayout.getOrElse(index, { listOf() }),
                 imagesWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
                 if (index == 0) resourcesToReferWithin.layouts else listOf())
     }

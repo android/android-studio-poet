@@ -16,7 +16,9 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules.resources
 
+import com.google.androidstudiopoet.models.ImageViewBlueprint
 import com.google.androidstudiopoet.models.LayoutBlueprint
+import com.google.androidstudiopoet.models.TextViewBlueprint
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.writers.FileWriter
 import org.intellij.lang.annotations.Language
@@ -24,8 +26,8 @@ import org.intellij.lang.annotations.Language
 class LayoutResourcesGenerator(val fileWriter: FileWriter) {
 
     fun generate(blueprint: LayoutBlueprint) {
-        val textViews = generateTextViews(blueprint.stringNamesToUse)
-        val imageViews = generateImageViews(blueprint.imagesToUse)
+        val textViews = generateTextViews(blueprint.textViewsBlueprints)
+        val imageViews = generateImageViews(blueprint.imageViewsBlueprints)
         val includeLayoutTags = generateIncludeLayoutTags(blueprint.layoutsToInclude)
         val layoutText = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 getLayoutViews(textViews, imageViews, includeLayoutTags, true)
@@ -50,24 +52,24 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
     </ScrollView>"""
     }
 
-    private fun generateTextViews(stringNamesToUse: List<String>): String {
-        return stringNamesToUse.map {
-            //language=XML
+    private fun generateTextViews(textViewBlueprints: List<TextViewBlueprint>): String {
+        return textViewBlueprints.map {
             """<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/$it"
+        android:text="@string/${it.stringName}"
+        ${if (it.hasAction) "android:onClick=\"@{${it.onClickAction}}\"" else ""}
 />"""
         }.fold()
     }
 
-    private fun generateImageViews(imagesToUse: List<String>): String {
-        return imagesToUse.map {
-            //language=XML
+    private fun generateImageViews(imageViewBlueprints: List<ImageViewBlueprint>): String {
+        return imageViewBlueprints.map {
             """<ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/$it"
+        android:src="@drawable/${it.imageName}"
+        ${if (it.hasAction) "android:onClick=\"@{${it.onClickAction}}\"" else ""}
 />
             """
         }.fold()

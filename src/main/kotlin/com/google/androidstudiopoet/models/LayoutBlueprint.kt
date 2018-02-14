@@ -17,9 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 class LayoutBlueprint(val filePath: String,
-                      val stringNamesToUse: List<String>,
                       stringsWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
-                      val imagesToUse: List<String>,
                       imagesWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
                       val layoutsToInclude: List<String>) {
     val textViewsBlueprints = stringsWithDataBindingListenersToUse.map {
