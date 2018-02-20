@@ -45,7 +45,7 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
     ${generateDataTag(blueprint)}
     ${generateScrollView(blueprint)}
 </layout>
-            """"
+            """
     }
 
     private fun generateDataTag(blueprint: LayoutBlueprint): String {
