@@ -36,5 +36,5 @@ class LayoutBlueprint(val filePath: String,
 
 
 fun ClassBlueprint.toOnClickAction(): String {
-    return "{() -> ${className.decapitalize()}.${getMethodToCallFromOutside()!!.methodName}()}"
+    return "(view) -> ${className.decapitalize()}.${getMethodToCallFromOutside()!!.methodName}()"
 }

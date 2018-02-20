@@ -40,6 +40,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 apply plugin: 'com.android.$androidPlugin'
 ${if (blueprint.useKotlin) "apply plugin: 'kotlin-android'" else ""}
 ${if (blueprint.useKotlin) "apply plugin: 'kotlin-android-extensions'" else ""}
+${if (blueprint.useKotlin && blueprint.hasDataBinding) "apply plugin: 'kotlin-kapt'" else ""}
 
 android {
     compileSdkVersion 26
@@ -89,6 +90,8 @@ dependencies {
     implementation "com.android.support:multidex:1.0.1"
 
     ${align(moduleDependencies.trimEnd(),"    ")}
+    ${if (blueprint.useKotlin && blueprint.hasDataBinding) "kapt 'com.android.databinding:compiler:3.0.1'" else ""}
+
 }
 ${blueprint.extraLines.joinLines()}
 """.trim()
