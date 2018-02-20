@@ -16,29 +16,64 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules.resources
 
+import com.google.androidstudiopoet.models.ClassBlueprint
 import com.google.androidstudiopoet.models.ImageViewBlueprint
 import com.google.androidstudiopoet.models.LayoutBlueprint
 import com.google.androidstudiopoet.models.TextViewBlueprint
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.writers.FileWriter
-import org.intellij.lang.annotations.Language
+
+private const val XML_FILE_PREFIX = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 
 class LayoutResourcesGenerator(val fileWriter: FileWriter) {
 
     fun generate(blueprint: LayoutBlueprint) {
-        val textViews = generateTextViews(blueprint.textViewsBlueprints)
-        val imageViews = generateImageViews(blueprint.imageViewsBlueprints)
-        val includeLayoutTags = generateIncludeLayoutTags(blueprint.layoutsToInclude)
-        val layoutText = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-                getLayoutViews(textViews, imageViews, includeLayoutTags, true)
+
+        var layoutText = XML_FILE_PREFIX
+        if (blueprint.hasLayoutTag) {
+            layoutText = generateLayoutTag(blueprint)
+        } else {
+            layoutText += generateScrollView(blueprint)
+        }
+
+
         fileWriter.writeToFile(layoutText, blueprint.filePath)
     }
 
-    private fun getLayoutViews(textViews: String, imageViews: String, includeLayoutTags: String,
+    private fun generateLayoutTag(blueprint: LayoutBlueprint): String {
+        return """<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    ${generateDataTag(blueprint)}
+    ${generateScrollView(blueprint)}
+</layout>
+            """"
+    }
+
+    private fun generateDataTag(blueprint: LayoutBlueprint): String {
+        return """<data>
+${generateVariableTags(blueprint.classesToBind)}
+</data>
+            """
+    }
+
+    private fun generateVariableTags(blueprints: List<ClassBlueprint>): String {
+        return blueprints
+                .map { "<variable name=\"${it.className.decapitalize()}\" type=\"${it.fullClassName}\"/>\n" }
+                .fold()
+    }
+
+    private fun generateScrollView(blueprint: LayoutBlueprint): String {
+        val textViews = generateTextViews(blueprint.textViewsBlueprints)
+        val imageViews = generateImageViews(blueprint.imageViewsBlueprints)
+        val includeLayoutTags = generateIncludeLayoutTags(blueprint.layoutsToInclude)
+
+        return getScrollViews(textViews, imageViews, includeLayoutTags, !blueprint.hasLayoutTag)
+    }
+
+    private fun getScrollViews(textViews: String, imageViews: String, includeLayoutTags: String,
                                isNotInsideLayoutTag: Boolean): String {
         return """
     <ScrollView
-            ${if (isNotInsideLayoutTag)  "xmlns:android=\"http://schemas.android.com/apk/res/android\"" else ""}
+            ${if (isNotInsideLayoutTag) "xmlns:android=\"http://schemas.android.com/apk/res/android\"" else ""}
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <LinearLayout

@@ -28,7 +28,7 @@ class LayoutBlueprint(val filePath: String,
         ImageViewBlueprint(it.first, it.second?.toOnClickAction())
     }
 
-    private val classesToBind
+    val classesToBind
             = (stringsWithDataBindingListenersToUse + imagesWithDataBindingListenersToUse).mapNotNull { it.second }
 
     val hasLayoutTag = classesToBind.isNotEmpty()
