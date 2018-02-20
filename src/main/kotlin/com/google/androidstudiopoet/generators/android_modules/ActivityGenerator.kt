@@ -18,6 +18,7 @@ package com.google.androidstudiopoet.generators.android_modules
 
 import com.google.androidstudiopoet.models.ActivityBlueprint
 import com.google.androidstudiopoet.models.ClassBlueprint
+import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.javapoet.*
 import javax.lang.model.element.Modifier
@@ -27,10 +28,9 @@ class ActivityGenerator(var fileWriter: FileWriter) {
 
     fun generate(blueprint: ActivityBlueprint) {
 
-        val classBlueprint = blueprint.classBlueprint
-        val onCreateMethodStatements = getMethodStatementFromClassToCall(classBlueprint)?.let { listOf(it) } ?: listOf()
+        val onCreateMethodStatements = getOnCreateMethodStatements(blueprint)
 
-        val onCreateMethod = getOnCreateMethod(blueprint.layout, onCreateMethodStatements)
+        val onCreateMethod = getOnCreateMethod(onCreateMethodStatements)
 
         val activityClass = getClazzSpec(blueprint.className)
                 .addMethod(onCreateMethod)
@@ -43,6 +43,24 @@ class ActivityGenerator(var fileWriter: FileWriter) {
 
     }
 
+    private fun getOnCreateMethodStatements(blueprint: ActivityBlueprint): List<String> {
+        val classBlueprint = blueprint.classBlueprint
+        val statements = getMethodStatementFromClassToCall(classBlueprint)?.let { mutableListOf(it) } ?: mutableListOf()
+
+        if (blueprint.hasDataBinding) {
+            statements.addAll(getDataBindingMethodStatements(blueprint.layout, blueprint.dataBindingClassName, blueprint.listenerClassesForDataBinding))
+        } else {
+            statements.add("setContentView(R.layout.${blueprint.layout})")
+        }
+        return statements
+    }
+
+    private fun getDataBindingMethodStatements(layout: String, dataBindingClassName: String,
+                                               listenerClasses: List<ClassBlueprint>): List<String> {
+        return listOf("$dataBindingClassName binding = android.databinding.DataBindingUtil.setContentView(this, R.layout.$layout)") +
+        listenerClasses.map { "binding.set${it.className}(new ${it.fullClassName}())" }
+    }
+
     private fun getMethodStatementFromClassToCall(classBlueprint: ClassBlueprint) =
             classBlueprint.getMethodToCallFromOutside()?.let { "new ${it.className}().${it.methodName}()" }
 
@@ -51,7 +69,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
                     .superclass(TypeVariableName.get("android.app.Activity"))
                     .addModifiers(Modifier.PUBLIC)
 
-    private fun getOnCreateMethod(layout: String, statements: List<String>): MethodSpec {
+    private fun getOnCreateMethod(statements: List<String>): MethodSpec {
 
         val builder = MethodSpec.methodBuilder("onCreate")
                 .addAnnotation(Override::class.java)
@@ -59,11 +77,9 @@ class ActivityGenerator(var fileWriter: FileWriter) {
                 .returns(Void.TYPE)
                 .addParameter(TypeVariableName.get("android.os.Bundle"), "savedInstanceState")
                 .addStatement("super.onCreate(savedInstanceState)")
-                .addStatement("setContentView(R.layout.$layout)")
 
         statements.forEach { builder.addStatement(it) }
-        return builder.build();
+        return builder.build()
     }
 
 }
-

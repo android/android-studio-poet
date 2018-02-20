@@ -43,13 +43,6 @@ data class ResourcesBlueprint(private val moduleName: String,
                 Pair(stringName, listenerClassesForDataBinding.getOrNull(index + stringNamesWithDataBindingListeners.size))
             }
 
-    private val stringsPerLayout by lazy {
-        (stringNames + resourcesToReferWithin.strings).splitPerLayout(layoutCount)
-    }
-    private val imagesPerLayout by lazy {
-        (imageNames + resourcesToReferWithin.images).splitPerLayout(layoutCount)
-    }
-
     private val stringsWithDataBindingListenersPerLayout by lazy {
         stringNamesWithDataBindingListeners.splitPerLayout(layoutCount)
     }
@@ -64,6 +57,8 @@ data class ResourcesBlueprint(private val moduleName: String,
                 imagesWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
                 if (index == 0) resourcesToReferWithin.layouts else listOf())
     }
+
+    val dataBindingListenersPerLayout = layoutBlueprints.map { it.classesToBind }
 
     val resourcesToReferFromOutside by lazy {
         ResourcesToRefer(listOf(stringNames.last()), listOf(imageNames.last()), listOf(layoutNames.last()))

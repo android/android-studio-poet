@@ -77,8 +77,12 @@ class AndroidModuleBlueprint(name: String,
     val activityBlueprints by lazy {
         (0 until numOfActivities).map {
             ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
-                    classToReferFromActivity)
+                    classToReferFromActivity, listenerClassesForDataBindingPerLayout[it])
         }
+    }
+
+    private val listenerClassesForDataBindingPerLayout by lazy {
+        resourcesBlueprint?.dataBindingListenersPerLayout ?: listOf()
     }
 
     private val classBlueprintSequence: Sequence<ClassBlueprint> by lazy {

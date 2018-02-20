@@ -51,7 +51,8 @@ class AndroidModuleBlueprintTest {
                     androidModuleBlueprint.resourcesBlueprint!!.layoutNames[0],
                     androidModuleBlueprint.packagePath,
                     androidModuleBlueprint.packageName,
-                    androidModuleBlueprint.packagesBlueprint.javaPackageBlueprints[0].classBlueprints[0])))
+                    androidModuleBlueprint.packagesBlueprint.javaPackageBlueprints[0].classBlueprints[0],
+                    listOf())))
         }
     }
 
