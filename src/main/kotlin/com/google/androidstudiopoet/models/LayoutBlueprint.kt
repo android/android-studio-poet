@@ -17,6 +17,24 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 class LayoutBlueprint(val filePath: String,
-                      val stringNamesToUse: List<String>,
-                      val imagesToUse: List<String>,
-                      val layoutsToInclude: List<String>)
+                      stringsWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
+                      imagesWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
+                      val layoutsToInclude: List<String>) {
+    val textViewsBlueprints = stringsWithDataBindingListenersToUse.map {
+        TextViewBlueprint(it.first, it.second?.toOnClickAction())
+    }
+
+    val imageViewsBlueprints = imagesWithDataBindingListenersToUse.map {
+        ImageViewBlueprint(it.first, it.second?.toOnClickAction())
+    }
+
+    val classesToBind
+            = (stringsWithDataBindingListenersToUse + imagesWithDataBindingListenersToUse).mapNotNull { it.second }
+
+    val hasLayoutTag = classesToBind.isNotEmpty()
+}
+
+
+fun ClassBlueprint.toOnClickAction(): String {
+    return "(view) -> ${className.decapitalize()}.${getMethodToCallFromOutside()!!.methodName}()"
+}

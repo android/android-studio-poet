@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.input.BuildTypeConfig
+import com.google.androidstudiopoet.input.DataBindingConfig
 import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.input.ResourcesConfig
 import com.google.androidstudiopoet.utils.joinPath
@@ -34,7 +35,8 @@ class AndroidModuleBlueprint(name: String,
                              javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
                              kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
                              extraLines: List<String>?,
-                             generateTests: Boolean
+                             generateTests: Boolean,
+                             dataBindingConfig: DataBindingConfig?
 ) : ModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
         javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
 
@@ -54,7 +56,8 @@ class AndroidModuleBlueprint(name: String,
         when (resourcesConfig) {
             null -> null
             else -> ResourcesBlueprint(name, resDirPath, resourcesConfig.stringCount ?: 0,
-                    resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin)
+                    resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin,
+                    listenerClassesForDataBinding)
         }
     }
 
@@ -72,13 +75,28 @@ class AndroidModuleBlueprint(name: String,
 
     val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
     val activityBlueprints by lazy {
-        (0 until numOfActivities).map { ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
-                classToReferFromActivity) }
+        (0 until numOfActivities).map {
+            ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
+                    classToReferFromActivity, listenerClassesForDataBindingPerLayout[it])
+        }
+    }
+
+    private val listenerClassesForDataBindingPerLayout by lazy {
+        resourcesBlueprint?.dataBindingListenersPerLayout ?: listOf()
+    }
+
+    private val classBlueprintSequence: Sequence<ClassBlueprint> by lazy {
+        (packagesBlueprint.javaPackageBlueprints.asSequence() + packagesBlueprint.kotlinPackageBlueprints.asSequence())
+                .flatMap { it.classBlueprints.asSequence() }
     }
 
     private val classToReferFromActivity: ClassBlueprint by lazy {
-        (packagesBlueprint.javaPackageBlueprints.asSequence() + packagesBlueprint.kotlinPackageBlueprints.asSequence())
-                .flatMap { it.classBlueprints.asSequence() }
-                .first()
+        classBlueprintSequence.first()
+    }
+
+    val hasDataBinding: Boolean = dataBindingConfig?.listenerCount?.let { it > 0 } ?: false
+    private val listenerClassesForDataBinding: List<ClassBlueprint> by lazy {
+        classBlueprintSequence.filter { it.getMethodToCallFromOutside() != null }
+                .take(dataBindingConfig?.listenerCount ?: 0).toList()
     }
 }

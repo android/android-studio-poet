@@ -16,13 +16,4 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-class AndroidModuleConfig : ModuleConfig() {
-
-    var activityCount: Int = 0
-    var productFlavorConfigs: List<FlavorConfig>? = null
-    var buildTypes: List<BuildTypeConfig>? = null
-    var hasLaunchActivity: Boolean = false
-
-    var resourcesConfig: ResourcesConfig? = null
-    var dataBindingConfig: DataBindingConfig? = null
-}
+class DataBindingConfig(val listenerCount: Int? = 0)
