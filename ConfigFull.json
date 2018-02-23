@@ -83,6 +83,13 @@
           {
             "moduleName": "pureModule"
           }
+        ],
+        "flavors": [
+          {
+            "name": "red",
+            "dimension": "color",
+            "count": 2
+          }
         ]
       }
     ]

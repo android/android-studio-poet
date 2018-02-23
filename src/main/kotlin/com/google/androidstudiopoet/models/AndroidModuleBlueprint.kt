@@ -70,7 +70,7 @@ class AndroidModuleBlueprint(name: String,
         resourcesBlueprint?.resourcesToReferFromOutside ?: ResourcesToRefer(listOf(), listOf(), listOf())
     }
 
-    val productFlavors = productFlavorConfigs?.map { Flavor(it.name, it.dimension) }?.toSet()
+    val productFlavors = productFlavorConfigs?.flatMap { it.toFlavors() }?.toSet()
     val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()
 
     val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
@@ -98,5 +98,14 @@ class AndroidModuleBlueprint(name: String,
     private val listenerClassesForDataBinding: List<ClassBlueprint> by lazy {
         classBlueprintSequence.filter { it.getMethodToCallFromOutside() != null }
                 .take(dataBindingConfig?.listenerCount ?: 0).toList()
+    }
+}
+
+
+private fun FlavorConfig.toFlavors(): List<Flavor> {
+    return if (this.count > 1) {
+        (0 until this.count).map { Flavor(this.name + it, this.dimension) }
+    } else {
+        listOf(Flavor(this.name, this.dimension))
     }
 }
