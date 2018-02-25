@@ -29,7 +29,6 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     fun generate(blueprint: AndroidModuleBlueprint, buildGradleBlueprint: AndroidBuildGradleBlueprint) {
         val moduleRoot = blueprint.moduleRoot
 
-        val androidPlugin = if (blueprint.hasLaunchActivity) "application" else "library"
         val applicationId = if (blueprint.hasLaunchActivity) "applicationId \"${blueprint.packageName}\"" else ""
 
         val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
@@ -37,12 +36,8 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
         val flavorsSection = createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 
         val gradleText =
-"""
-apply plugin: 'com.android.$androidPlugin'
-${if (blueprint.useKotlin) "apply plugin: 'kotlin-android'" else ""}
-${if (blueprint.useKotlin) "apply plugin: 'kotlin-android-extensions'" else ""}
-${if (blueprint.useKotlin && blueprint.hasDataBinding) "apply plugin: 'kotlin-kapt'" else ""}
-
+                """
+${applyPlugins(buildGradleBlueprint.plugins)}
 android {
     compileSdkVersion ${blueprint.compileSdkVersion}
 
@@ -64,10 +59,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         ${align(blueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
-            "${buildType.name} {\n" +
-            "    ${align(buildType.body,"    ")}\n" +
-            "}"
-        }, "        ")}
+                    "${buildType.name} {\n" +
+                            "    ${align(buildType.body, "    ")}\n" +
+                            "}"
+                }, "        ")}
     }
 
     ${align(flavorsSection, "    ")}
@@ -90,7 +85,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation "com.android.support:multidex:1.0.1"
 
-    ${align(moduleDependencies.trimEnd(),"    ")}
+    ${align(moduleDependencies.trimEnd(), "    ")}
     ${if (blueprint.useKotlin && blueprint.hasDataBinding) "kapt 'com.android.databinding:compiler:3.0.1'" else ""}
 
 }
@@ -109,15 +104,19 @@ ${blueprint.extraLines.joinLines()}
 
         val flavorsList = productFlavors?.joinToString(separator = "") {
             "${it.name} {\n" +
-                (if (it.dimension != null) "    dimension \"${it.dimension}\"\n" else "") +
-            "}\n"
+                    (if (it.dimension != null) "    dimension \"${it.dimension}\"\n" else "") +
+                    "}\n"
         }
 
         return "flavorDimensions $dimensionsList\n" +
-               "productFlavors {\n" +
-               "    ${align(flavorsList?.trimEnd(),"    ")}\n" +
-               "}"
+                "productFlavors {\n" +
+                "    ${align(flavorsList?.trimEnd(), "    ")}\n" +
+                "}"
     }
 
     private fun align(input: String?, spaces: String): String = if (input != null) input.lines().joinToString(separator = "\n$spaces") else ""
+
+    private fun applyPlugins(plugins: Set<String>): String {
+        return plugins.map { "apply plugin: '$it'\n" }.fold()
+    }
 }
