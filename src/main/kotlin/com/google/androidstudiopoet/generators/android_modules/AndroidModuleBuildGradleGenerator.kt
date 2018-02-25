@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules
 
+import com.google.androidstudiopoet.input.AndroidBuildGradleBlueprint
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.utils.fold
@@ -25,7 +26,7 @@ import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
 class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
-    fun generate(blueprint: AndroidModuleBlueprint) {
+    fun generate(blueprint: AndroidModuleBlueprint, buildGradleBlueprint: AndroidBuildGradleBlueprint) {
         val moduleRoot = blueprint.moduleRoot
 
         val androidPlugin = if (blueprint.hasLaunchActivity) "application" else "library"
