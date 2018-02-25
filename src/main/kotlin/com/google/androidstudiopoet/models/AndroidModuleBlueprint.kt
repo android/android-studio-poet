@@ -103,9 +103,9 @@ class AndroidModuleBlueprint(name: String,
 
 
 private fun FlavorConfig.toFlavors(): List<Flavor> {
-    return if (this.count > 1) {
-        (0 until this.count).map { Flavor(this.name + it, this.dimension) }
-    } else {
+    return if (this.count == null || this.count <= 1) {
         listOf(Flavor(this.name, this.dimension))
+    } else {
+        (0 until this.count).map { Flavor(this.name + it, this.dimension) }
     }
 }

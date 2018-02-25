@@ -16,4 +16,4 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-data class FlavorConfig(val name: String, val dimension: String?, val count: Int = 1)
+data class FlavorConfig(val name: String, val dimension: String?, val count: Int? = 1)
