@@ -1,9 +1,6 @@
 package com.google.androidstudiopoet.models
 
-import com.google.androidstudiopoet.input.BuildTypeConfig
-import com.google.androidstudiopoet.input.DataBindingConfig
-import com.google.androidstudiopoet.input.FlavorConfig
-import com.google.androidstudiopoet.input.ResourcesConfig
+import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.testutils.*
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Test
@@ -95,31 +92,55 @@ class AndroidModuleBlueprintTest {
     }
 
     @Test
-    fun `dataBindingConfig is false when data binding config is null`() {
+    fun `hasDataBinding is false when data binding config is null`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = null)
 
         androidModuleBlueprint.hasDataBinding.assertFalse()
     }
 
     @Test
-    fun `dataBindingConfig is false when data binding config has zero listener count`() {
+    fun `hasDataBinding is false when data binding config has zero listener count`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = 0))
 
         androidModuleBlueprint.hasDataBinding.assertFalse()
     }
 
     @Test
-    fun `dataBindingConfig is true when data binding config has positive listener count`() {
+    fun `hasDataBinding is true when data binding config has positive listener count`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = 2))
 
         androidModuleBlueprint.hasDataBinding.assertTrue()
     }
 
     @Test
-    fun `dataBindingConfig is false when data binding config has negative listener count`() {
+    fun `hasDataBinding is false when data binding config has negative listener count`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = -1))
 
         androidModuleBlueprint.hasDataBinding.assertFalse()
+    }
+
+    @Test
+    fun `minSdkVersion is passed from AndroidBuildConfig`() {
+        val androidBuildConfig = AndroidBuildConfig(minSdkVersion = 7)
+        val androidModuleBlueprint = getAndroidModuleBlueprint(androidBuildConfig = androidBuildConfig)
+
+        androidModuleBlueprint.minSdkVersion.assertEquals(androidBuildConfig.minSdkVersion)
+    }
+
+    @Test
+    fun `targetSdkVersion is passed from AndroidBuildConfig`() {
+        val androidBuildConfig = AndroidBuildConfig(targetSdkVersion = 7)
+        val androidModuleBlueprint = getAndroidModuleBlueprint(androidBuildConfig = androidBuildConfig)
+
+        androidModuleBlueprint.targetSdkVersion.assertEquals(androidBuildConfig.targetSdkVersion)
+    }
+
+    @Test
+    fun `compileSdkVersion is passed from AndroidBuildConfig`() {
+        val androidBuildConfig = AndroidBuildConfig(compileSdkVersion = 7)
+        val androidModuleBlueprint = getAndroidModuleBlueprint(androidBuildConfig = androidBuildConfig)
+
+        androidModuleBlueprint.compileSdkVersion.assertEquals(androidBuildConfig.compileSdkVersion)
     }
 
     private fun getAndroidModuleBlueprint(
@@ -140,8 +161,10 @@ class AndroidModuleBlueprintTest {
             kotlinMethodsPerClass: Int = 1,
             extraLines: List<String>? = null,
             generateTests: Boolean = true,
-            dataBindingConfig: DataBindingConfig? = null
+            dataBindingConfig: DataBindingConfig? = null,
+            androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig()
     ) = AndroidModuleBlueprint(name, numOfActivities, resourcesConfig, projectRoot, hasLaunchActivity, useKotlin,
             dependencies, productFlavorConfigs, buildTypeConfigs, javaPackageCount, javaClassCount, javaMethodsPerClass,
-            kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests, dataBindingConfig)
+            kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests, dataBindingConfig,
+            androidBuildConfig)
 }
