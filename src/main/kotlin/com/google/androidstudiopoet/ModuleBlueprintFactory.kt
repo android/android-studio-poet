@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet
 
+import com.google.androidstudiopoet.input.AndroidBuildConfig
 import com.google.androidstudiopoet.input.AndroidModuleConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.models.*
@@ -112,7 +113,8 @@ object ModuleBlueprintFactory {
                 androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass,
                 androidModuleConfig.extraLines,
                 androidModuleConfig.generateTests,
-                androidModuleConfig.dataBindingConfig)
+                androidModuleConfig.dataBindingConfig,
+                androidModuleConfig.androidBuildConfig ?: AndroidBuildConfig())
     }
 
     fun initCache() {

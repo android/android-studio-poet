@@ -43,12 +43,12 @@ ${if (blueprint.useKotlin) "apply plugin: 'kotlin-android-extensions'" else ""}
 ${if (blueprint.useKotlin && blueprint.hasDataBinding) "apply plugin: 'kotlin-kapt'" else ""}
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion ${blueprint.compileSdkVersion}
 
     defaultConfig {
         $applicationId
-        minSdkVersion 19
-        targetSdkVersion 26
+        minSdkVersion ${blueprint.minSdkVersion}
+        targetSdkVersion ${blueprint.targetSdkVersion}
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

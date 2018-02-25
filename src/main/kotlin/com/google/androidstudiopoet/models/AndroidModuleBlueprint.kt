@@ -16,10 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-import com.google.androidstudiopoet.input.BuildTypeConfig
-import com.google.androidstudiopoet.input.DataBindingConfig
-import com.google.androidstudiopoet.input.FlavorConfig
-import com.google.androidstudiopoet.input.ResourcesConfig
+import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
 
@@ -36,7 +33,8 @@ class AndroidModuleBlueprint(name: String,
                              kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
                              extraLines: List<String>?,
                              generateTests: Boolean,
-                             dataBindingConfig: DataBindingConfig?
+                             dataBindingConfig: DataBindingConfig?,
+                             androidBuildConfig: AndroidBuildConfig
 ) : ModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
         javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
 
@@ -99,6 +97,10 @@ class AndroidModuleBlueprint(name: String,
         classBlueprintSequence.filter { it.getMethodToCallFromOutside() != null }
                 .take(dataBindingConfig?.listenerCount ?: 0).toList()
     }
+
+    val minSdkVersion = androidBuildConfig.minSdkVersion
+    val targetSdkVersion = androidBuildConfig.targetSdkVersion
+    val compileSdkVersion = androidBuildConfig.compileSdkVersion
 }
 
 
