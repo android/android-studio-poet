@@ -16,5 +16,18 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-class AndroidBuildGradleBlueprint {
+class AndroidBuildGradleBlueprint(val isApplication: Boolean, val enableKotlin: Boolean, val enableDataBinding: Boolean) {
+    val plugins: Set<String> = createListOfPlugins()
+
+    private fun createListOfPlugins(): Set<String> {
+        val result = mutableSetOf<String>()
+        result += if (isApplication) "com.android.application" else "com.android.library"
+        if (enableKotlin) {
+            result += listOf("kotlin-android", "kotlin-android-extensions")
+        }
+        if (enableKotlin && enableDataBinding) {
+            result += "kotlin-kapt"
+        }
+        return result
+    }
 }

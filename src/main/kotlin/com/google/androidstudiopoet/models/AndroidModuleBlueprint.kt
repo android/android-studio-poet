@@ -102,7 +102,7 @@ class AndroidModuleBlueprint(name: String,
     val targetSdkVersion = androidBuildConfig.targetSdkVersion
     val compileSdkVersion = androidBuildConfig.compileSdkVersion
 
-    val buildGradleBlueprint = AndroidBuildGradleBlueprint()
+    val buildGradleBlueprint = AndroidBuildGradleBlueprint(false, false, false)
 }
 
 
