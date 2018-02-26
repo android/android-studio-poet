@@ -19,6 +19,7 @@ package com.google.androidstudiopoet.generators.android_modules
 import com.google.androidstudiopoet.input.AndroidBuildGradleBlueprint
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.models.Flavor
+import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.utils.isNullOrEmpty
 import com.google.androidstudiopoet.utils.joinLines
@@ -27,9 +28,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 
 class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     fun generate(blueprint: AndroidModuleBlueprint, buildGradleBlueprint: AndroidBuildGradleBlueprint) {
-        val moduleRoot = blueprint.moduleRoot
-
-        val applicationId = if (blueprint.hasLaunchActivity) "applicationId \"${blueprint.packageName}\"" else ""
+        val applicationId = if (buildGradleBlueprint.isApplication) "applicationId \"${blueprint.packageName}\"" else ""
 
         val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
 
@@ -67,7 +66,7 @@ android {
 
     ${align(flavorsSection, "    ")}
 
-    ${if (blueprint.hasDataBinding) "dataBinding {\n        enabled = true\n    }" else ""}
+    ${if (buildGradleBlueprint.enableDataBinding) "dataBinding {\n        enabled = true\n    }" else ""}
 
     compileOptions {
         targetCompatibility 1.8
@@ -77,22 +76,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    ${if (blueprint.useKotlin) "implementation \"org.jetbrains.kotlin:kotlin-stdlib-jre7:${'$'}kotlin_version\"" else ""}
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation "com.android.support:multidex:1.0.1"
-
+    ${addLibraries(buildGradleBlueprint.libraries)}
     ${align(moduleDependencies.trimEnd(), "    ")}
-    ${if (blueprint.useKotlin && blueprint.hasDataBinding) "kapt 'com.android.databinding:compiler:3.0.1'" else ""}
-
 }
 ${blueprint.extraLines.joinLines()}
 """.trim()
 
-        fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))
+        fileWriter.writeToFile(gradleText, buildGradleBlueprint.path)
     }
 
     private fun createFlavorsSection(productFlavors: Set<Flavor>?, flavorDimensions: Set<String>?): String {
@@ -114,9 +104,13 @@ ${blueprint.extraLines.joinLines()}
                 "}"
     }
 
-    private fun align(input: String?, spaces: String): String = if (input != null) input.lines().joinToString(separator = "\n$spaces") else ""
+    private fun align(input: String?, spaces: String): String = input?.lines()?.joinToString(separator = "\n$spaces") ?: ""
 
     private fun applyPlugins(plugins: Set<String>): String {
         return plugins.map { "apply plugin: '$it'\n" }.fold()
+    }
+
+    private fun addLibraries(libraries: Set<LibraryDependency>): String {
+        return libraries.map { "${it.method} \"${it.name}\"\n" }.fold()
     }
 }

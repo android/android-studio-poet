@@ -16,10 +16,39 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-class AndroidBuildGradleBlueprint(val isApplication: Boolean, val enableKotlin: Boolean, val enableDataBinding: Boolean) {
-    val plugins: Set<String> = createListOfPlugins()
+import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.utils.joinPath
 
-    private fun createListOfPlugins(): Set<String> {
+class AndroidBuildGradleBlueprint(val isApplication: Boolean, val enableKotlin: Boolean, val enableDataBinding: Boolean,
+                                  moduleRoot: String) {
+    val plugins: Set<String> = createSetOfPlugins()
+
+    val libraries: Set<LibraryDependency> = createSetOfLibraries()
+
+    val path = moduleRoot.joinPath("build.gradle")
+
+    private fun createSetOfLibraries(): Set<LibraryDependency> {
+        val result = mutableSetOf(
+                LibraryDependency("implementation", "com.android.support:appcompat-v7:26.1.0"),
+                LibraryDependency("implementation", "com.android.support.constraint:constraint-layout:1.0.2"),
+                LibraryDependency("testImplementation", "junit:junit:4.12"),
+                LibraryDependency("androidTestImplementation", "com.android.support.test:runner:1.0.1"),
+                LibraryDependency("androidTestImplementation", "com.android.support.test.espresso:espresso-core:3.0.1"),
+                LibraryDependency("implementation", "com.android.support:multidex:1.0.1")
+        )
+
+        if (enableKotlin) {
+            result += LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version")
+        }
+
+        if (enableKotlin && enableDataBinding) {
+            result += LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1")
+        }
+
+        return result
+    }
+
+    private fun createSetOfPlugins(): Set<String> {
         val result = mutableSetOf<String>()
         result += if (isApplication) "com.android.application" else "com.android.library"
         if (enableKotlin) {

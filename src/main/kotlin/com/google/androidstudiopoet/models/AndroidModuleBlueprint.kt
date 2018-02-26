@@ -102,7 +102,7 @@ class AndroidModuleBlueprint(name: String,
     val targetSdkVersion = androidBuildConfig.targetSdkVersion
     val compileSdkVersion = androidBuildConfig.compileSdkVersion
 
-    val buildGradleBlueprint = AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding)
+    val buildGradleBlueprint = AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot)
 }
 
 

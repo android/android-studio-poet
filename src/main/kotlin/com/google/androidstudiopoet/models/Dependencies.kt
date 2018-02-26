@@ -21,6 +21,8 @@ open class ModuleDependency(val name: String, val methodToCall: MethodToCall, va
 class AndroidModuleDependency(name: String, methodToCall: MethodToCall, method: DependencyMethod, val resourcesToRefer: ResourcesToRefer)
     : ModuleDependency(name, methodToCall, method)
 
+data class LibraryDependency(val method: String, val name: String)
+
 enum class DependencyMethod(val value: String) {
     API("api"),
     IMPLEMENTATION("implementation")
