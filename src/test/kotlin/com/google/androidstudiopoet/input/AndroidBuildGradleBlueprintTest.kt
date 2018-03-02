@@ -143,9 +143,34 @@ class AndroidBuildGradleBlueprintTest {
         }
     }
 
+    @Test
+    fun `minSdkVersion is passed from AndroidBuildConfig`() {
+        val androidBuildConfig = AndroidBuildConfig(minSdkVersion = 7)
+        val androidModuleBlueprint = createAndroidBuildGradleBlueprint(androidBuildConfig = androidBuildConfig)
+
+        androidModuleBlueprint.minSdkVersion.assertEquals(androidBuildConfig.minSdkVersion)
+    }
+
+    @Test
+    fun `targetSdkVersion is passed from AndroidBuildConfig`() {
+        val androidBuildConfig = AndroidBuildConfig(targetSdkVersion = 7)
+        val androidModuleBlueprint = createAndroidBuildGradleBlueprint(androidBuildConfig = androidBuildConfig)
+
+        androidModuleBlueprint.targetSdkVersion.assertEquals(androidBuildConfig.targetSdkVersion)
+    }
+
+    @Test
+    fun `compileSdkVersion is passed from AndroidBuildConfig`() {
+        val androidBuildConfig = AndroidBuildConfig(compileSdkVersion = 7)
+        val androidModuleBlueprint = createAndroidBuildGradleBlueprint(androidBuildConfig = androidBuildConfig)
+
+        androidModuleBlueprint.compileSdkVersion.assertEquals(androidBuildConfig.compileSdkVersion)
+    }
+
     private fun createAndroidBuildGradleBlueprint(isApplication: Boolean = false,
                                                   enableKotlin: Boolean = false,
                                                   enableDataBinding: Boolean = false,
-                                                  moduleRoot: String = ""
-    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot)
+                                                  moduleRoot: String = "",
+                                                  androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig()
+    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig)
 }

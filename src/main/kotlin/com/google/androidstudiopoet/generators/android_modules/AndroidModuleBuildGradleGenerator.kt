@@ -38,12 +38,12 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                 """
 ${applyPlugins(buildGradleBlueprint.plugins)}
 android {
-    compileSdkVersion ${blueprint.compileSdkVersion}
+    compileSdkVersion ${buildGradleBlueprint.compileSdkVersion}
 
     defaultConfig {
         $applicationId
-        minSdkVersion ${blueprint.minSdkVersion}
-        targetSdkVersion ${blueprint.targetSdkVersion}
+        minSdkVersion ${buildGradleBlueprint.minSdkVersion}
+        targetSdkVersion ${buildGradleBlueprint.targetSdkVersion}
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

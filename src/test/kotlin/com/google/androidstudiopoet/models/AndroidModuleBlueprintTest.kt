@@ -119,30 +119,6 @@ class AndroidModuleBlueprintTest {
         androidModuleBlueprint.hasDataBinding.assertFalse()
     }
 
-    @Test
-    fun `minSdkVersion is passed from AndroidBuildConfig`() {
-        val androidBuildConfig = AndroidBuildConfig(minSdkVersion = 7)
-        val androidModuleBlueprint = getAndroidModuleBlueprint(androidBuildConfig = androidBuildConfig)
-
-        androidModuleBlueprint.minSdkVersion.assertEquals(androidBuildConfig.minSdkVersion)
-    }
-
-    @Test
-    fun `targetSdkVersion is passed from AndroidBuildConfig`() {
-        val androidBuildConfig = AndroidBuildConfig(targetSdkVersion = 7)
-        val androidModuleBlueprint = getAndroidModuleBlueprint(androidBuildConfig = androidBuildConfig)
-
-        androidModuleBlueprint.targetSdkVersion.assertEquals(androidBuildConfig.targetSdkVersion)
-    }
-
-    @Test
-    fun `compileSdkVersion is passed from AndroidBuildConfig`() {
-        val androidBuildConfig = AndroidBuildConfig(compileSdkVersion = 7)
-        val androidModuleBlueprint = getAndroidModuleBlueprint(androidBuildConfig = androidBuildConfig)
-
-        androidModuleBlueprint.compileSdkVersion.assertEquals(androidBuildConfig.compileSdkVersion)
-    }
-
     private fun getAndroidModuleBlueprint(
             name: String = "androidAppModule1",
             numOfActivities: Int = 1,

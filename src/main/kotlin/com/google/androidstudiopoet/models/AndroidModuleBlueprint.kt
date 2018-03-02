@@ -98,11 +98,7 @@ class AndroidModuleBlueprint(name: String,
                 .take(dataBindingConfig?.listenerCount ?: 0).toList()
     }
 
-    val minSdkVersion = androidBuildConfig.minSdkVersion
-    val targetSdkVersion = androidBuildConfig.targetSdkVersion
-    val compileSdkVersion = androidBuildConfig.compileSdkVersion
-
-    val buildGradleBlueprint = AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot)
+    val buildGradleBlueprint = AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig)
 }
 
 

@@ -20,12 +20,16 @@ import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.utils.joinPath
 
 class AndroidBuildGradleBlueprint(val isApplication: Boolean, val enableKotlin: Boolean, val enableDataBinding: Boolean,
-                                  moduleRoot: String) {
+                                  moduleRoot: String, androidBuildConfig: AndroidBuildConfig) {
     val plugins: Set<String> = createSetOfPlugins()
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
 
     val path = moduleRoot.joinPath("build.gradle")
+
+    val minSdkVersion = androidBuildConfig.minSdkVersion
+    val targetSdkVersion = androidBuildConfig.targetSdkVersion
+    val compileSdkVersion = androidBuildConfig.compileSdkVersion
 
     private fun createSetOfLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf(
