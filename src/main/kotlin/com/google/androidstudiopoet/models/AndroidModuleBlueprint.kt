@@ -68,7 +68,6 @@ class AndroidModuleBlueprint(name: String,
         resourcesBlueprint?.resourcesToReferFromOutside ?: ResourcesToRefer(listOf(), listOf(), listOf())
     }
 
-    val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
     val activityBlueprints by lazy {
         (0 until numOfActivities).map {
             ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
@@ -95,15 +94,8 @@ class AndroidModuleBlueprint(name: String,
                 .take(dataBindingConfig?.listenerCount ?: 0).toList()
     }
 
-    val buildGradleBlueprint = AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot,
-            androidBuildConfig, packageName, extraLines, productFlavorConfigs)
-}
-
-
-private fun FlavorConfig.toFlavors(): List<Flavor> {
-    return if (this.count == null || this.count <= 1) {
-        listOf(Flavor(this.name, this.dimension))
-    } else {
-        (0 until this.count).map { Flavor(this.name + it, this.dimension) }
+    val buildGradleBlueprint: AndroidBuildGradleBlueprint by lazy {
+        AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
+                packageName, extraLines, productFlavorConfigs, buildTypeConfigs)
     }
 }

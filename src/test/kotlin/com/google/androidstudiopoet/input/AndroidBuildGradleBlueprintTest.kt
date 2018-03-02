@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
+import com.google.androidstudiopoet.models.BuildType
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.testutils.assertContains
@@ -211,6 +212,28 @@ class AndroidBuildGradleBlueprintTest {
         }
     }
 
+    @Test
+    fun `blueprint creates buildTypes from BuildTypeConfigs`() {
+        val name1 = "name1"
+        val body1 = "body1"
+        val name2 = "name2"
+        val body2 = "body2"
+
+        val buildTypeConfigs = listOf(
+                BuildTypeConfig(name1, body1),
+                BuildTypeConfig(name2, body2)
+        )
+
+        val blueprint = createAndroidBuildGradleBlueprint(buildTypeConfigs = buildTypeConfigs)
+
+        assertOn(blueprint) {
+            blueprint.buildTypes!!.assertEquals(setOf(
+                    BuildType(name1, body1),
+                    BuildType(name2, body2)
+            ))
+        }
+    }
+
     private fun createAndroidBuildGradleBlueprint(isApplication: Boolean = false,
                                                   enableKotlin: Boolean = false,
                                                   enableDataBinding: Boolean = false,
@@ -218,7 +241,8 @@ class AndroidBuildGradleBlueprintTest {
                                                   androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
                                                   packageName: String = "com.example",
                                                   extraLines: List<String>? = null,
-                                                  productFlavorConfigs: List<FlavorConfig>? = null
+                                                  productFlavorConfigs: List<FlavorConfig>? = null,
+                                                  buildTypeConfigs: List<BuildTypeConfig>? = null
     ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig,
-            packageName, extraLines, productFlavorConfigs)
+            packageName, extraLines, productFlavorConfigs, buildTypeConfigs)
 }

@@ -16,13 +16,15 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
+import com.google.androidstudiopoet.models.BuildType
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.utils.joinPath
 
 class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
-                                  val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?) {
+                                  val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
+                                  buildTypeConfigs: List<BuildTypeConfig>?) {
     val plugins: Set<String> = createSetOfPlugins()
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
@@ -35,6 +37,8 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
 
     val productFlavors = productFlavorConfigs?.flatMap { it.toFlavors() }?.toSet()
     val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()
+
+    val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
 
     private fun createSetOfLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf(

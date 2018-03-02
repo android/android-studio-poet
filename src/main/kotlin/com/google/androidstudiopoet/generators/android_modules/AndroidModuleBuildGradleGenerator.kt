@@ -57,7 +57,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        ${align(blueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
+        ${align(buildGradleBlueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
                     "${buildType.name} {\n" +
                             "    ${align(buildType.body, "    ")}\n" +
                             "}"
