@@ -28,8 +28,6 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     fun generate(blueprint: AndroidBuildGradleBlueprint) {
         val applicationId = if (blueprint.isApplication) "applicationId \"${blueprint.packageName}\"" else ""
 
-        val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
-
         val flavorsSection = createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 
         val gradleText =
@@ -39,7 +37,7 @@ android {
     compileSdkVersion ${blueprint.compileSdkVersion}
 
     defaultConfig {
-        $applicationId
+$applicationId
         minSdkVersion ${blueprint.minSdkVersion}
         targetSdkVersion ${blueprint.targetSdkVersion}
         versionCode 1
@@ -55,28 +53,18 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        ${align(blueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
+${align(blueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
                     "${buildType.name} {\n" +
                             "    ${align(buildType.body, "    ")}\n" +
                             "}"
                 }, "        ")}
-    }
-
-    ${align(flavorsSection, "    ")}
-
-    ${if (blueprint.enableDataBinding) "dataBinding {\n        enabled = true\n    }" else ""}
-
+    }${align(flavorsSection, "    ")}${if (blueprint.enableDataBinding) "dataBinding {\n        enabled = true\n    }" else ""}
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
 }
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    ${addLibraries(blueprint.libraries)}
-    ${align(moduleDependencies.trimEnd(), "    ")}
-}
+${dependencyClosure(blueprint)}
 ${blueprint.extraLines.joinLines()}
 """.trim()
 
@@ -111,4 +99,16 @@ ${blueprint.extraLines.joinLines()}
     private fun addLibraries(libraries: Set<LibraryDependency>): String {
         return libraries.map { "${it.method} \"${it.name}\"\n" }.fold()
     }
+
+    private fun dependencyClosure(blueprint: AndroidBuildGradleBlueprint): String {
+
+        val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
+
+        return """dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])${addLibraries(blueprint.libraries)}${align(moduleDependencies.trimEnd(), "    ")}
 }
+            """
+    }
+}
+
+private data class DependencyStatement(val method: String, val dependencyExpression: String)
