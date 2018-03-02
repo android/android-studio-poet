@@ -28,7 +28,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 
 class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     fun generate(blueprint: AndroidModuleBlueprint, buildGradleBlueprint: AndroidBuildGradleBlueprint) {
-        val applicationId = if (buildGradleBlueprint.isApplication) "applicationId \"${blueprint.packageName}\"" else ""
+        val applicationId = if (buildGradleBlueprint.isApplication) "applicationId \"${buildGradleBlueprint.packageName}\"" else ""
 
         val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
 
@@ -79,7 +79,7 @@ dependencies {
     ${addLibraries(buildGradleBlueprint.libraries)}
     ${align(moduleDependencies.trimEnd(), "    ")}
 }
-${blueprint.extraLines.joinLines()}
+${buildGradleBlueprint.extraLines.joinLines()}
 """.trim()
 
         fileWriter.writeToFile(gradleText, buildGradleBlueprint.path)

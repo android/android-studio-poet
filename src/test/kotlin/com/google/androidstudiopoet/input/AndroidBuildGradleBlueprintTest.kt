@@ -171,6 +171,8 @@ class AndroidBuildGradleBlueprintTest {
                                                   enableKotlin: Boolean = false,
                                                   enableDataBinding: Boolean = false,
                                                   moduleRoot: String = "",
-                                                  androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig()
-    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig)
+                                                  androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
+                                                  packageName: String = "com.example",
+                                                  extraLines: List<String>? = null
+    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig, packageName, extraLines)
 }

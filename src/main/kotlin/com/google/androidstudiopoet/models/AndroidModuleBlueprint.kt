@@ -21,7 +21,7 @@ import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
 
 class AndroidModuleBlueprint(name: String,
-                             val numOfActivities: Int,
+                             private val numOfActivities: Int,
                              private val resourcesConfig: ResourcesConfig?,
                              projectRoot: String,
                              val hasLaunchActivity: Boolean,
@@ -98,7 +98,8 @@ class AndroidModuleBlueprint(name: String,
                 .take(dataBindingConfig?.listenerCount ?: 0).toList()
     }
 
-    val buildGradleBlueprint = AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig)
+    val buildGradleBlueprint = AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot,
+            androidBuildConfig, packageName, extraLines)
 }
 
 

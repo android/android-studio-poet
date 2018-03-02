@@ -19,8 +19,9 @@ package com.google.androidstudiopoet.input
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.utils.joinPath
 
-class AndroidBuildGradleBlueprint(val isApplication: Boolean, val enableKotlin: Boolean, val enableDataBinding: Boolean,
-                                  moduleRoot: String, androidBuildConfig: AndroidBuildConfig) {
+class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
+                                  moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
+                                  val extraLines: List<String>?) {
     val plugins: Set<String> = createSetOfPlugins()
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
