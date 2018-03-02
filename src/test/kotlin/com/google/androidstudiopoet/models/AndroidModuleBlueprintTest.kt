@@ -16,49 +16,6 @@ class AndroidModuleBlueprintTest {
     }
 
     @Test
-    fun `blueprint creates proper flavors and dimensions`() {
-        val dimension1 = "dim1"
-        val dimension2 = "dim2"
-        val flavorName1 = "flav1"
-        val flavorName2 = "flav2"
-        val flavorName3 = "flav3"
-        val flavorConfigs = listOf(
-                FlavorConfig(flavorName1, dimension1),
-                FlavorConfig(flavorName2, dimension1),
-                FlavorConfig(flavorName3, dimension2))
-        val blueprint = getAndroidModuleBlueprint(productFlavorConfigs = flavorConfigs)
-
-        blueprint.flavorDimensions!!.assertEquals(setOf(dimension1, dimension2))
-        blueprint.productFlavors!!.assertEquals(setOf(
-                Flavor(flavorName1, dimension1),
-                Flavor(flavorName2, dimension1),
-                Flavor(flavorName3, dimension2)
-        ))
-    }
-
-    @Test
-    fun `blueprint creates amount of flavors that set in "count" field of each FlavorConfig`() {
-        val dimension = "dim"
-        val flavorName = "flav"
-        val expectedFlavorName0 = "flav0"
-        val expectedFlavorName1 = "flav1"
-        val expectedFlavorName2 = "flav2"
-        val flavorCount = 3
-        val flavorConfig = FlavorConfig(flavorName, dimension, flavorCount)
-
-        val blueprint = getAndroidModuleBlueprint(productFlavorConfigs = listOf(flavorConfig))
-
-        assertOn(blueprint) {
-            blueprint.flavorDimensions!!.assertEquals(setOf(dimension))
-            blueprint.productFlavors!!.assertEquals(setOf(
-                    Flavor(expectedFlavorName0, dimension),
-                    Flavor(expectedFlavorName1, dimension),
-                    Flavor(expectedFlavorName2, dimension)
-            ))
-        }
-    }
-
-    @Test
     fun `blueprint creates activity blueprint with java class when java code exists`() {
         whenever(resourcesConfig0.layoutCount).thenReturn(1)
 

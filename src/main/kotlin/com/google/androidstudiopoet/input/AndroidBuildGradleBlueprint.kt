@@ -16,12 +16,13 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
+import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.utils.joinPath
 
 class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
-                                  val extraLines: List<String>?) {
+                                  val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?) {
     val plugins: Set<String> = createSetOfPlugins()
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
@@ -31,6 +32,9 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
     val minSdkVersion = androidBuildConfig.minSdkVersion
     val targetSdkVersion = androidBuildConfig.targetSdkVersion
     val compileSdkVersion = androidBuildConfig.compileSdkVersion
+
+    val productFlavors = productFlavorConfigs?.flatMap { it.toFlavors() }?.toSet()
+    val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()
 
     private fun createSetOfLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf(
@@ -63,5 +67,13 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
             result += "kotlin-kapt"
         }
         return result
+    }
+}
+
+private fun FlavorConfig.toFlavors(): List<Flavor> {
+    return if (this.count == null || this.count <= 1) {
+        listOf(Flavor(this.name, this.dimension))
+    } else {
+        (0 until this.count).map { Flavor(this.name + it, this.dimension) }
     }
 }

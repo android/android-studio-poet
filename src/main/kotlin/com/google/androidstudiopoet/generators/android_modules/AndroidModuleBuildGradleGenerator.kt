@@ -32,7 +32,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
 
-        val flavorsSection = createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
+        val flavorsSection = createFlavorsSection(buildGradleBlueprint.productFlavors, buildGradleBlueprint.flavorDimensions)
 
         val gradleText =
                 """

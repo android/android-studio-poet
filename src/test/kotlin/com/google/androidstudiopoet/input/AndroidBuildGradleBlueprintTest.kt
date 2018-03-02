@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
+import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEquals
@@ -167,12 +168,57 @@ class AndroidBuildGradleBlueprintTest {
         androidModuleBlueprint.compileSdkVersion.assertEquals(androidBuildConfig.compileSdkVersion)
     }
 
+    @Test
+    fun `blueprint creates proper flavors and dimensions`() {
+        val dimension1 = "dim1"
+        val dimension2 = "dim2"
+        val flavorName1 = "flav1"
+        val flavorName2 = "flav2"
+        val flavorName3 = "flav3"
+        val flavorConfigs = listOf(
+                FlavorConfig(flavorName1, dimension1),
+                FlavorConfig(flavorName2, dimension1),
+                FlavorConfig(flavorName3, dimension2))
+        val blueprint = createAndroidBuildGradleBlueprint(productFlavorConfigs = flavorConfigs)
+
+        blueprint.flavorDimensions!!.assertEquals(setOf(dimension1, dimension2))
+        blueprint.productFlavors!!.assertEquals(setOf(
+                Flavor(flavorName1, dimension1),
+                Flavor(flavorName2, dimension1),
+                Flavor(flavorName3, dimension2)
+        ))
+    }
+
+    @Test
+    fun `blueprint creates amount of flavors that set in "count" field of each FlavorConfig`() {
+        val dimension = "dim"
+        val flavorName = "flav"
+        val expectedFlavorName0 = "flav0"
+        val expectedFlavorName1 = "flav1"
+        val expectedFlavorName2 = "flav2"
+        val flavorCount = 3
+        val flavorConfig = FlavorConfig(flavorName, dimension, flavorCount)
+
+        val blueprint = createAndroidBuildGradleBlueprint(productFlavorConfigs = listOf(flavorConfig))
+
+        assertOn(blueprint) {
+            blueprint.flavorDimensions!!.assertEquals(kotlin.collections.setOf(dimension))
+            blueprint.productFlavors!!.assertEquals(kotlin.collections.setOf(
+                    com.google.androidstudiopoet.models.Flavor(expectedFlavorName0, dimension),
+                    com.google.androidstudiopoet.models.Flavor(expectedFlavorName1, dimension),
+                    com.google.androidstudiopoet.models.Flavor(expectedFlavorName2, dimension)
+            ))
+        }
+    }
+
     private fun createAndroidBuildGradleBlueprint(isApplication: Boolean = false,
                                                   enableKotlin: Boolean = false,
                                                   enableDataBinding: Boolean = false,
                                                   moduleRoot: String = "",
                                                   androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
                                                   packageName: String = "com.example",
-                                                  extraLines: List<String>? = null
-    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig, packageName, extraLines)
+                                                  extraLines: List<String>? = null,
+                                                  productFlavorConfigs: List<FlavorConfig>? = null
+    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig,
+            packageName, extraLines, productFlavorConfigs)
 }

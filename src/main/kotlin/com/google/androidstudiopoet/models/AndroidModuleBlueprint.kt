@@ -68,9 +68,6 @@ class AndroidModuleBlueprint(name: String,
         resourcesBlueprint?.resourcesToReferFromOutside ?: ResourcesToRefer(listOf(), listOf(), listOf())
     }
 
-    val productFlavors = productFlavorConfigs?.flatMap { it.toFlavors() }?.toSet()
-    val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()
-
     val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
     val activityBlueprints by lazy {
         (0 until numOfActivities).map {
@@ -99,7 +96,7 @@ class AndroidModuleBlueprint(name: String,
     }
 
     val buildGradleBlueprint = AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot,
-            androidBuildConfig, packageName, extraLines)
+            androidBuildConfig, packageName, extraLines, productFlavorConfigs)
 }
 
 
