@@ -19,12 +19,13 @@ package com.google.androidstudiopoet.input
 import com.google.androidstudiopoet.models.BuildType
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.utils.joinPath
 
 class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
                                   val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
-                                  buildTypeConfigs: List<BuildTypeConfig>?) {
+                                  buildTypeConfigs: List<BuildTypeConfig>?, val dependencies: List<ModuleDependency>) {
     val plugins: Set<String> = createSetOfPlugins()
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()

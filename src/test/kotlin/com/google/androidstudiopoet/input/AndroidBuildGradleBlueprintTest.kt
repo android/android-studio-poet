@@ -19,6 +19,7 @@ package com.google.androidstudiopoet.input
 import com.google.androidstudiopoet.models.BuildType
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.assertNotContains
@@ -242,7 +243,8 @@ class AndroidBuildGradleBlueprintTest {
                                                   packageName: String = "com.example",
                                                   extraLines: List<String>? = null,
                                                   productFlavorConfigs: List<FlavorConfig>? = null,
-                                                  buildTypeConfigs: List<BuildTypeConfig>? = null
+                                                  buildTypeConfigs: List<BuildTypeConfig>? = null,
+                                                  dependencies: List<ModuleDependency> = listOf()
     ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig,
-            packageName, extraLines, productFlavorConfigs, buildTypeConfigs)
+            packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
 }

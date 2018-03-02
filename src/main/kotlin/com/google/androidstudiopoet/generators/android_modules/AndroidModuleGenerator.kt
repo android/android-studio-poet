@@ -37,7 +37,7 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
         generateMainFolders(blueprint)
 
         proguardGenerator.generate(blueprint)
-        buildGradleGenerator.generate(blueprint, blueprint.buildGradleBlueprint)
+        buildGradleGenerator.generate(blueprint.buildGradleBlueprint)
         blueprint.resourcesBlueprint?.let { resourcesGenerator.generate(it) }
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
         blueprint.activityBlueprints.forEach({ activityGenerator.generate(it) })

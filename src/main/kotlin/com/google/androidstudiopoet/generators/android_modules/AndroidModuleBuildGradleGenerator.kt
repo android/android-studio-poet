@@ -17,33 +17,31 @@ limitations under the License.
 package com.google.androidstudiopoet.generators.android_modules
 
 import com.google.androidstudiopoet.input.AndroidBuildGradleBlueprint
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.utils.isNullOrEmpty
 import com.google.androidstudiopoet.utils.joinLines
-import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
 class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
-    fun generate(blueprint: AndroidModuleBlueprint, buildGradleBlueprint: AndroidBuildGradleBlueprint) {
-        val applicationId = if (buildGradleBlueprint.isApplication) "applicationId \"${buildGradleBlueprint.packageName}\"" else ""
+    fun generate(blueprint: AndroidBuildGradleBlueprint) {
+        val applicationId = if (blueprint.isApplication) "applicationId \"${blueprint.packageName}\"" else ""
 
         val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
 
-        val flavorsSection = createFlavorsSection(buildGradleBlueprint.productFlavors, buildGradleBlueprint.flavorDimensions)
+        val flavorsSection = createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 
         val gradleText =
                 """
-${applyPlugins(buildGradleBlueprint.plugins)}
+${applyPlugins(blueprint.plugins)}
 android {
-    compileSdkVersion ${buildGradleBlueprint.compileSdkVersion}
+    compileSdkVersion ${blueprint.compileSdkVersion}
 
     defaultConfig {
         $applicationId
-        minSdkVersion ${buildGradleBlueprint.minSdkVersion}
-        targetSdkVersion ${buildGradleBlueprint.targetSdkVersion}
+        minSdkVersion ${blueprint.minSdkVersion}
+        targetSdkVersion ${blueprint.targetSdkVersion}
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -57,7 +55,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        ${align(buildGradleBlueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
+        ${align(blueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
                     "${buildType.name} {\n" +
                             "    ${align(buildType.body, "    ")}\n" +
                             "}"
@@ -66,7 +64,7 @@ android {
 
     ${align(flavorsSection, "    ")}
 
-    ${if (buildGradleBlueprint.enableDataBinding) "dataBinding {\n        enabled = true\n    }" else ""}
+    ${if (blueprint.enableDataBinding) "dataBinding {\n        enabled = true\n    }" else ""}
 
     compileOptions {
         targetCompatibility 1.8
@@ -76,13 +74,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    ${addLibraries(buildGradleBlueprint.libraries)}
+    ${addLibraries(blueprint.libraries)}
     ${align(moduleDependencies.trimEnd(), "    ")}
 }
-${buildGradleBlueprint.extraLines.joinLines()}
+${blueprint.extraLines.joinLines()}
 """.trim()
 
-        fileWriter.writeToFile(gradleText, buildGradleBlueprint.path)
+        fileWriter.writeToFile(gradleText, blueprint.path)
     }
 
     private fun createFlavorsSection(productFlavors: Set<Flavor>?, flavorDimensions: Set<String>?): String {

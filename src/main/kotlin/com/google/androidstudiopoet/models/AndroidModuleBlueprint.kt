@@ -96,6 +96,6 @@ class AndroidModuleBlueprint(name: String,
 
     val buildGradleBlueprint: AndroidBuildGradleBlueprint by lazy {
         AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
-                packageName, extraLines, productFlavorConfigs, buildTypeConfigs)
+                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
     }
 }
