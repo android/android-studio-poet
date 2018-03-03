@@ -18,25 +18,19 @@ class AndroidModuleBuildGradleGeneratorTest {
         verify(fileWriter).writeToFile(captor.capture(), eq("path"))
         val expected = """android {
     compileSdkVersion 0
-
     defaultConfig {
-
         minSdkVersion 0
         targetSdkVersion 0
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
     }
     compileOptions {
         targetCompatibility 1.8
