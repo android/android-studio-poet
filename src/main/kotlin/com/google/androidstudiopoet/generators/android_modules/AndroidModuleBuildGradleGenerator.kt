@@ -87,7 +87,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
         val flavorDimensionsExpression = flavorDimensions?.joinToString { "\"$it\"" }?.let { Expression("flavorDimensions", it) }
 
         val flavorsList = productFlavors!!.map { Closure(it.name, listOfNotNull(
-                it.dimension?.let { dimensionName -> Expression("dimension", dimensionName) }
+                it.dimension?.let { dimensionName -> Expression("dimension", "\"$dimensionName\"") }
         )) }
 
         return listOfNotNull(
@@ -112,7 +112,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
     private fun dependenciesClosure(blueprint: AndroidBuildGradleBlueprint): Closure {
         val moduleDependenciesExpressions = blueprint.dependencies.map { Expression(it.method.value, "project(':${it.name}')") }
-        val librariesExpression = blueprint.libraries.map { Expression(it.method, "\"${it.name}\"\n") }
+        val librariesExpression = blueprint.libraries.map { Expression(it.method, "\"${it.name}\"") }
 
         val statements = listOf(Expression("implementation", "fileTree(dir: 'libs', include: ['*.jar'])")) +
                 moduleDependenciesExpressions + librariesExpression
