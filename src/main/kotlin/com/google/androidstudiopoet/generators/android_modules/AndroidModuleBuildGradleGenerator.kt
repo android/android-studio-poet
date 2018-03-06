@@ -16,107 +16,129 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules
 
-import com.google.androidstudiopoet.models.AndroidModuleBlueprint
+import com.google.androidstudiopoet.input.AndroidBuildGradleBlueprint
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.utils.isNullOrEmpty
 import com.google.androidstudiopoet.utils.joinLines
-import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
 class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
-    fun generate(blueprint: AndroidModuleBlueprint) {
-        val moduleRoot = blueprint.moduleRoot
+    fun generate(blueprint: AndroidBuildGradleBlueprint) {
 
-        val androidPlugin = if (blueprint.hasLaunchActivity) "application" else "library"
-        val applicationId = if (blueprint.hasLaunchActivity) "applicationId \"${blueprint.packageName}\"" else ""
+        val statements = applyPlugins(blueprint.plugins) +
+                androidClosure(blueprint) +
+                dependenciesClosure(blueprint) +
+                (blueprint.extraLines?.map { StringStatement(it) } ?: listOf())
 
-        val moduleDependencies = blueprint.dependencies.map { "${it.method.value} project(':${it.name}')\n" }.fold()
+        val gradleText = statements.joinToString(separator = "\n") { it.toGroovy(0) }
 
-        val flavorsSection = createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
-
-        val gradleText =
-"""
-apply plugin: 'com.android.$androidPlugin'
-${if (blueprint.useKotlin) "apply plugin: 'kotlin-android'" else ""}
-${if (blueprint.useKotlin) "apply plugin: 'kotlin-android-extensions'" else ""}
-${if (blueprint.useKotlin && blueprint.hasDataBinding) "apply plugin: 'kotlin-kapt'" else ""}
-
-android {
-    compileSdkVersion ${blueprint.compileSdkVersion}
-
-    defaultConfig {
-        $applicationId
-        minSdkVersion ${blueprint.minSdkVersion}
-        targetSdkVersion ${blueprint.targetSdkVersion}
-        versionCode 1
-        versionName "1.0"
-        multiDexEnabled true
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        fileWriter.writeToFile(gradleText, blueprint.path)
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        ${align(blueprint.buildTypes?.joinToString(separator = "\n") { buildType ->
-            "${buildType.name} {\n" +
-            "    ${align(buildType.body,"    ")}\n" +
-            "}"
-        }, "        ")}
+    private fun applyPlugins(plugins: Set<String>): List<Statement> {
+        return plugins.map { Expression("apply plugin:", "'$it'") }
     }
 
-    ${align(flavorsSection, "    ")}
+    private fun androidClosure(blueprint: AndroidBuildGradleBlueprint): Closure {
+        val statements = listOfNotNull(
+                Expression("compileSdkVersion", "${blueprint.compileSdkVersion}"),
+                defaultConfigClosure(blueprint),
+                buildTypesClosure(blueprint),
+                (if (blueprint.enableDataBinding) dataBindingClosure() else null),
+                compileOptionsClosure()
+        ) + createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 
-    ${if (blueprint.hasDataBinding) "dataBinding {\n        enabled = true\n    }" else ""}
-
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    ${if (blueprint.useKotlin) "implementation \"org.jetbrains.kotlin:kotlin-stdlib-jre7:${'$'}kotlin_version\"" else ""}
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation "com.android.support:multidex:1.0.1"
-
-    ${align(moduleDependencies.trimEnd(),"    ")}
-    ${if (blueprint.useKotlin && blueprint.hasDataBinding) "kapt 'com.android.databinding:compiler:3.0.1'" else ""}
-
-}
-${blueprint.extraLines.joinLines()}
-""".trim()
-
-        fileWriter.writeToFile(gradleText, moduleRoot.joinPath("build.gradle"))
+        return Closure("android", statements)
     }
 
-    private fun createFlavorsSection(productFlavors: Set<Flavor>?, flavorDimensions: Set<String>?): String {
+    private fun defaultConfigClosure(blueprint: AndroidBuildGradleBlueprint): Closure {
+        val expressions = listOfNotNull(
+                if (blueprint.isApplication) Expression("applicationId", "\"${blueprint.packageName}\"") else null,
+                Expression("minSdkVersion", "${blueprint.minSdkVersion}"),
+                Expression("targetSdkVersion", "${blueprint.targetSdkVersion}"),
+                Expression("versionCode", "1"),
+                Expression("versionName", "\"1.0\""),
+                Expression("multiDexEnabled", "true"),
+                Expression("testInstrumentationRunner", "\"android.support.test.runner.AndroidJUnitRunner\"")
+        )
+        return Closure("defaultConfig", expressions)
+    }
+
+    private fun buildTypesClosure(blueprint: AndroidBuildGradleBlueprint): Statement {
+
+        val releaseClosure = Closure("release", listOf(
+                Expression("minifyEnabled", "false"),
+                Expression("proguardFiles", "getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'")
+        ))
+
+        val buildTypesClosures = blueprint.buildTypes?.map {
+            Closure(it.name, it.body?.lines()?.map { line -> StringStatement(line) } ?: listOf())
+        } ?: listOf()
+
+        return Closure("buildTypes", listOf(releaseClosure) + buildTypesClosures)
+    }
+
+    private fun createFlavorsSection(productFlavors: Set<Flavor>?, flavorDimensions: Set<String>?): List<Statement> {
         if (productFlavors.isNullOrEmpty() && flavorDimensions.isNullOrEmpty()) {
-            return ""
+            return listOf()
         }
 
-        val dimensionsList = flavorDimensions?.joinToString { "\"$it\"" } ?: ""
+        val flavorDimensionsExpression = flavorDimensions?.joinToString { "\"$it\"" }?.let { Expression("flavorDimensions", it) }
 
-        val flavorsList = productFlavors?.joinToString(separator = "") {
-            "${it.name} {\n" +
-                (if (it.dimension != null) "    dimension \"${it.dimension}\"\n" else "") +
-            "}\n"
-        }
+        val flavorsList = productFlavors!!.map { Closure(it.name, listOfNotNull(
+                it.dimension?.let { dimensionName -> Expression("dimension", "\"$dimensionName\"") }
+        )) }
 
-        return "flavorDimensions $dimensionsList\n" +
-               "productFlavors {\n" +
-               "    ${align(flavorsList?.trimEnd(),"    ")}\n" +
-               "}"
+        return listOfNotNull(
+                flavorDimensionsExpression,
+                Closure("productFlavors", flavorsList)
+        )
     }
 
-    private fun align(input: String?, spaces: String): String = if (input != null) input.lines().joinToString(separator = "\n$spaces") else ""
+    private fun dataBindingClosure(): Closure {
+        return Closure("dataBinding", listOf(
+                StringStatement("enabled = true")
+        ))
+    }
+
+    private fun compileOptionsClosure(): Closure {
+        val expressions = listOf(
+                Expression("targetCompatibility", "1.8"),
+                Expression("sourceCompatibility", "1.8")
+        )
+        return Closure("compileOptions", expressions)
+    }
+
+    private fun dependenciesClosure(blueprint: AndroidBuildGradleBlueprint): Closure {
+        val moduleDependenciesExpressions = blueprint.dependencies.map { Expression(it.method.value, "project(':${it.name}')") }
+        val librariesExpression = blueprint.libraries.map { Expression(it.method, "\"${it.name}\"") }
+
+        val statements = listOf(Expression("implementation", "fileTree(dir: 'libs', include: ['*.jar'])")) +
+                moduleDependenciesExpressions + librariesExpression
+        return Closure("dependencies", statements)
+    }
 }
+
+private interface Statement {
+    fun toGroovy(indentNumber: Int): String
+}
+
+private data class StringStatement(val value: String) : Statement {
+    override fun toGroovy(indentNumber: Int): String = INDENT.repeat(indentNumber) + value
+}
+
+private data class Expression(val left: String, val right: String) : Statement {
+    override fun toGroovy(indentNumber: Int): String = "${INDENT.repeat(indentNumber)}$left $right"
+}
+
+private class Closure(val name: String, val statements: List<Statement>) : Statement {
+    override fun toGroovy(indentNumber: Int): String {
+        val indent = INDENT.repeat(indentNumber)
+        return """$indent$name {
+${statements.joinToString(separator = "\n") { it.toGroovy(indentNumber + 1) }}
+$indent}"""
+    }
+}
+
+private const val INDENT = "    "

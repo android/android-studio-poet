@@ -28,6 +28,14 @@ fun <T> Collection<T>.assertSize(expectedSize: Int) {
     assertEquals(expectedSize, size)
 }
 
+fun <T> Collection<T>.assertContains(item: T) {
+    assertTrue(this.contains(item))
+}
+
+fun <T> Collection<T>.assertNotContains(item: T) {
+    assertFalse(this.contains(item))
+}
+
 fun Any.assertEquals(expected: Any) {
     assertEquals(expected, this)
 }

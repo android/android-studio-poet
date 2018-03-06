@@ -21,7 +21,7 @@ import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
 
 class AndroidModuleBlueprint(name: String,
-                             val numOfActivities: Int,
+                             private val numOfActivities: Int,
                              private val resourcesConfig: ResourcesConfig?,
                              projectRoot: String,
                              val hasLaunchActivity: Boolean,
@@ -68,10 +68,6 @@ class AndroidModuleBlueprint(name: String,
         resourcesBlueprint?.resourcesToReferFromOutside ?: ResourcesToRefer(listOf(), listOf(), listOf())
     }
 
-    val productFlavors = productFlavorConfigs?.flatMap { it.toFlavors() }?.toSet()
-    val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()
-
-    val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
     val activityBlueprints by lazy {
         (0 until numOfActivities).map {
             ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
@@ -98,16 +94,8 @@ class AndroidModuleBlueprint(name: String,
                 .take(dataBindingConfig?.listenerCount ?: 0).toList()
     }
 
-    val minSdkVersion = androidBuildConfig.minSdkVersion
-    val targetSdkVersion = androidBuildConfig.targetSdkVersion
-    val compileSdkVersion = androidBuildConfig.compileSdkVersion
-}
-
-
-private fun FlavorConfig.toFlavors(): List<Flavor> {
-    return if (this.count == null || this.count <= 1) {
-        listOf(Flavor(this.name, this.dimension))
-    } else {
-        (0 until this.count).map { Flavor(this.name + it, this.dimension) }
+    val buildGradleBlueprint: AndroidBuildGradleBlueprint by lazy {
+        AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
+                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
     }
 }

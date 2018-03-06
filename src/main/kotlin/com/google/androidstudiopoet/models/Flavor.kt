@@ -1,3 +1,3 @@
 package com.google.androidstudiopoet.models
 
-data class Flavor(val name: String, val dimension: String?)
+data class Flavor(val name: String, val dimension: String? = null)
