@@ -21,7 +21,7 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.squareup:javapoet:1.9.0'
+    compile 'com.squareup:javapoet:1.10.0'
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.2"
     compile 'junit:junit:4.12'
 
