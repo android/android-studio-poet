@@ -7,19 +7,20 @@ buildscript {
     repositories {
         jcenter()
     }
+
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
     }
 }
-
-apply plugin: 'kotlin'
 
 repositories {
     jcenter()
 }
 
+apply plugin: 'kotlin'
+
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}"
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.squareup:javapoet:1.10.0'
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
@@ -29,7 +30,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-inline:2.15.0'
     testCompile 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
 }
 
 task runGenerator(type: JavaExec) {
@@ -45,12 +46,13 @@ task fatJar(type: Jar) {
         )
     }
     baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.compile.collect { it.directory ? it : zipTree(it) } }
     with jar
 }
+
 kotlin {
     experimental {
-        coroutines "enable"
+        coroutines 'enable'
     }
 }
 
