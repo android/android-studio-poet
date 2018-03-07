@@ -31,3 +31,4 @@ src/META-INF/MANIFEST.MF
 modules/**
 
 out/**
+local.properties
