@@ -2,35 +2,35 @@ group 'com.google.androidstudio.poet'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = '1.2.30'
 
     repositories {
         jcenter()
     }
+
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
     }
 }
-
-apply plugin: 'kotlin'
 
 repositories {
     jcenter()
 }
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.squareup:javapoet:1.9.0'
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.2"
-    compile 'junit:junit:4.12'
+apply plugin: 'kotlin'
 
-    compile group: 'commons-io', name: 'commons-io', version: '2.0.1'
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}"
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.squareup:javapoet:1.10.0'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
+    compile 'junit:junit:4.12'
+    compile 'commons-io:commons-io:2.6'
 
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-inline:2.10.0"
-    testCompile "com.nhaarman:mockito-kotlin:1.5.0"
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testCompile 'org.mockito:mockito-inline:2.15.0'
+    testCompile 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
 }
 
 task runGenerator(type: JavaExec) {
@@ -46,12 +46,13 @@ task fatJar(type: Jar) {
         )
     }
     baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.compile.collect { it.directory ? it : zipTree(it) } }
     with jar
 }
+
 kotlin {
     experimental {
-        coroutines "enable"
+        coroutines 'enable'
     }
 }
 
