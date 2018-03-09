@@ -22,8 +22,12 @@ import com.google.androidstudiopoet.utils.fold
 
 class BuildGradleGenerator {
     fun create(moduleBlueprint: ModuleBlueprint): String {
+
         return BuildGradle.print(moduleBlueprint.dependencies
                 .map { it -> "${it.method} project(':${it.name}')\n" }
-                .fold(), moduleBlueprint.useKotlin, moduleBlueprint.generateTests, moduleBlueprint.extraLines)
+                .fold(),
+                moduleBlueprint.useKotlin,
+                moduleBlueprint.generateTests,
+                moduleBlueprint.extraLines)
     }
 }
