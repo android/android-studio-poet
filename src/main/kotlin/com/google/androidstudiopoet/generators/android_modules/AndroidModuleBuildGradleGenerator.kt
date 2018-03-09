@@ -16,11 +16,13 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules
 
+import com.google.androidstudiopoet.gradle.Closure
+import com.google.androidstudiopoet.gradle.Expression
+import com.google.androidstudiopoet.gradle.Statement
+import com.google.androidstudiopoet.gradle.StringStatement
 import com.google.androidstudiopoet.input.AndroidBuildGradleBlueprint
 import com.google.androidstudiopoet.models.Flavor
-import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.utils.isNullOrEmpty
-import com.google.androidstudiopoet.utils.joinLines
 import com.google.androidstudiopoet.writers.FileWriter
 
 class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
@@ -119,26 +121,3 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
         return Closure("dependencies", statements)
     }
 }
-
-private interface Statement {
-    fun toGroovy(indentNumber: Int): String
-}
-
-private data class StringStatement(val value: String) : Statement {
-    override fun toGroovy(indentNumber: Int): String = INDENT.repeat(indentNumber) + value
-}
-
-private data class Expression(val left: String, val right: String) : Statement {
-    override fun toGroovy(indentNumber: Int): String = "${INDENT.repeat(indentNumber)}$left $right"
-}
-
-private class Closure(val name: String, val statements: List<Statement>) : Statement {
-    override fun toGroovy(indentNumber: Int): String {
-        val indent = INDENT.repeat(indentNumber)
-        return """$indent$name {
-${statements.joinToString(separator = "\n") { it.toGroovy(indentNumber + 1) }}
-$indent}"""
-    }
-}
-
-private const val INDENT = "    "
