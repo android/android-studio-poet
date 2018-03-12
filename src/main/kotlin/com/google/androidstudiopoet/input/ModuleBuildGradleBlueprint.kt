@@ -16,4 +16,44 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-class ModuleBuildGradleBlueprint(dependencies: String, useKotlin: Boolean, generateTests: Boolean, extraLines: List<String>? = null)
+import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.models.ModuleDependency
+import com.google.androidstudiopoet.utils.joinPath
+
+class ModuleBuildGradleBlueprint(
+        val dependencies: List<ModuleDependency>,
+        private val enableKotlin: Boolean,
+        val generateTests: Boolean,
+        val extraLines: List<String>? = null,
+        moduleRoot: String
+) {
+
+    val path = moduleRoot.joinPath("build.gradle")
+    val libraries: Set<LibraryDependency> = createSetOfLibraries()
+
+    val plugins: Set<String> = createSetOfPlugins()
+
+    private fun createSetOfLibraries(): Set<LibraryDependency> {
+        val result = mutableSetOf<LibraryDependency>()
+
+        if (enableKotlin) {
+            result += LibraryDependency("compile", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version")
+        }
+
+        if (generateTests) {
+            result += LibraryDependency("testCompile", "junit:junit:4.12")
+        }
+
+        return result
+    }
+
+    private fun createSetOfPlugins(): Set<String> {
+        val result = mutableSetOf("java-library")
+        if (enableKotlin) {
+            result += listOf("kotlin")
+        }
+        return result
+    }
+
+
+}

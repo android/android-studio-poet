@@ -16,6 +16,8 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules
 
+import com.google.androidstudiopoet.generators.toApplyPluginExpression
+import com.google.androidstudiopoet.generators.toExpression
 import com.google.androidstudiopoet.gradle.Closure
 import com.google.androidstudiopoet.gradle.Expression
 import com.google.androidstudiopoet.gradle.Statement
@@ -39,7 +41,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     }
 
     private fun applyPlugins(plugins: Set<String>): List<Statement> {
-        return plugins.map { Expression("apply plugin:", "'$it'") }
+        return plugins.map { it.toApplyPluginExpression() }
     }
 
     private fun androidClosure(blueprint: AndroidBuildGradleBlueprint): Closure {
@@ -113,11 +115,12 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     }
 
     private fun dependenciesClosure(blueprint: AndroidBuildGradleBlueprint): Closure {
-        val moduleDependenciesExpressions = blueprint.dependencies.map { Expression(it.method, "project(':${it.name}')") }
-        val librariesExpression = blueprint.libraries.map { Expression(it.method, "\"${it.name}\"") }
+        val moduleDependenciesExpressions = blueprint.dependencies.map {  it.toExpression() }
+        val librariesExpression = blueprint.libraries.map { it.toExpression() }
 
         val statements = listOf(Expression("implementation", "fileTree(dir: 'libs', include: ['*.jar'])")) +
                 moduleDependenciesExpressions + librariesExpression
         return Closure("dependencies", statements)
     }
 }
+

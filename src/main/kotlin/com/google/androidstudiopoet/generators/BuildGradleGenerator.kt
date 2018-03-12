@@ -16,18 +16,42 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators
 
-import com.google.androidstudiopoet.BuildGradle
-import com.google.androidstudiopoet.models.ModuleBlueprint
-import com.google.androidstudiopoet.utils.fold
+import com.google.androidstudiopoet.gradle.Closure
+import com.google.androidstudiopoet.gradle.Expression
+import com.google.androidstudiopoet.gradle.Statement
+import com.google.androidstudiopoet.gradle.StringStatement
+import com.google.androidstudiopoet.input.ModuleBuildGradleBlueprint
+import com.google.androidstudiopoet.writers.FileWriter
 
-class BuildGradleGenerator {
-    fun create(moduleBlueprint: ModuleBlueprint): String {
+class BuildGradleGenerator(private val fileWriter: FileWriter) {
+    fun generate(blueprint: ModuleBuildGradleBlueprint) {
+        val statements = applyPlugins(blueprint.plugins) +
+                dependenciesClosure(blueprint) +
+                codeCompatibilityStatements() +
+                (blueprint.extraLines?.map { StringStatement(it) } ?: listOf())
 
-        return BuildGradle.print(moduleBlueprint.dependencies
-                .map { it -> "${it.method} project(':${it.name}')\n" }
-                .fold(),
-                moduleBlueprint.useKotlin,
-                moduleBlueprint.generateTests,
-                moduleBlueprint.extraLines)
+        val gradleText = statements.joinToString(separator = "\n") { it.toGroovy(0) }
+
+        fileWriter.writeToFile(gradleText, blueprint.path)
+    }
+
+    private fun applyPlugins(plugins: Set<String>): List<Statement> {
+        return plugins.map { it.toApplyPluginExpression() }
+    }
+
+    private fun dependenciesClosure(blueprint: ModuleBuildGradleBlueprint): Closure {
+        val moduleDependenciesExpressions = blueprint.dependencies.map { it.toExpression() }
+        val librariesExpression = blueprint.libraries.map { it.toExpression() }
+
+        val statements = listOf(Expression("implementation", "fileTree(dir: 'libs', include: ['*.jar'])")) +
+                moduleDependenciesExpressions + librariesExpression
+        return Closure("dependencies", statements)
+    }
+
+    private fun codeCompatibilityStatements(): List<Statement> {
+        return listOf(
+                StringStatement("sourceCompatibility = \"1.8\"\n"),
+                StringStatement("targetCompatibility = \"1.8\"\n")
+        )
     }
 }

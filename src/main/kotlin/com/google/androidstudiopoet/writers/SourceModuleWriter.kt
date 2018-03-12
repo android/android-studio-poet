@@ -20,6 +20,7 @@ import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGene
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
+import com.google.androidstudiopoet.input.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.ModuleBlueprint
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import kotlinx.coroutines.experimental.Job
@@ -67,15 +68,14 @@ class SourceModuleWriter(private val buildGradleGenerator: BuildGradleGenerator,
         moduleRootFile.mkdir()
 
         writeLibsFolder(moduleRootFile)
-        writeBuildGradle(moduleRootFile, moduleBlueprint)
+        writeBuildGradle(moduleBlueprint)
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
     }
 
-    private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {
-        val libRoot = moduleRootFile.toString() + "/build.gradle/"
-        val content = buildGradleGenerator.create(moduleBlueprint)
-        fileWriter.writeToFile(content, libRoot)
+    private fun writeBuildGradle(moduleBlueprint: ModuleBlueprint) {
+        buildGradleGenerator.generate(ModuleBuildGradleBlueprint(moduleBlueprint.dependencies, moduleBlueprint.useKotlin,
+                moduleBlueprint.generateTests, moduleBlueprint.extraLines, moduleBlueprint.moduleRoot))
     }
 
     private fun writeLibsFolder(moduleRootFile: File) {

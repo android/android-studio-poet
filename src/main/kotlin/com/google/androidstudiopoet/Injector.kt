@@ -41,7 +41,7 @@ object Injector {
     private val fileWriter = FileWriter()
     val dependencyValidator = DependencyValidator()
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
-    private val buildGradleGenerator = BuildGradleGenerator()
+    private val buildGradleGenerator = BuildGradleGenerator(fileWriter)
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator(fileWriter)
     private val stringResourcesGenerator = StringResourcesGenerator(fileWriter)
