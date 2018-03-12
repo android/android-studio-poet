@@ -16,14 +16,12 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators
 
-import com.google.androidstudiopoet.BuildGradle
-import com.google.androidstudiopoet.models.ModuleBlueprint
-import com.google.androidstudiopoet.utils.fold
+import com.google.androidstudiopoet.gradle.Expression
+import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.models.ModuleDependency
 
-class BuildGradleGenerator {
-    fun create(moduleBlueprint: ModuleBlueprint): String {
-        return BuildGradle.print(moduleBlueprint.dependencies
-                .map { it -> "${it.method} project(':${it.name}')\n" }
-                .fold(), moduleBlueprint.useKotlin, moduleBlueprint.generateTests, moduleBlueprint.extraLines)
-    }
-}
+fun ModuleDependency.toExpression() = Expression(this.method, "project(':${this.name}')")
+
+fun LibraryDependency.toExpression() = Expression(this.method, "\"${this.name}\"")
+
+fun String.toApplyPluginExpression() = Expression("apply plugin:", "'$this'")

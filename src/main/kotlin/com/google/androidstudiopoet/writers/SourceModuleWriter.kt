@@ -14,12 +14,13 @@
 
 package com.google.androidstudiopoet.writers
 
-import com.google.androidstudiopoet.generators.BuildGradleGenerator
+import com.google.androidstudiopoet.generators.ModuleBuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
+import com.google.androidstudiopoet.input.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.ModuleBlueprint
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import kotlinx.coroutines.experimental.Job
@@ -27,7 +28,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
 
-class SourceModuleWriter(private val buildGradleGenerator: BuildGradleGenerator,
+class SourceModuleWriter(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
                          private val gradleSettingsGenerator: GradleSettingsGenerator,
                          private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
                          private val androidModuleGenerator: AndroidModuleGenerator,
@@ -67,15 +68,14 @@ class SourceModuleWriter(private val buildGradleGenerator: BuildGradleGenerator,
         moduleRootFile.mkdir()
 
         writeLibsFolder(moduleRootFile)
-        writeBuildGradle(moduleRootFile, moduleBlueprint)
+        writeBuildGradle(moduleBlueprint)
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
     }
 
-    private fun writeBuildGradle(moduleRootFile: File, moduleBlueprint: ModuleBlueprint) {
-        val libRoot = moduleRootFile.toString() + "/build.gradle/"
-        val content = buildGradleGenerator.create(moduleBlueprint)
-        fileWriter.writeToFile(content, libRoot)
+    private fun writeBuildGradle(moduleBlueprint: ModuleBlueprint) {
+        moduleBuildGradleGenerator.generate(ModuleBuildGradleBlueprint(moduleBlueprint.dependencies.toSet(), moduleBlueprint.useKotlin,
+                moduleBlueprint.generateTests, moduleBlueprint.extraLines, moduleBlueprint.moduleRoot))
     }
 
     private fun writeLibsFolder(moduleRootFile: File) {

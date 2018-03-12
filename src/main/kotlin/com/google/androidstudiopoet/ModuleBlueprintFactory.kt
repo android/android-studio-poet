@@ -121,7 +121,6 @@ object ModuleBlueprintFactory {
         moduleDependencyCache = mutableMapOf()
         moduleDependencyLock = mutableMapOf()
     }
-
 }
 
 private fun String?.toDependencyMethod(): String = this ?: DEFAULT_DEPENDENCY_METHOD

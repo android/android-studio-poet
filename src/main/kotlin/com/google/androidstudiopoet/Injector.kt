@@ -18,7 +18,7 @@ package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.converters.*
 import com.google.androidstudiopoet.deserializers.ModuleConfigDeserializer
-import com.google.androidstudiopoet.generators.BuildGradleGenerator
+import com.google.androidstudiopoet.generators.ModuleBuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.android_modules.*
 import com.google.androidstudiopoet.generators.packages.JavaGenerator
@@ -41,7 +41,7 @@ object Injector {
     private val fileWriter = FileWriter()
     val dependencyValidator = DependencyValidator()
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
-    private val buildGradleGenerator = BuildGradleGenerator()
+    private val buildGradleGenerator = ModuleBuildGradleGenerator(fileWriter)
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator(fileWriter)
     private val stringResourcesGenerator = StringResourcesGenerator(fileWriter)
