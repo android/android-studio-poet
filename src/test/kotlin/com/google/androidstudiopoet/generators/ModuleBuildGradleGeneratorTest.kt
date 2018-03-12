@@ -9,9 +9,9 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Test
 
-class BuildGradleGeneratorTest {
+class ModuleBuildGradleGeneratorTest {
     private val fileWriter: FileWriter = mock()
-    private val buildGradleGenerator = BuildGradleGenerator(fileWriter)
+    private val buildGradleGenerator = ModuleBuildGradleGenerator(fileWriter)
 
     @Test
     fun `generator applies plugins from the blueprint`() {

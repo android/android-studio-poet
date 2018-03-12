@@ -14,7 +14,7 @@
 
 package com.google.androidstudiopoet.writers
 
-import com.google.androidstudiopoet.generators.BuildGradleGenerator
+import com.google.androidstudiopoet.generators.ModuleBuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
@@ -28,7 +28,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
 
-class SourceModuleWriter(private val buildGradleGenerator: BuildGradleGenerator,
+class SourceModuleWriter(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
                          private val gradleSettingsGenerator: GradleSettingsGenerator,
                          private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
                          private val androidModuleGenerator: AndroidModuleGenerator,
@@ -74,7 +74,7 @@ class SourceModuleWriter(private val buildGradleGenerator: BuildGradleGenerator,
     }
 
     private fun writeBuildGradle(moduleBlueprint: ModuleBlueprint) {
-        buildGradleGenerator.generate(ModuleBuildGradleBlueprint(moduleBlueprint.dependencies.toSet(), moduleBlueprint.useKotlin,
+        moduleBuildGradleGenerator.generate(ModuleBuildGradleBlueprint(moduleBlueprint.dependencies.toSet(), moduleBlueprint.useKotlin,
                 moduleBlueprint.generateTests, moduleBlueprint.extraLines, moduleBlueprint.moduleRoot))
     }
 
