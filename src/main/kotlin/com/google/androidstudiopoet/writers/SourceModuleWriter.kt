@@ -74,7 +74,7 @@ class SourceModuleWriter(private val buildGradleGenerator: BuildGradleGenerator,
     }
 
     private fun writeBuildGradle(moduleBlueprint: ModuleBlueprint) {
-        buildGradleGenerator.generate(ModuleBuildGradleBlueprint(moduleBlueprint.dependencies, moduleBlueprint.useKotlin,
+        buildGradleGenerator.generate(ModuleBuildGradleBlueprint(moduleBlueprint.dependencies.toSet(), moduleBlueprint.useKotlin,
                 moduleBlueprint.generateTests, moduleBlueprint.extraLines, moduleBlueprint.moduleRoot))
     }
 

@@ -22,6 +22,6 @@ import com.google.androidstudiopoet.models.ModuleDependency
 
 fun ModuleDependency.toExpression() = Expression(this.method, "project(':${this.name}')")
 
-fun LibraryDependency.toExpression() = Expression(this.method, "project(':${this.name}')")
+fun LibraryDependency.toExpression() = Expression(this.method, "\"${this.name}\"")
 
 fun String.toApplyPluginExpression() = Expression("apply plugin:", "'$this'")

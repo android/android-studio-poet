@@ -43,15 +43,15 @@ class BuildGradleGenerator(private val fileWriter: FileWriter) {
         val moduleDependenciesExpressions = blueprint.dependencies.map { it.toExpression() }
         val librariesExpression = blueprint.libraries.map { it.toExpression() }
 
-        val statements = listOf(Expression("implementation", "fileTree(dir: 'libs', include: ['*.jar'])")) +
+        val statements = listOf(Expression("compile", "fileTree(dir: 'libs', include: ['*.jar'])")) +
                 moduleDependenciesExpressions + librariesExpression
         return Closure("dependencies", statements)
     }
 
     private fun codeCompatibilityStatements(): List<Statement> {
         return listOf(
-                StringStatement("sourceCompatibility = \"1.8\"\n"),
-                StringStatement("targetCompatibility = \"1.8\"\n")
+                StringStatement("sourceCompatibility = \"1.8\""),
+                StringStatement("targetCompatibility = \"1.8\"")
         )
     }
 }

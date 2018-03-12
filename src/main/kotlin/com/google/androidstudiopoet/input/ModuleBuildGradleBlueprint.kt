@@ -21,9 +21,9 @@ import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.utils.joinPath
 
 class ModuleBuildGradleBlueprint(
-        val dependencies: List<ModuleDependency>,
+        val dependencies: Set<ModuleDependency>,
         private val enableKotlin: Boolean,
-        val generateTests: Boolean,
+        private val generateTests: Boolean,
         val extraLines: List<String>? = null,
         moduleRoot: String
 ) {
