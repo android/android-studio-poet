@@ -17,7 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.converters
 
 import com.google.androidstudiopoet.input.FlavorConfig
-import com.google.androidstudiopoet.models.ConfigPOJO
+import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.testutils.assertEmpty
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.mock

@@ -22,7 +22,7 @@ import com.google.androidstudiopoet.gradle.Closure
 import com.google.androidstudiopoet.gradle.Expression
 import com.google.androidstudiopoet.gradle.Statement
 import com.google.androidstudiopoet.gradle.StringStatement
-import com.google.androidstudiopoet.input.AndroidBuildGradleBlueprint
+import com.google.androidstudiopoet.models.AndroidBuildGradleBlueprint
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.utils.isNullOrEmpty
 import com.google.androidstudiopoet.writers.FileWriter

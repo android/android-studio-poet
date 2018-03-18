@@ -12,28 +12,27 @@
  * permissions and limitations under the License.
  */
 
-package com.google.androidstudiopoet.writers
+package com.google.androidstudiopoet.generators
 
-import com.google.androidstudiopoet.generators.ModuleBuildGradleGenerator
-import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
-import com.google.androidstudiopoet.input.ModuleBuildGradleBlueprint
+import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.ModuleBlueprint
 import com.google.androidstudiopoet.models.ProjectBlueprint
+import com.google.androidstudiopoet.writers.FileWriter
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
 
-class SourceModuleWriter(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
-                         private val gradleSettingsGenerator: GradleSettingsGenerator,
-                         private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
-                         private val androidModuleGenerator: AndroidModuleGenerator,
-                         private val packagesGenerator: PackagesGenerator,
-                         private val fileWriter: FileWriter) {
+class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
+                            private val gradleSettingsGenerator: GradleSettingsGenerator,
+                            private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
+                            private val androidModuleGenerator: AndroidModuleGenerator,
+                            private val packagesGenerator: PackagesGenerator,
+                            private val fileWriter: FileWriter) {
 
     fun generate(projectBlueprint: ProjectBlueprint) = runBlocking {
 

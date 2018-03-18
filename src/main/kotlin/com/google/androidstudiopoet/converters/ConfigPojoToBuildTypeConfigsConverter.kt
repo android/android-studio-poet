@@ -1,7 +1,7 @@
 package com.google.androidstudiopoet.converters
 
 import com.google.androidstudiopoet.input.BuildTypeConfig
-import com.google.androidstudiopoet.models.ConfigPOJO
+import com.google.androidstudiopoet.input.ConfigPOJO
 
 class ConfigPojoToBuildTypeConfigsConverter {
     fun convert(configPOJO: ConfigPOJO): List<BuildTypeConfig> {

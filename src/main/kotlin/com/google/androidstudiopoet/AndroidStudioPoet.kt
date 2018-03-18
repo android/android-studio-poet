@@ -17,9 +17,9 @@ package com.google.androidstudiopoet
 import com.google.androidstudiopoet.converters.ConfigPojoToProjectConfigConverter
 import com.google.androidstudiopoet.input.GenerationConfig
 import com.google.androidstudiopoet.input.ProjectConfig
-import com.google.androidstudiopoet.models.ConfigPOJO
+import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.models.ProjectBlueprint
-import com.google.androidstudiopoet.writers.SourceModuleWriter
+import com.google.androidstudiopoet.generators.SourceModuleGenerator
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -33,7 +33,7 @@ import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
 
 
-class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private val filename: String?,
+class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, private val filename: String?,
                         private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter,
                         private val dependencyValidator: DependencyValidator, private val gson: Gson) {
 
@@ -164,7 +164,7 @@ class AndroidStudioPoet(private val modulesWriter: SourceModuleWriter, private v
         var projectBluePrint: ProjectBlueprint? = null
         val timeSpent = measureTimeMillis {
             projectBluePrint = ProjectBlueprint(projectConfig)
-            modulesWriter.generate(projectBluePrint!!)
+            modulesGenerator.generate(projectBluePrint!!)
         }
         println("Finished in $timeSpent ms")
         println("Dependency graph:")

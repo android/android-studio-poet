@@ -1,6 +1,6 @@
 package com.google.androidstudiopoet.generators.android_modules
 
-import com.google.androidstudiopoet.input.AndroidBuildGradleBlueprint
+import com.google.androidstudiopoet.models.AndroidBuildGradleBlueprint
 import com.google.androidstudiopoet.models.BuildType
 import com.google.androidstudiopoet.models.Flavor
 import com.google.androidstudiopoet.models.LibraryDependency

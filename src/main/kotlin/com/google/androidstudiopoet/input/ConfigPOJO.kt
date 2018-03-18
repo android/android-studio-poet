@@ -12,8 +12,10 @@
  * permissions and limitations under the License.
  */
 
-package com.google.androidstudiopoet.models
+package com.google.androidstudiopoet.input
 
+import com.google.androidstudiopoet.models.FromToDependencyConfig
+import com.google.androidstudiopoet.models.Topologies
 import com.google.gson.Gson
 import java.security.InvalidParameterException
 

@@ -14,12 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.input
+package com.google.androidstudiopoet.models
 
-import com.google.androidstudiopoet.models.BuildType
-import com.google.androidstudiopoet.models.Flavor
-import com.google.androidstudiopoet.models.LibraryDependency
-import com.google.androidstudiopoet.models.ModuleDependency
+import com.google.androidstudiopoet.input.AndroidBuildConfig
+import com.google.androidstudiopoet.input.BuildTypeConfig
+import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.assertNotContains

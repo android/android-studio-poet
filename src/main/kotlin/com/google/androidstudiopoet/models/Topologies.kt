@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.input.ConfigPOJO
 import java.security.InvalidParameterException
 import java.util.*
 

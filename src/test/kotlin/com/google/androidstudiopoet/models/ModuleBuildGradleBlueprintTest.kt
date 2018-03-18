@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.input
+package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEmpty
