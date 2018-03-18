@@ -32,7 +32,7 @@ import com.google.androidstudiopoet.generators.android_modules.resources.Resourc
 import com.google.androidstudiopoet.generators.android_modules.resources.StringResourcesGenerator
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.writers.FileWriter
-import com.google.androidstudiopoet.writers.SourceModuleWriter
+import com.google.androidstudiopoet.generators.SourceModuleGenerator
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
@@ -75,7 +75,7 @@ object Injector {
                     fileWriter)
 
     val modulesWriter =
-            SourceModuleWriter(buildGradleGenerator, gradleSettingsGenerator,
+            SourceModuleGenerator(buildGradleGenerator, gradleSettingsGenerator,
                     projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator, fileWriter)
 
 

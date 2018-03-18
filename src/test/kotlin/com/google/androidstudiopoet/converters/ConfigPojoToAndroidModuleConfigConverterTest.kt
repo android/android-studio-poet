@@ -20,7 +20,7 @@ import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.DependencyConfig
 import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.input.ResourcesConfig
-import com.google.androidstudiopoet.models.ConfigPOJO
+import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.testutils.*
 import org.junit.Test
 

@@ -20,7 +20,7 @@ import com.google.androidstudiopoet.gradle.Closure
 import com.google.androidstudiopoet.gradle.Expression
 import com.google.androidstudiopoet.gradle.Statement
 import com.google.androidstudiopoet.gradle.StringStatement
-import com.google.androidstudiopoet.input.ModuleBuildGradleBlueprint
+import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 
 class ModuleBuildGradleGenerator(private val fileWriter: FileWriter) {

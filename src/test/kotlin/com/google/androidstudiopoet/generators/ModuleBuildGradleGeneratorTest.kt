@@ -16,7 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators
 
-import com.google.androidstudiopoet.input.ModuleBuildGradleBlueprint
+import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.testutils.mock
