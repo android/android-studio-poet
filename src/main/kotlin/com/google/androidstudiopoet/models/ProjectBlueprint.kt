@@ -40,7 +40,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val moduleBlueprints: List<ModuleBlueprint>
     val androidModuleBlueprints: List<AndroidModuleBlueprint>
-    private val allModuleBlueprints: List<ModuleBlueprint>
+    private val allModuleBlueprints: List<AbstractModuleBlueprint>
     val allModulesNames: List<String>
     private val allDependencies: Map<String, List<ModuleDependency>>
 

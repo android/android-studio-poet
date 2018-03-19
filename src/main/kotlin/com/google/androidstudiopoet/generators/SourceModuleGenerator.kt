@@ -18,7 +18,6 @@ import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGene
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
-import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.ModuleBlueprint
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
@@ -67,14 +66,9 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         moduleRootFile.mkdir()
 
         writeLibsFolder(moduleRootFile)
-        writeBuildGradle(moduleBlueprint)
+        moduleBuildGradleGenerator.generate(moduleBlueprint.buildGradleBlueprint)
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
-    }
-
-    private fun writeBuildGradle(moduleBlueprint: ModuleBlueprint) {
-        moduleBuildGradleGenerator.generate(ModuleBuildGradleBlueprint(moduleBlueprint.dependencies.toSet(), moduleBlueprint.useKotlin,
-                moduleBlueprint.generateTests, moduleBlueprint.extraLines, moduleBlueprint.moduleRoot))
     }
 
     private fun writeLibsFolder(moduleRootFile: File) {

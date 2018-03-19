@@ -35,7 +35,7 @@ class AndroidModuleBlueprint(name: String,
                              generateTests: Boolean,
                              dataBindingConfig: DataBindingConfig?,
                              androidBuildConfig: AndroidBuildConfig
-) : ModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
+) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
         javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
 
     val packageName = "com.$name"
