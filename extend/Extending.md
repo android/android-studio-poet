@@ -38,50 +38,22 @@ Here the blueprints you must absolutely know:
 
 Start by looking at the above classes, find the places you want to modify or add a new blueprint. Prefer to add a new  to keep the blue prints super easy.
 
-Lets's look at one small but crucial blueprint [`Dependencies`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/models/Dependencies.kt)
+For example: [`ModuleBuildGradleBlueprint`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/models/ModuleBuildGradleBlueprint.kt).
+It is used to describe `build.gradle` file of `java-library` module. 
 
-```kotlin
-package com.google.androidstudiopoet.models
-
-open class ModuleDependency(val name: String, val methodToCall: MethodToCall, val method: String)
-
-class AndroidModuleDependency(name: String, methodToCall: MethodToCall, method: String, val resourcesToRefer: ResourcesToRefer)
-    : ModuleDependency(name, methodToCall, method)
-
-data class LibraryDependency(val method: String, val name: String)
-
-const val DEFAULT_DEPENDENCY_METHOD = "implementation"
-
-```
-* The class is called from [`ModuleBlueprintFactory`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/ModuleBlueprintFactory.kt), a facotry class to create dependencies with optimizations.
-* Each class gets all its dependencies as parameters (Dependndency Injection)
-* All sub-classes are simple and plain data classes
+* As input it takes list of dependencies and different flags (some blueprint takes directly input objects)
+* Depending on the input flags it create sets of plugins and libraries that should be applied/included into resulted `build.gradle` file 
+* It also responsible for calculating path to the new file
 
 ## 3. Create/update generator
 
-Generator is the layer that takes a blueprint and writes down its representation as a file. Lets's look at one small but crucial generator [`PackagesGenerator`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/generators/PackagesGenerator.kt)
+Generator is the layer that takes a blueprint and writes down its representation as a file. 
 
-```kotlin 
-import com.google.androidstudiopoet.generators.packages.JavaGenerator
-import com.google.androidstudiopoet.generators.packages.KotlinGenerator
-import com.google.androidstudiopoet.models.PackagesBlueprint
-import java.io.File
-
-class PackagesGenerator(private val javaGenerator: JavaGenerator,
-                        private val kotlinGenerator: KotlinGenerator) {
-
-    fun writePackages(blueprint: PackagesBlueprint) {
-        val packagesRoot = File(blueprint.where)
-        packagesRoot.mkdirs()
-        blueprint.javaPackageBlueprints.forEach({javaGenerator.generatePackage(it) })
-        blueprint.kotlinPackageBlueprints.forEach({ kotlinGenerator.generatePackage(it) })
-    }
-}
-```
-* Tha class is created in [`Injector`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/Injector.kt) (like all classes, again Dependency Injection) and passed as an argument to [`AndroidModuleGenerator`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/generators/android_modules/AndroidModuleBuildGradleGenerator.kt) and [`SourceModuleGenerator`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/generators/SourceModuleGenerator.kt)
-* Each class gets all its dependencies as parameters (Dependndency Injection)
-* The class generates packages in the Android supported source languages Java & Kotlin
-* The class creates root folders and calling Java & Kotlin generators to generate their sources
+For example [`ModuleBuildGradleGenerator`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/generators/ModuleBuildGradleGenerator.kt). 
+* It takes `ModuleBuildGradleBlueprint` described above
+* It transforms input into the list of statements from [`GradleLang`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/gradle/GradleLang.kt)
+* Each statement can display itself as a part of Gradle script
+* Saves result into the file
 
 ### Technical details to keep in mind:
 * All interactions with the file system should be done via [`FileWriter`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/writers/FileWriter.kt).
@@ -89,6 +61,7 @@ class PackagesGenerator(private val javaGenerator: JavaGenerator,
 * Gradle Scripts are generated with simplified language that you can find in [`GradleLang`](https://github.com/android/android-studio-poet/blob/master/src/main/kotlin/com/google/androidstudiopoet/gradle/GradleLang.kt), feel free to extend it.
 * Feel free to add [KotlinPoet](https://github.com/square/kotlinpoet) to this project
 * We are currently in the process of choosing "Poet" for XML files, you are welcome to propose one you like via issues on GitHub. 
+
 
  
 
