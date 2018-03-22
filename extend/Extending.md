@@ -1,6 +1,6 @@
 # Extending AS Poet
 
-AS Poet is designed to be extendable. When you want to add a new feature you should follow up the following three steps, each step shouldn't take you more than 30 minutes to grasp. In this doc let's extend AS Poet with my ```cool feature```. All in all, you will need to modify/create three key files: one JSON and two Kotlin classes (possibly more, bu these are the key ones that define the architecture).
+AS Poet is designed to be extendable. When you want to add a new feature you should follow up the following three steps, each step shouldn't take you more than 30 minutes to grasp. In this doc let's extend AS Poet with my ```cool feature```. All in all, you will need to modify/create three key files: one JSON and two Kotlin classes (possibly more, but these are the key ones that define the architecture).
 
 ## 1. Add your feature to the JSON config
 At the highest level, think of AS Poet as of a function that accept a JSON configuration file that mimics your project and outputs an Android Studio buildable project(folders and files) based on the JSON config.
