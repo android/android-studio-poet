@@ -15,6 +15,6 @@ class ModuleConfigDeserializer: JsonDeserializer<ModuleConfig> {
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ModuleConfig =
             when (json.asJsonObject?.get(MODULE_TYPE)?.asString) {
                 ANDROID -> context.deserialize<AndroidModuleConfig>(json, AndroidModuleConfig::class.java)
-                else -> context.deserialize<AndroidModuleConfig>(json, PureModuleConfig::class.java)
+                else -> context.deserialize<PureModuleConfig>(json, PureModuleConfig::class.java)
             }
 }

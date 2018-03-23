@@ -41,7 +41,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
             val androidDependencies = (index + 1 until config.androidModules)
                     .map { getAndroidModuleName(it) }
 
-            dependencies = (androidDependencies + pureModuleDependencies).map { DependencyConfig(it) }
+            dependencies = (androidDependencies + pureModuleDependencies).map { DependencyConfig.ModuleDependencyConfig(it) }
 
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs

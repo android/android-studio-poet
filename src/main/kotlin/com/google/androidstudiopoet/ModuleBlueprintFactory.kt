@@ -18,6 +18,7 @@ package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.input.AndroidBuildConfig
 import com.google.androidstudiopoet.input.AndroidModuleConfig
+import com.google.androidstudiopoet.input.DependencyConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.models.*
 
@@ -31,10 +32,14 @@ object ModuleBlueprintFactory {
     fun create(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
         val moduleDependencies = moduleConfig.dependencies
                 ?.map {
-                    getModuleDependency(it.moduleName, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
-                            moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
-                            moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin,
-                            it.method.toDependencyMethod())
+                    when(it) {
+                        is DependencyConfig.ModuleDependencyConfig -> getModuleDependency(it.moduleName, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
+                                moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
+                                moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin,
+                                it.method.toDependencyMethod())
+                        is DependencyConfig.LibraryDependencyConfig -> LibraryDependency(it.method.toDependencyMethod(), it.libraryName)
+                    }
+
                 } ?: listOf()
         val result = ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, moduleDependencies.toSet(),
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
@@ -92,6 +97,7 @@ object ModuleBlueprintFactory {
             AndroidModuleBlueprint {
 
         val moduleDependencies = androidModuleConfig.dependencies
+                ?.filterIsInstance<DependencyConfig.ModuleDependencyConfig>()
                 ?.mapNotNull { dependencyConfig ->
                     val moduleConfigToDependOn = moduleConfigs.find { it.moduleName == dependencyConfig.moduleName }
                     return@mapNotNull when (moduleConfigToDependOn) {

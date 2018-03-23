@@ -16,11 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.converters
 
-import com.google.androidstudiopoet.input.BuildTypeConfig
-import com.google.androidstudiopoet.input.DependencyConfig
-import com.google.androidstudiopoet.input.FlavorConfig
-import com.google.androidstudiopoet.input.ResourcesConfig
-import com.google.androidstudiopoet.input.ConfigPOJO
+import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.testutils.*
 import org.junit.Test
 
@@ -44,7 +40,7 @@ private const val MODULE_NAME_0 = "module0"
 private const val MODULE_NAME_1 = "module1"
 
 private val PURE_MODULE_LIST = listOf(MODULE_NAME_0, MODULE_NAME_1)
-private val PURE_MODULE_DEPENDENCY_LIST = PURE_MODULE_LIST.map { DependencyConfig(it) }
+private val PURE_MODULE_DEPENDENCY_LIST = PURE_MODULE_LIST.map { DependencyConfig.ModuleDependencyConfig(it) }
 
 class ConfigPojoToAndroidModuleConfigConverterTest {
 
@@ -102,7 +98,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
         val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes, PURE_MODULE_LIST)
         assertOn(androidModuleConfig) {
             hasLaunchActivity.assertTrue()
-            dependencies!!.assertEquals(listOf(DependencyConfig(ANDROID_MODULE_NAME_1)) + PURE_MODULE_DEPENDENCY_LIST)
+            dependencies!!.assertEquals(listOf(DependencyConfig.ModuleDependencyConfig(ANDROID_MODULE_NAME_1)) + PURE_MODULE_DEPENDENCY_LIST)
             resourcesConfig!!.assertEquals(ResourcesConfig(ACTIVITY_COUNT + 2, ACTIVITY_COUNT + 5, ACTIVITY_COUNT))
         }
     }
