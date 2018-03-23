@@ -20,7 +20,9 @@ import com.google.androidstudiopoet.gradle.Closure
 import com.google.androidstudiopoet.gradle.Expression
 import com.google.androidstudiopoet.gradle.Statement
 import com.google.androidstudiopoet.gradle.StringStatement
+import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
+import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.writers.FileWriter
 
 class ModuleBuildGradleGenerator(private val fileWriter: FileWriter) {
@@ -40,11 +42,14 @@ class ModuleBuildGradleGenerator(private val fileWriter: FileWriter) {
     }
 
     private fun dependenciesClosure(blueprint: ModuleBuildGradleBlueprint): Closure {
-        val moduleDependenciesExpressions = blueprint.dependencies.map { it.toExpression() }
-        val librariesExpression = blueprint.libraries.map { it.toExpression() }
+        val dependencyExpressions = blueprint.dependencies.mapNotNull { when(it) {
+            is ModuleDependency -> it.toExpression()
+            is LibraryDependency -> it.toExpression()
+            else -> null
+        } }
 
         val statements = listOf(Expression("compile", "fileTree(dir: 'libs', include: ['*.jar'])")) +
-                moduleDependenciesExpressions + librariesExpression
+                dependencyExpressions
         return Closure("dependencies", statements)
     }
 

@@ -19,7 +19,7 @@ package com.google.androidstudiopoet.models
 class ModuleBlueprint(name: String,
                            root: String,
                            useKotlin: Boolean,
-                           dependencies: List<ModuleDependency>,
+                           dependencies: List<Dependency>,
                            javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
                            kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
                            extraLines: List<String>?,
@@ -29,6 +29,6 @@ class ModuleBlueprint(name: String,
         generateTests) {
 
     val buildGradleBlueprint by lazy {
-        ModuleBuildGradleBlueprint(dependencies.toSet(), useKotlin, generateTests, extraLines, moduleRoot)
+        ModuleBuildGradleBlueprint(moduleDependencies.toSet(), useKotlin, generateTests, extraLines, moduleRoot)
     }
 }

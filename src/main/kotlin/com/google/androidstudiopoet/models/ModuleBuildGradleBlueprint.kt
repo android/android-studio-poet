@@ -19,7 +19,7 @@ package com.google.androidstudiopoet.models
 import com.google.androidstudiopoet.utils.joinPath
 
 class ModuleBuildGradleBlueprint(
-        val dependencies: Set<ModuleDependency>,
+        additionalDependencies: Set<ModuleDependency>,
         private val enableKotlin: Boolean,
         private val generateTests: Boolean,
         val extraLines: List<String>? = null,
@@ -30,6 +30,8 @@ class ModuleBuildGradleBlueprint(
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
 
     val plugins: Set<String> = createSetOfPlugins()
+
+    val dependencies = additionalDependencies + libraries
 
     private fun createSetOfLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf<LibraryDependency>()
