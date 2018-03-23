@@ -16,9 +16,6 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-import com.google.androidstudiopoet.models.LibraryDependency
-import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
-import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEmpty
 import com.google.androidstudiopoet.testutils.assertEquals
@@ -56,29 +53,29 @@ class ModuleBuildGradleBlueprintTest {
     }
 
     @Test
-    fun `libraries are empty by default`() {
+    fun `dependencies are empty by default`() {
         val blueprint = createModuleBuildGradleBlueprint()
 
         assertOn(blueprint) {
-            libraries.assertEmpty()
+            dependencies.assertEmpty()
         }
     }
 
     @Test
-    fun `libraries contains kotlin stldlib when kotlin is enabled`() {
+    fun `dependencies contains kotlin stldlib when kotlin is enabled`() {
         val blueprint = createModuleBuildGradleBlueprint(enableKotlin = true)
 
         assertOn(blueprint) {
-            libraries.assertContains(LibraryDependency("compile", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version"))
+            dependencies.assertContains(LibraryDependency("compile", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version"))
         }
     }
 
     @Test
-    fun `libraries contains junit when generate tests is true`() {
+    fun `dependencies contains junit when generate tests is true`() {
         val blueprint = createModuleBuildGradleBlueprint(generateTests = true)
 
         assertOn(blueprint) {
-            libraries.assertContains(LibraryDependency("testCompile", "junit:junit:4.12"))
+            dependencies.assertContains(LibraryDependency("testCompile", "junit:junit:4.12"))
         }
     }
 

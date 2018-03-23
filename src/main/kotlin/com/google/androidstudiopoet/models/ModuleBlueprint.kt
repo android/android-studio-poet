@@ -29,6 +29,6 @@ class ModuleBlueprint(name: String,
         generateTests) {
 
     val buildGradleBlueprint by lazy {
-        ModuleBuildGradleBlueprint(moduleDependencies.toSet(), useKotlin, generateTests, extraLines, moduleRoot)
+        ModuleBuildGradleBlueprint(dependencies.toSet(), useKotlin, generateTests, extraLines, moduleRoot)
     }
 }

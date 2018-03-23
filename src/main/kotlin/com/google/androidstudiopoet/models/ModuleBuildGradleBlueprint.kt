@@ -19,7 +19,7 @@ package com.google.androidstudiopoet.models
 import com.google.androidstudiopoet.utils.joinPath
 
 class ModuleBuildGradleBlueprint(
-        additionalDependencies: Set<ModuleDependency>,
+        additionalDependencies: Set<Dependency>,
         private val enableKotlin: Boolean,
         private val generateTests: Boolean,
         val extraLines: List<String>? = null,
@@ -27,13 +27,12 @@ class ModuleBuildGradleBlueprint(
 ) {
 
     val path = moduleRoot.joinPath("build.gradle")
-    val libraries: Set<LibraryDependency> = createSetOfLibraries()
 
     val plugins: Set<String> = createSetOfPlugins()
 
-    val dependencies = additionalDependencies + libraries
+    val dependencies = additionalDependencies + createSetOfMandatoryLibraries()
 
-    private fun createSetOfLibraries(): Set<LibraryDependency> {
+    private fun createSetOfMandatoryLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf<LibraryDependency>()
 
         if (enableKotlin) {
