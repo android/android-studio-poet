@@ -1,9 +1,6 @@
 package com.google.androidstudiopoet.generators.android_modules
 
-import com.google.androidstudiopoet.models.AndroidBuildGradleBlueprint
-import com.google.androidstudiopoet.models.BuildType
-import com.google.androidstudiopoet.models.Flavor
-import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.models.*
 import com.google.androidstudiopoet.testutils.mock
 import com.google.androidstudiopoet.writers.FileWriter
 import com.nhaarman.mockito_kotlin.*
@@ -141,7 +138,7 @@ dependencies {
 
     @Test
     fun `generator applies libraries from the blueprint`() {
-        val blueprint = getAndroidBuildGradleBlueprint(libraries = setOf(
+        val blueprint = getAndroidBuildGradleBlueprint(dependencies = setOf(
                 LibraryDependency("implementation", "library1"),
                 LibraryDependency("testApi", "library2"),
                 LibraryDependency("kapt", "library3")
@@ -265,7 +262,7 @@ dependencies {
             compileSdkVersion: Int  = 0,
             minSdkVersion: Int = 0,
             targetSdkVersion: Int = 0,
-            libraries: Set<LibraryDependency> = setOf(),
+            dependencies: Set<Dependency> = setOf(),
             flavorDimensions: Set<String> = setOf(),
             productFlavors: Set<Flavor> = setOf(),
             buildTypes: Set<BuildType> = setOf()
@@ -275,7 +272,7 @@ dependencies {
         whenever(blueprint.compileSdkVersion).thenReturn(compileSdkVersion)
         whenever(blueprint.minSdkVersion).thenReturn(minSdkVersion)
         whenever(blueprint.targetSdkVersion).thenReturn(targetSdkVersion)
-        whenever(blueprint.libraries).thenReturn(libraries)
+        whenever(blueprint.dependencies).thenReturn(dependencies)
         whenever(blueprint.flavorDimensions).thenReturn(flavorDimensions)
         whenever(blueprint.productFlavors).thenReturn(productFlavors)
         whenever(blueprint.buildTypes).thenReturn(buildTypes)

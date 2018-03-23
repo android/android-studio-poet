@@ -24,6 +24,8 @@ import com.google.androidstudiopoet.gradle.Statement
 import com.google.androidstudiopoet.gradle.StringStatement
 import com.google.androidstudiopoet.models.AndroidBuildGradleBlueprint
 import com.google.androidstudiopoet.models.Flavor
+import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.utils.isNullOrEmpty
 import com.google.androidstudiopoet.writers.FileWriter
 
@@ -90,9 +92,11 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val flavorDimensionsExpression = flavorDimensions?.joinToString { "\"$it\"" }?.let { Expression("flavorDimensions", it) }
 
-        val flavorsList = productFlavors!!.map { Closure(it.name, listOfNotNull(
-                it.dimension?.let { dimensionName -> Expression("dimension", "\"$dimensionName\"") }
-        )) }
+        val flavorsList = productFlavors!!.map {
+            Closure(it.name, listOfNotNull(
+                    it.dimension?.let { dimensionName -> Expression("dimension", "\"$dimensionName\"") }
+            ))
+        }
 
         return listOfNotNull(
                 flavorDimensionsExpression,
@@ -115,11 +119,10 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     }
 
     private fun dependenciesClosure(blueprint: AndroidBuildGradleBlueprint): Closure {
-        val moduleDependenciesExpressions = blueprint.dependencies.map {  it.toExpression() }
-        val librariesExpression = blueprint.libraries.map { it.toExpression() }
+        val dependencyExpressions: Set<Statement> = blueprint.dependencies.mapNotNull { it.toExpression() }.toSet()
 
         val statements = listOf(Expression("implementation", "fileTree(dir: 'libs', include: ['*.jar'])")) +
-                moduleDependenciesExpressions + librariesExpression
+                dependencyExpressions
         return Closure("dependencies", statements)
     }
 }
