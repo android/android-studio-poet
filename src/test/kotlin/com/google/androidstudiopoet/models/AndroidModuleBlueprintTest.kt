@@ -83,7 +83,7 @@ class AndroidModuleBlueprintTest {
             projectRoot: String = "root",
             hasLaunchActivity: Boolean = true,
             useKotlin: Boolean = false,
-            dependencies: List<ModuleDependency> = listOf(),
+            dependencies: Set<Dependency> = setOf(),
             productFlavorConfigs: List<FlavorConfig>? = null,
             buildTypeConfigs: List<BuildTypeConfig>? = null,
             javaPackageCount: Int = 1,

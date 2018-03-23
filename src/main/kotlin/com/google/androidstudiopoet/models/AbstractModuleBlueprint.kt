@@ -21,7 +21,7 @@ import com.google.androidstudiopoet.utils.joinPath
 abstract class AbstractModuleBlueprint(val name: String,
                                    root: String,
                                    val useKotlin: Boolean,
-                                   val dependencies: List<Dependency>,
+                                   val dependencies: Set<Dependency>,
                                    javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
                                    kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
                                    val extraLines: List<String>?,
