@@ -70,12 +70,12 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         println("Time to create Android model blueprints: $timeAndroidModels")
         allModuleBlueprints = androidModuleBlueprints + moduleBlueprints
         allModulesNames = allModuleBlueprints.map { it.name }
-        allDependencies = allModuleBlueprints.associate { it -> Pair(it.name, it.dependencies) }
+        allDependencies = allModuleBlueprints.associate { it -> Pair(it.name, it.moduleDependencies) }
     }
 
     fun printDependencies() {
         println(allModuleBlueprints.joinToString("\n", "digraph $projectName {\n", "\n}") {
-            getDependencyForModuleAsString(it.name, it.dependencies)
+            getDependencyForModuleAsString(it.name, it.moduleDependencies)
         })
     }
 
