@@ -17,12 +17,13 @@ limitations under the License.
 package com.google.androidstudiopoet.generators.project
 
 import com.google.androidstudiopoet.models.ProjectBlueprint
+import com.google.androidstudiopoet.models.ProjectBuildGradleBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
 class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
-    fun generate(root: String, projectBlueprint: ProjectBlueprint) {
+    fun generate(projectBlueprint: ProjectBlueprint, blueprint: ProjectBuildGradleBlueprint) {
 
         val (kotlinBuildScript, kotlinClasspath) = if (projectBlueprint.useKotlin) {
 
@@ -73,6 +74,6 @@ buildScan {
 
 """.trim()
 
-        fileWriter.writeToFile(gradleText, root.joinPath("build.gradle"))
+        fileWriter.writeToFile(gradleText, blueprint.root.joinPath("build.gradle"))
     }
 }
