@@ -16,6 +16,8 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.project
 
+import com.google.androidstudiopoet.generators.toExpression
+import com.google.androidstudiopoet.gradle.Closure
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.models.ProjectBuildGradleBlueprint
 import com.google.androidstudiopoet.utils.joinPath
@@ -76,4 +78,12 @@ buildScan {
 
         fileWriter.writeToFile(gradleText, blueprint.root.joinPath("build.gradle"))
     }
+
+    private fun getRespositoriesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
+        val repositoriesExpressions = blueprint.repositories.map { it.toExpression() }
+        return Closure("respositories", repositoriesExpressions)
+    }
+
+    private fun getAllprojectsClosure(blueprint: ProjectBuildGradleBlueprint) =
+            Closure("allprojects", listOf(getRespositoriesClosure(blueprint)))
 }
