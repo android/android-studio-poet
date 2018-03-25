@@ -69,6 +69,10 @@
           {
             "moduleName": "libraryModule",
             "method": "api"
+          },
+          {
+            "library": "org.mockito:mockito-inline:2.15.0",
+            "method": "testCompile"
           }
         ]
       },

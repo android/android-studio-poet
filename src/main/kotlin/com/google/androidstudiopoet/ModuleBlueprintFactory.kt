@@ -37,7 +37,7 @@ object ModuleBlueprintFactory {
                                 moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
                                 moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin,
                                 it.method.toDependencyMethod())
-                        is DependencyConfig.LibraryDependencyConfig -> LibraryDependency(it.method.toDependencyMethod(), it.libraryName)
+                        is DependencyConfig.LibraryDependencyConfig -> LibraryDependency(it.method.toDependencyMethod(), it.library)
                     }
 
                 } ?: listOf()
@@ -97,16 +97,21 @@ object ModuleBlueprintFactory {
             AndroidModuleBlueprint {
 
         val moduleDependencies = androidModuleConfig.dependencies
-                ?.filterIsInstance<DependencyConfig.ModuleDependencyConfig>()
                 ?.mapNotNull { dependencyConfig ->
-                    val moduleConfigToDependOn = moduleConfigs.find { it.moduleName == dependencyConfig.moduleName }
-                    return@mapNotNull when (moduleConfigToDependOn) {
-                        is AndroidModuleConfig -> getAndroidModuleDependency(projectRoot, moduleConfigToDependOn, dependencyConfig.method.toDependencyMethod())
-                        is ModuleConfig -> getModuleDependency(moduleConfigToDependOn.moduleName, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
-                                androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
-                                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin, dependencyConfig.method.toDependencyMethod())
-                        else -> null
+                    when (dependencyConfig) {
+                        is DependencyConfig.ModuleDependencyConfig -> {
+                            val moduleConfigToDependOn = moduleConfigs.find { it.moduleName == dependencyConfig.moduleName }
+                            return@mapNotNull when (moduleConfigToDependOn) {
+                                is AndroidModuleConfig -> getAndroidModuleDependency(projectRoot, moduleConfigToDependOn, dependencyConfig.method.toDependencyMethod())
+                                is ModuleConfig -> getModuleDependency(moduleConfigToDependOn.moduleName, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
+                                        androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
+                                        androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin, dependencyConfig.method.toDependencyMethod())
+                                else -> null
+                            }
+                        }
+                        is DependencyConfig.LibraryDependencyConfig -> LibraryDependency(dependencyConfig.method.toDependencyMethod(), dependencyConfig.library)
                     }
+
 
                 } ?: listOf()
 
