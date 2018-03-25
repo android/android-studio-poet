@@ -21,14 +21,15 @@ import com.google.androidstudiopoet.utils.joinPath
 abstract class AbstractModuleBlueprint(val name: String,
                                    root: String,
                                    val useKotlin: Boolean,
-                                   val dependencies: List<ModuleDependency>,
+                                   val dependencies: Set<Dependency>,
                                    javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
                                    kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
                                    val extraLines: List<String>?,
                                    val generateTests : Boolean) {
 
     val moduleRoot = root.joinPath(name)
-    private val methodsToCallWithIn = dependencies.map { it.methodToCall }
+    val moduleDependencies = dependencies.filterIsInstance<ModuleDependency>()
+    private val methodsToCallWithIn = moduleDependencies.map { it.methodToCall }
 
     val packagesBlueprint by lazy {
         PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,

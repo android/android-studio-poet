@@ -16,11 +16,13 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-open class ModuleDependency(val name: String, val methodToCall: MethodToCall, val method: String)
+open class ModuleDependency(val name: String, val methodToCall: MethodToCall, val method: String) : Dependency
 
 class AndroidModuleDependency(name: String, methodToCall: MethodToCall, method: String, val resourcesToRefer: ResourcesToRefer)
     : ModuleDependency(name, methodToCall, method)
 
-data class LibraryDependency(val method: String, val name: String)
+data class LibraryDependency(val method: String, val name: String) : Dependency
+
+interface Dependency
 
 const val DEFAULT_DEPENDENCY_METHOD = "implementation"

@@ -24,10 +24,12 @@ import com.google.androidstudiopoet.utils.joinPath
 class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
                                   val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
-                                  buildTypeConfigs: List<BuildTypeConfig>?, val dependencies: List<ModuleDependency>) {
+                                  buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>) {
     val plugins: Set<String> = createSetOfPlugins()
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
+
+    val dependencies = additionalDependencies + libraries
 
     val path = moduleRoot.joinPath("build.gradle")
 

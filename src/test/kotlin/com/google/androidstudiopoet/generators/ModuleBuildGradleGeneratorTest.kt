@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators
 
+import com.google.androidstudiopoet.models.Dependency
 import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.models.ModuleDependency
@@ -45,7 +46,7 @@ targetCompatibility = "1.8""""
 
     @Test
     fun `generator applies libraries from the blueprint`() {
-        val blueprint = getModuleBuildGradleBlueprint(libraries = setOf(
+        val blueprint = getModuleBuildGradleBlueprint(dependencies = setOf(
                 LibraryDependency("compile", "library1"),
                 LibraryDependency("testCompile", "library2")
         ))
@@ -96,14 +97,12 @@ line2"""
 
     private fun getModuleBuildGradleBlueprint(
             plugins: Set<String> = setOf(),
-            libraries: Set<LibraryDependency> = setOf(),
-            dependencies: Set<ModuleDependency> = setOf(),
+            dependencies: Set<Dependency> = setOf(),
             extraLines: List<String>? = null
     ): ModuleBuildGradleBlueprint {
         return mock<ModuleBuildGradleBlueprint>().apply {
             whenever(this.dependencies).thenReturn(dependencies)
             whenever(this.plugins).thenReturn(plugins)
-            whenever(this.libraries).thenReturn(libraries)
             whenever(this.extraLines).thenReturn(extraLines)
             whenever(this.path).thenReturn("path")
         }

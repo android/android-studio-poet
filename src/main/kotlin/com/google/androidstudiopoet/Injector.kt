@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.converters.*
+import com.google.androidstudiopoet.deserializers.DependencyConfigDeserializer
 import com.google.androidstudiopoet.deserializers.ModuleConfigDeserializer
 import com.google.androidstudiopoet.generators.ModuleBuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
@@ -33,6 +34,7 @@ import com.google.androidstudiopoet.generators.android_modules.resources.StringR
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.generators.SourceModuleGenerator
+import com.google.androidstudiopoet.input.DependencyConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
@@ -80,10 +82,12 @@ object Injector {
 
 
     private val moduleConfigDeserializer = ModuleConfigDeserializer()
+    private val dependencyConfigDeserializer = DependencyConfigDeserializer()
 
     val gson: Gson by lazy {
-        GsonBuilder().
-                registerTypeAdapter(ModuleConfig::class.java, moduleConfigDeserializer)
+        GsonBuilder()
+                .registerTypeAdapter(ModuleConfig::class.java, moduleConfigDeserializer)
+                .registerTypeAdapter(DependencyConfig::class.java, dependencyConfigDeserializer)
                 .create()
     }
 }

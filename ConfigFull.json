@@ -30,6 +30,10 @@
           {
             "moduleName": "pureModule2",
             "method": "api"
+          },
+          {
+            "library": "org.mockito:mockito-inline:2.15.0",
+            "method": "testCompile"
           }
         ]
       },
@@ -65,6 +69,10 @@
           {
             "moduleName": "libraryModule",
             "method": "api"
+          },
+          {
+            "library": "org.mockito:mockito-inline:2.15.0",
+            "method": "testCompile"
           }
         ]
       },

@@ -40,11 +40,10 @@ class ModuleBuildGradleGenerator(private val fileWriter: FileWriter) {
     }
 
     private fun dependenciesClosure(blueprint: ModuleBuildGradleBlueprint): Closure {
-        val moduleDependenciesExpressions = blueprint.dependencies.map { it.toExpression() }
-        val librariesExpression = blueprint.libraries.map { it.toExpression() }
+        val dependencyExpressions: Set<Statement> = blueprint.dependencies.mapNotNull { it.toExpression() }.toSet()
 
         val statements = listOf(Expression("compile", "fileTree(dir: 'libs', include: ['*.jar'])")) +
-                moduleDependenciesExpressions + librariesExpression
+                dependencyExpressions
         return Closure("dependencies", statements)
     }
 

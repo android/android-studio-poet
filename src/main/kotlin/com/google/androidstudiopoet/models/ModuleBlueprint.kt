@@ -19,7 +19,7 @@ package com.google.androidstudiopoet.models
 class ModuleBlueprint(name: String,
                            root: String,
                            useKotlin: Boolean,
-                           dependencies: List<ModuleDependency>,
+                           dependencies: Set<Dependency>,
                            javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
                            kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
                            extraLines: List<String>?,

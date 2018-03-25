@@ -18,6 +18,7 @@ package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.input.AndroidBuildConfig
 import com.google.androidstudiopoet.input.AndroidModuleConfig
+import com.google.androidstudiopoet.input.DependencyConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.models.*
 
@@ -31,12 +32,16 @@ object ModuleBlueprintFactory {
     fun create(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
         val moduleDependencies = moduleConfig.dependencies
                 ?.map {
-                    getModuleDependency(it.moduleName, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
-                            moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
-                            moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin,
-                            it.method.toDependencyMethod())
+                    when(it) {
+                        is DependencyConfig.ModuleDependencyConfig -> getModuleDependency(it.moduleName, projectRoot, moduleConfig.javaPackageCount, moduleConfig.javaClassCount,
+                                moduleConfig.javaMethodsPerClass, moduleConfig.kotlinPackageCount,
+                                moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.useKotlin,
+                                it.method.toDependencyMethod())
+                        is DependencyConfig.LibraryDependencyConfig -> LibraryDependency(it.method.toDependencyMethod(), it.library)
+                    }
+
                 } ?: listOf()
-        val result = ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, moduleDependencies,
+        val result = ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, moduleDependencies.toSet(),
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
                 moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass, moduleConfig.extraLines, moduleConfig.generateTests)
         synchronized(moduleDependencyLock.getOrPut(moduleConfig.moduleName, { moduleConfig.moduleName })) {
@@ -69,7 +74,7 @@ object ModuleBlueprintFactory {
             dependency, return methodToCallFromOutside and forget about this module blueprint.
             WARNING: creation of ModuleBlueprint could be expensive
          */
-        val tempModuleBlueprint = ModuleBlueprint(moduleName, projectRoot, useKotlin, listOf(),
+        val tempModuleBlueprint = ModuleBlueprint(moduleName, projectRoot, useKotlin, setOf(),
                 javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount, kotlinClassCount,
                 kotlinMethodsPerClass, null, false)
         return ModuleDependency(tempModuleBlueprint.name, tempModuleBlueprint.methodToCallFromOutside, dependencyMethod)
@@ -93,21 +98,27 @@ object ModuleBlueprintFactory {
 
         val moduleDependencies = androidModuleConfig.dependencies
                 ?.mapNotNull { dependencyConfig ->
-                    val moduleConfigToDependOn = moduleConfigs.find { it.moduleName == dependencyConfig.moduleName }
-                    return@mapNotNull when (moduleConfigToDependOn) {
-                        is AndroidModuleConfig -> getAndroidModuleDependency(projectRoot, moduleConfigToDependOn, dependencyConfig.method.toDependencyMethod())
-                        is ModuleConfig -> getModuleDependency(moduleConfigToDependOn.moduleName, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
-                                androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
-                                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin, dependencyConfig.method.toDependencyMethod())
-                        else -> null
+                    when (dependencyConfig) {
+                        is DependencyConfig.ModuleDependencyConfig -> {
+                            val moduleConfigToDependOn = moduleConfigs.find { it.moduleName == dependencyConfig.moduleName }
+                            return@mapNotNull when (moduleConfigToDependOn) {
+                                is AndroidModuleConfig -> getAndroidModuleDependency(projectRoot, moduleConfigToDependOn, dependencyConfig.method.toDependencyMethod())
+                                is ModuleConfig -> getModuleDependency(moduleConfigToDependOn.moduleName, projectRoot, androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
+                                        androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
+                                        androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass, androidModuleConfig.useKotlin, dependencyConfig.method.toDependencyMethod())
+                                else -> null
+                            }
+                        }
+                        is DependencyConfig.LibraryDependencyConfig -> LibraryDependency(dependencyConfig.method.toDependencyMethod(), dependencyConfig.library)
                     }
+
 
                 } ?: listOf()
 
         return AndroidModuleBlueprint(androidModuleConfig.moduleName,
                 androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
                 projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
-                moduleDependencies, androidModuleConfig.productFlavorConfigs, androidModuleConfig.buildTypes,
+                moduleDependencies.toSet(), androidModuleConfig.productFlavorConfigs, androidModuleConfig.buildTypes,
                 androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
                 androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
                 androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass,
