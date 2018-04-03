@@ -39,7 +39,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         fileWriter.mkdir(projectBlueprint.projectRoot)
 
         GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint)
-        projectBuildGradleGenerator.generate(projectBlueprint, projectBlueprint.buildGradleBlueprint)
+        projectBuildGradleGenerator.generate(projectBlueprint.buildGradleBlueprint)
         gradleSettingsGenerator.generate(projectBlueprint.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
 
         val allJobs = mutableListOf<Job>()

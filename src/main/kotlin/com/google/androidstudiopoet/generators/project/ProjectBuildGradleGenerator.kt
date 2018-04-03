@@ -16,8 +16,9 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.project
 
+import com.google.androidstudiopoet.generators.toClasspathExpression
 import com.google.androidstudiopoet.generators.toExpression
-import com.google.androidstudiopoet.gradle.Closure
+import com.google.androidstudiopoet.gradle.*
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.models.ProjectBuildGradleBlueprint
 import com.google.androidstudiopoet.utils.joinPath
@@ -25,51 +26,68 @@ import com.google.androidstudiopoet.writers.FileWriter
 
 class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
-    fun generate(projectBlueprint: ProjectBlueprint, blueprint: ProjectBuildGradleBlueprint) {
+    fun generate(blueprint: ProjectBuildGradleBlueprint) {
 
-        val (kotlinBuildScript, kotlinClasspath) = if (projectBlueprint.useKotlin) {
+        val statements = listOf(
+                getBuildscriptClosure(blueprint),
+                getAllprojectsClosure(blueprint),
+                getPluginsClosure(),
+                getCleanTask(),
+                getBuildScanClosure())
 
-            "ext.kotlin_version = '${projectBlueprint.kotlinVersion}'" to """classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version""""
-        } else {
-            Pair("", "")
-        }
+        val gradleText = statements.joinToString(separator = "\n") { it.toGroovy(0) }
 
-        val gradleText = """buildscript {
-    $kotlinBuildScript
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:${projectBlueprint.androidGradlePluginVersion}'
-        $kotlinClasspath
-    }
-}
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
-plugins {
-    id 'com.gradle.build-scan' version '1.8'
-
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-buildScan {
- licenseAgreementUrl = 'https://gradle.com/terms-of-service'
- licenseAgree = 'yes'
- tag 'SAMPLE'
- link 'GitHub', 'https://github.com/gradle/gradle-build-scan-quickstart'
-}
-
-""".trim()
+//        val (kotlinBuildScript, kotlinClasspath) = if (projectBlueprint.useKotlin) {
+//
+//            "ext.kotlin_version = '${projectBlueprint.kotlinVersion}'" to """classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version""""
+//        } else {
+//            Pair("", "")
+//        }
+//
+//        val gradleText = """buildscript {
+//    $kotlinBuildScript
+//    repositories {
+//        google()
+//        jcenter()
+//    }
+//    dependencies {
+//        classpath 'com.android.tools.build:gradle:${projectBlueprint.androidGradlePluginVersion}'
+//        $kotlinClasspath
+//    }
+//}
+//allprojects {
+//    repositories {
+//        google()
+//        jcenter()
+//    }
+//}
+//plugins {
+//    id 'com.gradle.build-scan' version '1.8'
+//
+//}
+//
+//task clean(type: Delete) {
+//    delete rootProject.buildDir
+//}
+//
+//buildScan {
+// licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+// licenseAgree = 'yes'
+// tag 'SAMPLE'
+// link 'GitHub', 'https://github.com/gradle/gradle-build-scan-quickstart'
+//}
+//
+//""".trim()
 
         fileWriter.writeToFile(gradleText, blueprint.root.joinPath("build.gradle"))
+    }
+
+    private fun getBuildscriptClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
+        return Closure("buildscript", listOfNotNull(
+                blueprint.kotlinExtStatement?.let { StringStatement(it) },
+                getRespositoriesClosure(blueprint),
+                getClasspathDependenciesClosure(blueprint)
+        ))
     }
 
     private fun getRespositoriesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
@@ -77,6 +95,25 @@ buildScan {
         return Closure("respositories", repositoriesExpressions)
     }
 
+    private fun getClasspathDependenciesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
+        return Closure("dependencies", blueprint.classpaths.map { it.toClasspathExpression() })
+    }
+
     private fun getAllprojectsClosure(blueprint: ProjectBuildGradleBlueprint) =
             Closure("allprojects", listOf(getRespositoriesClosure(blueprint)))
+
+    private fun getBuildScanClosure() = Closure("buildScan", listOf(
+            StringStatement("licenseAgreementUrl = 'https://gradle.com/terms-of-service'"),
+            StringStatement("licenseAgree = 'yes'"),
+            Expression("tag", "'SAMPLE'"),
+            Expression("link", "'GitHub', 'https://github.com/gradle/gradle-build-scan-quickstart'")
+    ))
+
+    private fun getPluginsClosure() = Closure("plugins", listOf(
+            StringStatement("id 'com.gradle.build-scan' version '1.8'")
+    ))
+
+    private fun getCleanTask() = Task("clean",
+            listOf(TaskParameter("type", "Delete")),
+            listOf(Expression("delete", "rootProject.buildDir")))
 }

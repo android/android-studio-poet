@@ -1,6 +1,9 @@
 package com.google.androidstudiopoet.models
 
-class ProjectBuildGradleBlueprint(val root: String, enableKotlin: Boolean, androidGradlePluginVersion: String) {
+class ProjectBuildGradleBlueprint(val root: String, enableKotlin: Boolean, androidGradlePluginVersion: String,
+                                  kotlinVersion: String) {
+
+    val kotlinExtStatement = if (enableKotlin) "ext.kotlin_version = '$kotlinVersion'" else null
 
     val classpaths by lazy {
         listOfNotNull(

@@ -29,6 +29,8 @@ fun LibraryDependency.toExpression() = Expression(this.method, "\"${this.name}\"
 
 fun String.toApplyPluginExpression() = Expression("apply plugin:", "'$this'")
 
+fun String.toClasspathExpression() = Expression("classpath", "'$this'")
+
 fun Repository.Named.toExpression() = StringStatement("${this.name}()")
 
 fun Dependency.toExpression() = when (this) {
