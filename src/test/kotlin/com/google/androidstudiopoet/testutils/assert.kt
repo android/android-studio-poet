@@ -49,3 +49,7 @@ fun Boolean.assertTrue() {
 fun Boolean.assertFalse() {
     assertFalse(this)
 }
+
+fun Any?.assertNull() {
+    assertEquals(null, this)
+}

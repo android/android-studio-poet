@@ -33,8 +33,8 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val projectRoot = projectConfig.root.joinPath(projectName)
 
-    val androidGradlePluginVersion = projectConfig.buildSystemConfig.agpVersion ?: DEFAULT_AGP_VERSION
-    val kotlinVersion = projectConfig.buildSystemConfig.kotlinVersion ?: DEFAULT_KOTLIN_VERSION
+    private val androidGradlePluginVersion = projectConfig.buildSystemConfig.agpVersion ?: DEFAULT_AGP_VERSION
+    private val kotlinVersion = projectConfig.buildSystemConfig.kotlinVersion ?: DEFAULT_KOTLIN_VERSION
     val useKotlin = projectConfig.moduleConfigs.map { it.useKotlin }.find { it } ?: false
     val gradleVersion = projectConfig.buildSystemConfig.buildSystemVersion!!
 
@@ -43,6 +43,8 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     private val allModuleBlueprints: List<AbstractModuleBlueprint>
     val allModulesNames: List<String>
     private val allDependencies: Map<String, List<ModuleDependency>>
+
+    val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion, kotlinVersion)
 
     init {
         var temporaryModuleBlueprints: List<ModuleBlueprint> = listOf()

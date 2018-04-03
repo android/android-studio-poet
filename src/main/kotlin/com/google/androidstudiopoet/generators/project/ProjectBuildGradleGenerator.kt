@@ -16,63 +16,62 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.project
 
+import com.google.androidstudiopoet.generators.toClasspathExpression
+import com.google.androidstudiopoet.generators.toExpression
+import com.google.androidstudiopoet.gradle.*
 import com.google.androidstudiopoet.models.ProjectBlueprint
+import com.google.androidstudiopoet.models.ProjectBuildGradleBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
 class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
-    fun generate(root: String, projectBlueprint: ProjectBlueprint) {
+    fun generate(blueprint: ProjectBuildGradleBlueprint) {
 
-        val (kotlinBuildScript, kotlinClasspath) = if (projectBlueprint.useKotlin) {
+        val statements = listOf(
+                getBuildscriptClosure(blueprint),
+                getAllprojectsClosure(blueprint),
+                getPluginsClosure(),
+                getCleanTask(),
+                getBuildScanClosure())
 
-            "ext.kotlin_version = '${projectBlueprint.kotlinVersion}'" to """classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version""""
-        } else {
-            Pair("", "")
-        }
+        val gradleText = statements.joinToString(separator = "\n") { it.toGroovy(0) }
 
-        val gradleText = """
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-buildscript {
-    $kotlinBuildScript
-    repositories {
-        google()
-        jcenter()
+        fileWriter.writeToFile(gradleText, blueprint.path)
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:${projectBlueprint.androidGradlePluginVersion}'
-        $kotlinClasspath
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    private fun getBuildscriptClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
+        return Closure("buildscript", listOfNotNull(
+                blueprint.kotlinExtStatement?.let { StringStatement(it) },
+                getRespositoriesClosure(blueprint),
+                getClasspathDependenciesClosure(blueprint)
+        ))
     }
-}
-plugins {
-    id 'com.gradle.build-scan' version '1.8'
 
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
+    private fun getRespositoriesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
+        val repositoriesExpressions = blueprint.repositories.map { it.toExpression() }
+        return Closure("repositories", repositoriesExpressions)
     }
-}
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-buildScan {
- licenseAgreementUrl = 'https://gradle.com/terms-of-service'
- licenseAgree = 'yes'
- tag 'SAMPLE'
- link 'GitHub', 'https://github.com/gradle/gradle-build-scan-quickstart'
-}
-
-""".trim()
-
-        fileWriter.writeToFile(gradleText, root.joinPath("build.gradle"))
+    private fun getClasspathDependenciesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
+        return Closure("dependencies", blueprint.classpaths.map { it.toClasspathExpression() })
     }
+
+    private fun getAllprojectsClosure(blueprint: ProjectBuildGradleBlueprint) =
+            Closure("allprojects", listOf(getRespositoriesClosure(blueprint)))
+
+    private fun getBuildScanClosure() = Closure("buildScan", listOf(
+            StringStatement("licenseAgreementUrl = 'https://gradle.com/terms-of-service'"),
+            StringStatement("licenseAgree = 'yes'"),
+            Expression("tag", "'SAMPLE'"),
+            Expression("link", "'GitHub', 'https://github.com/gradle/gradle-build-scan-quickstart'")
+    ))
+
+    private fun getPluginsClosure() = Closure("plugins", listOf(
+            StringStatement("id 'com.gradle.build-scan' version '1.8'")
+    ))
+
+    private fun getCleanTask() = Task("clean",
+            listOf(TaskParameter("type", "Delete")),
+            listOf(Expression("delete", "rootProject.buildDir")))
 }

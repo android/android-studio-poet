@@ -17,15 +17,21 @@ limitations under the License.
 package com.google.androidstudiopoet.generators
 
 import com.google.androidstudiopoet.gradle.Expression
+import com.google.androidstudiopoet.gradle.StringStatement
 import com.google.androidstudiopoet.models.Dependency
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.models.ModuleDependency
+import com.google.androidstudiopoet.models.Repository
 
 fun ModuleDependency.toExpression() = Expression(this.method, "project(':${this.name}')")
 
 fun LibraryDependency.toExpression() = Expression(this.method, "\"${this.name}\"")
 
 fun String.toApplyPluginExpression() = Expression("apply plugin:", "'$this'")
+
+fun String.toClasspathExpression() = Expression("classpath", "'$this'")
+
+fun Repository.Named.toExpression() = StringStatement("${this.name}()")
 
 fun Dependency.toExpression() = when (this) {
     is ModuleDependency -> this.toExpression()
