@@ -43,5 +43,5 @@ class ProjectBuildGradleBlueprintTest {
 
     private fun getBlueprint(
             enableKotlin: Boolean = false,
-            agpVersion: String = "3.0.2") = ProjectBuildGradleBlueprint("path", enableKotlin, agpVersion)
+            agpVersion: String = "3.0.2") = ProjectBuildGradleBlueprint("path", enableKotlin, agpVersion, "1.2.20")
 }

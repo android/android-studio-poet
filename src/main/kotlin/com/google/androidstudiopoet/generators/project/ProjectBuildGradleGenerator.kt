@@ -37,49 +37,7 @@ class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val gradleText = statements.joinToString(separator = "\n") { it.toGroovy(0) }
 
-//        val (kotlinBuildScript, kotlinClasspath) = if (projectBlueprint.useKotlin) {
-//
-//            "ext.kotlin_version = '${projectBlueprint.kotlinVersion}'" to """classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version""""
-//        } else {
-//            Pair("", "")
-//        }
-//
-//        val gradleText = """buildscript {
-//    $kotlinBuildScript
-//    repositories {
-//        google()
-//        jcenter()
-//    }
-//    dependencies {
-//        classpath 'com.android.tools.build:gradle:${projectBlueprint.androidGradlePluginVersion}'
-//        $kotlinClasspath
-//    }
-//}
-//allprojects {
-//    repositories {
-//        google()
-//        jcenter()
-//    }
-//}
-//plugins {
-//    id 'com.gradle.build-scan' version '1.8'
-//
-//}
-//
-//task clean(type: Delete) {
-//    delete rootProject.buildDir
-//}
-//
-//buildScan {
-// licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-// licenseAgree = 'yes'
-// tag 'SAMPLE'
-// link 'GitHub', 'https://github.com/gradle/gradle-build-scan-quickstart'
-//}
-//
-//""".trim()
-
-        fileWriter.writeToFile(gradleText, blueprint.root.joinPath("build.gradle"))
+        fileWriter.writeToFile(gradleText, blueprint.path)
     }
 
     private fun getBuildscriptClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
@@ -92,7 +50,7 @@ class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
     private fun getRespositoriesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
         val repositoriesExpressions = blueprint.repositories.map { it.toExpression() }
-        return Closure("respositories", repositoriesExpressions)
+        return Closure("repositories", repositoriesExpressions)
     }
 
     private fun getClasspathDependenciesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {

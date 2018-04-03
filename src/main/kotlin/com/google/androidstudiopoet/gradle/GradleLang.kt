@@ -40,9 +40,9 @@ $indent}"""
 data class Task(val name: String, val arguments: List<TaskParameter>, val statements: List<Statement>) : Statement {
     override fun toGroovy(indentNumber: Int): String {
         val indent = INDENT.repeat(indentNumber)
-        return """${indent}task $name(${arguments.joinToString { "${it.name}: ${it.value}" }})
+        return """${indent}task $name(${arguments.joinToString { "${it.name}: ${it.value}" }}) {
 ${statements.joinToString(separator = "\n") { it.toGroovy(indentNumber + 1) }}
-$indent"""
+$indent}"""
     }
 
 }
