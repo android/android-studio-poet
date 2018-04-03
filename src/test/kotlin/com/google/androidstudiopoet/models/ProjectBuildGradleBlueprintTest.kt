@@ -2,10 +2,53 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEquals
+import com.google.androidstudiopoet.testutils.assertNull
 import com.google.androidstudiopoet.testutils.assertOn
+import com.google.androidstudiopoet.utils.joinPath
 import org.junit.Test
 
 class ProjectBuildGradleBlueprintTest {
+
+    @Test
+    fun `path is root joined with build gradle`() {
+        val root = "some/root"
+
+        val blueprint = getBlueprint(root = root, kotlinVersion = "1.2.20")
+
+        assertOn(blueprint) {
+            path.assertEquals(root.joinPath("build.gradle"))
+        }
+    }
+
+    @Test
+    fun `kotlinExtStatement is set only if kotlin is enabled`() {
+        val kotlinVersion = "1.2.60"
+
+        val blueprint = getBlueprint(
+                enableKotlin = true,
+                kotlinVersion = kotlinVersion
+        )
+
+        val expectedKotlinExtStatement = "ext.kotlin_version = '$kotlinVersion'"
+
+        assertOn(blueprint) {
+            kotlinExtStatement!!.assertEquals(expectedKotlinExtStatement)
+        }
+    }
+
+    @Test
+    fun `kotlinExtStatement is set to null if kotlin is disabled`() {
+        val kotlinVersion = "1.2.60"
+
+        val blueprint = getBlueprint(
+                enableKotlin = false,
+                kotlinVersion = kotlinVersion
+        )
+
+        assertOn(blueprint) {
+            kotlinExtStatement.assertNull()
+        }
+    }
 
     @Test
     fun `classpaths should contain only gradle plugin if kotlin is disabled`() {
@@ -14,7 +57,7 @@ class ProjectBuildGradleBlueprintTest {
         val blueprint = getBlueprint(agpVersion = agpVersion)
 
         assertOn(blueprint) {
-            blueprint.classpaths.assertEquals(setOf("com.android.tools.build:gradle:$agpVersion"))
+            classpaths.assertEquals(setOf("com.android.tools.build:gradle:$agpVersion"))
         }
     }
 
@@ -23,7 +66,7 @@ class ProjectBuildGradleBlueprintTest {
         val blueprint = getBlueprint(enableKotlin = true)
 
         assertOn(blueprint) {
-            blueprint.classpaths.assertContains("org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version")
+            classpaths.assertContains("org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version")
         }
     }
 
@@ -37,11 +80,14 @@ class ProjectBuildGradleBlueprintTest {
         val blueprint = getBlueprint()
 
         assertOn(blueprint) {
-            blueprint.repositories.assertEquals(expectedRepositories)
+            repositories.assertEquals(expectedRepositories)
         }
     }
 
     private fun getBlueprint(
+            root: String = "root",
             enableKotlin: Boolean = false,
-            agpVersion: String = "3.0.2") = ProjectBuildGradleBlueprint("path", enableKotlin, agpVersion, "1.2.20")
+            agpVersion: String = "3.0.2",
+            kotlinVersion: String = "1.2.20") =
+            ProjectBuildGradleBlueprint(root, enableKotlin, agpVersion, kotlinVersion)
 }
