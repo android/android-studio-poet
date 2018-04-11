@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.converters
 
 import com.google.androidstudiopoet.input.*
+import com.google.androidstudiopoet.models.FromToDependencyConfig
 import com.google.androidstudiopoet.testutils.*
 import org.junit.Test
 
@@ -35,6 +36,7 @@ private const val GENERATE_TESTS = true
 
 private const val ANDROID_MODULE_COUNT = 2
 private const val INDEX_1 = 1
+private const val ANDROID_MODULE_NAME_0 = "androidAppModule0"
 private const val ANDROID_MODULE_NAME_1 = "androidAppModule1"
 private const val MODULE_NAME_0 = "module0"
 private const val MODULE_NAME_1 = "module1"
@@ -65,13 +67,18 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
 
         generateTests = GENERATE_TESTS
         androidModules = ANDROID_MODULE_COUNT
+        dependencies = listOf(FromToDependencyConfig(ANDROID_MODULE_NAME_0, MODULE_NAME_0),
+                FromToDependencyConfig(ANDROID_MODULE_NAME_0, MODULE_NAME_1),
+                FromToDependencyConfig(ANDROID_MODULE_NAME_1, MODULE_NAME_0),
+                FromToDependencyConfig(ANDROID_MODULE_NAME_1, MODULE_NAME_1),
+                FromToDependencyConfig(ANDROID_MODULE_NAME_0, ANDROID_MODULE_NAME_1))
     }
 
     private val converter = ConfigPojoToAndroidModuleConfigConverter()
 
     @Test
     fun `convert passes correct values to result AndroidModuleConfig`() {
-        val androidModuleConfig = converter.convert(configPOJO, INDEX_1, productFlavorConfigs, buildTypes, PURE_MODULE_LIST)
+        val androidModuleConfig = converter.convert(configPOJO, INDEX_1, productFlavorConfigs, buildTypes)
         assertOn(androidModuleConfig) {
             moduleName.assertEquals(ANDROID_MODULE_NAME_1)
             activityCount.assertEquals(ACTIVITY_COUNT)
@@ -95,7 +102,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
 
     @Test
     fun `convert result AndroidModuleConfig that has launch activity when index == 0`() {
-        val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes, PURE_MODULE_LIST)
+        val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes)
         assertOn(androidModuleConfig) {
             hasLaunchActivity.assertTrue()
             dependencies!!.assertEquals(listOf(DependencyConfig.ModuleDependencyConfig(ANDROID_MODULE_NAME_1)) + PURE_MODULE_DEPENDENCY_LIST)

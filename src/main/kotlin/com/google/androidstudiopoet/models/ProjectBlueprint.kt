@@ -25,6 +25,7 @@ import com.google.androidstudiopoet.utils.increase
 import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
+import java.io.File
 import kotlin.system.measureTimeMillis
 
 class ProjectBlueprint(private val projectConfig: ProjectConfig) {
@@ -75,10 +76,14 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         allDependencies = allModuleBlueprints.associate { it -> Pair(it.name, it.moduleDependencies) }
     }
 
-    fun printDependencies() {
-        println(allModuleBlueprints.joinToString("\n", "digraph $projectName {\n", "\n}") {
-            getDependencyForModuleAsString(it.name, it.moduleDependencies)
-        })
+    fun saveDependencies() {
+        val graphFileName = projectRoot.joinPath("dependencies.dot")
+        File(graphFileName).printWriter().use { out -> out.print(dependenciesGraphString())}
+        println("Dependency graph: $graphFileName")
+    }
+
+    private fun dependenciesGraphString() = allModuleBlueprints.joinToString("\n", "digraph $projectName {\n", "\n}") {
+        getDependencyForModuleAsString(it.name, it.moduleDependencies)
     }
 
     private fun getDependencyForModuleAsString(name: String, dependencies: List<ModuleDependency>): String {
@@ -94,7 +99,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         // Try to find a topological order (it will be stored in topologicalOrder)
         val dependencyCounter: MutableMap<String, Int> = mutableMapOf()
         for (moduleName in allModulesNames) {
-            dependencyCounter.put(moduleName, 0)
+            dependencyCounter[moduleName] = 0
         }
         // Count how many modules depend on each
         for ((_, dependencies) in allDependencies) {
@@ -116,6 +121,10 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
             index++
         }
         // No circular dependencies if and only if all modules can be sorted
-        return topologicalOrder.size != allModulesNames.size
+        if (topologicalOrder.size != allModulesNames.size) {
+            println("Found circular dependencies that affect modules ${dependencyCounter.filter{ counter -> counter.value > 0 }.keys}")
+            return true
+        }
+        return false
     }
 }
