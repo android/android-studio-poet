@@ -21,6 +21,7 @@ import com.google.androidstudiopoet.generators.android_modules.resources.Resourc
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
+import java.util.*
 
 class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
                              private val packagesGenerator: PackagesGenerator,
@@ -33,12 +34,12 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
     /**
      *  Generate android module, including module folder
      */
-    fun generate(blueprint: AndroidModuleBlueprint) {
+    fun generate(blueprint: AndroidModuleBlueprint, random: Random) {
         generateMainFolders(blueprint)
 
         proguardGenerator.generate(blueprint)
         buildGradleGenerator.generate(blueprint.buildGradleBlueprint)
-        blueprint.resourcesBlueprint?.let { resourcesGenerator.generate(it) }
+        blueprint.resourcesBlueprint?.let { resourcesGenerator.generate(it, random) }
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
         blueprint.activityBlueprints.forEach({ activityGenerator.generate(it) })
         manifestGenerator.generate(blueprint)

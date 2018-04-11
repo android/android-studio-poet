@@ -18,14 +18,15 @@ package com.google.androidstudiopoet.generators.android_modules.resources
 
 import com.google.androidstudiopoet.models.ResourcesBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
+import java.util.*
 
 class ResourcesGenerator(private val stringResourcesGenerator: StringResourcesGenerator,
                          private val imageResourcesGenerator: ImagesGenerator,
                          private val layoutResourcesGenerator: LayoutResourcesGenerator,
                          private val fileWriter: FileWriter) {
-    fun generate(blueprint: ResourcesBlueprint) {
+    fun generate(blueprint: ResourcesBlueprint, random: Random) {
         stringResourcesGenerator.generate(blueprint)
-        imageResourcesGenerator.generate(blueprint)
+        imageResourcesGenerator.generate(blueprint, random)
         fileWriter.mkdir(blueprint.layoutsDir)
         blueprint.layoutBlueprints.forEach { layoutResourcesGenerator.generate(it) }
     }

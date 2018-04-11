@@ -25,6 +25,7 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
+import java.util.*
 
 class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
                             private val gradleSettingsGenerator: GradleSettingsGenerator,
@@ -50,15 +51,18 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
             }
             allJobs.add(job)
         }
+        var randomCount: Long = 0
+        projectBlueprint.androidModuleBlueprints.forEach{ blueprint ->
+            val random = Random(randomCount++)
+            val job = launch {
+                androidModuleGenerator.generate(blueprint, random)
+                println("Done writing Android module " + blueprint.name)
+            }
+            allJobs.add(job)
+        }
         for (job in allJobs) {
             job.join()
         }
-
-        projectBlueprint.androidModuleBlueprints.forEach{ blueprint ->
-            androidModuleGenerator.generate(blueprint)
-            println("Done writing Android module " + blueprint.name)
-        }
-
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint) {
