@@ -21,7 +21,7 @@ import com.google.androidstudiopoet.input.ConfigPOJO
 
 class ConfigPojoToAndroidModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int, productFlavorConfigs: List<FlavorConfig>,
-                buildTypes: List<BuildTypeConfig>, pureModuleDependencies: List<String>): AndroidModuleConfig {
+                buildTypes: List<BuildTypeConfig>): AndroidModuleConfig {
         return AndroidModuleConfig().apply {
             moduleName = getAndroidModuleName(index)
             javaPackageCount = config.javaPackageCount!!.toInt()
@@ -38,10 +38,8 @@ class ConfigPojoToAndroidModuleConfigConverter {
             generateTests = config.generateTests
             hasLaunchActivity = index == 0
 
-            val androidDependencies = (index + 1 until config.androidModules)
-                    .map { getAndroidModuleName(it) }
-
-            dependencies = (androidDependencies + pureModuleDependencies).map { DependencyConfig.ModuleDependencyConfig(it) }
+            val resolvedDependencies = config.resolvedDependencies[moduleName]
+            dependencies = resolvedDependencies?.sortedBy { it.to }!!.map{ dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to) }
 
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs

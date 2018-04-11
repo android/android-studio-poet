@@ -26,6 +26,7 @@ object ModuleBlueprintFactory {
 
     // Store if a ModuleDependency was already computed
     private var moduleDependencyCache: MutableMap<String, ModuleDependency?> = mutableMapOf()
+    private var androidModuleDependencyCache: MutableMap<String, AndroidModuleDependency?> = mutableMapOf()
     // Used to synchronize cache elements (can be one per item since each is independent)
     private var moduleDependencyLock: MutableMap<String, Any> = mutableMapOf()
 
@@ -87,10 +88,17 @@ object ModuleBlueprintFactory {
             dependency, return methodToCallFromOutside with resourcesToRefer and forget about this module blueprint.
             WARNING: creation of AndroidModuleBlueprint could be expensive
         */
-
-        val moduleBlueprint = createAndroidModule(projectRoot, androidModuleConfig, listOf())
-        return AndroidModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside, dependencyMethod,
-                moduleBlueprint.resourcesToReferFromOutside)
+        synchronized(moduleDependencyLock.getOrPut(androidModuleConfig.moduleName, { androidModuleConfig.moduleName })) {
+            val cachedMethod = androidModuleDependencyCache[androidModuleConfig.moduleName]
+            if (cachedMethod != null) {
+                return cachedMethod
+            }
+            val moduleBlueprint = createAndroidModule(projectRoot, androidModuleConfig, listOf())
+            val newMethodDependency = AndroidModuleDependency(moduleBlueprint.name, moduleBlueprint.methodToCallFromOutside, dependencyMethod,
+                    moduleBlueprint.resourcesToReferFromOutside)
+            androidModuleDependencyCache[androidModuleConfig.moduleName] = newMethodDependency
+            return newMethodDependency
+        }
     }
 
     fun createAndroidModule(projectRoot: String, androidModuleConfig: AndroidModuleConfig, moduleConfigs: List<ModuleConfig>):
@@ -131,6 +139,7 @@ object ModuleBlueprintFactory {
     fun initCache() {
         moduleDependencyCache = mutableMapOf()
         moduleDependencyLock = mutableMapOf()
+        androidModuleDependencyCache = mutableMapOf()
     }
 }
 

@@ -167,8 +167,8 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
             modulesGenerator.generate(projectBluePrint!!)
         }
         println("Finished in $timeSpent ms")
-        println("Dependency graph:")
-        projectBluePrint!!.printDependencies()
+        println("Dependency graph written to:")
+        projectBluePrint!!.saveDependencies()
         if (projectBluePrint!!.hasCircularDependencies()) {
             println("WARNING: there are circular dependencies")
         }

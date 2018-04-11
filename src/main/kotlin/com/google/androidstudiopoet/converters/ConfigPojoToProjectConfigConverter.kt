@@ -33,8 +33,7 @@ class ConfigPojoToProjectConfigConverter(private val configPojoToModuleConfigCon
 
         val androidModulesConfigs = (0 until configPojo.androidModules)
                 .map {
-                    configPojoToAndroidModuleConfigConverter.convert(configPojo, it, productFlavors, buildTypes,
-                            pureModulesConfigs.map { it.moduleName })
+                    configPojoToAndroidModuleConfigConverter.convert(configPojo, it, productFlavors, buildTypes)
                 }
 
         val buildSystemConfig = configPojoToBuildSystemConfigConverter.convert(configPojo)
