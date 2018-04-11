@@ -37,8 +37,6 @@ class ActivityGenerator(var fileWriter: FileWriter) {
                 .build()
 
         val javaFile = JavaFile.builder(blueprint.packageName, activityClass).build()
-
-        println("${blueprint.where}/${blueprint.className}.java")
         fileWriter.writeToFile(javaFile.toString(), "${blueprint.where}/${blueprint.className}.java")
 
     }
