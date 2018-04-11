@@ -20,6 +20,7 @@ import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 import java.awt.image.BufferedImage
 import java.io.File
+import java.util.*
 import javax.imageio.ImageIO
 
 class ImagesGenerator(val fileWriter: FileWriter) {
@@ -27,32 +28,32 @@ class ImagesGenerator(val fileWriter: FileWriter) {
     /**
      * generates image resources by blueprint, returns list of image names to refer later.
      */
-    fun generate(blueprint: ResourcesBlueprint) {
+    fun generate(blueprint: ResourcesBlueprint, random: Random) {
 
         val imagesDir = blueprint.resDirPath.joinPath("drawable")
 
         fileWriter.mkdir(imagesDir)
 
         blueprint.imageNames.forEach { imageName ->
-            val image = generateRandomImage()
+            val image = generateRandomImage(random)
 
             ImageIO.write(image,
                     "png",
-                    File(imagesDir, imageName + ".png"))
+                    File(imagesDir, "$imageName.png"))
         }
     }
 
-    private fun generateRandomImage(): BufferedImage {
+    private fun generateRandomImage(random: Random): BufferedImage {
         // Create buffered image object
         val img = BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB)
 
         // create random values pixel by pixel
         for (y in 0 until 100) {
             for (x in 0 until 100) {
-                val a = (Math.random() * 256).toInt() //generating
-                val r = (Math.random() * 256).toInt() //values
-                val g = (Math.random() * 256).toInt() //less than
-                val b = (Math.random() * 256).toInt() //256
+                val a = random.nextInt(256) //generating
+                val r = random.nextInt(256) //values
+                val g = random.nextInt(256) //less than
+                val b = random.nextInt(256) //256
 
                 val p = a shl 24 or (r shl 16) or (g shl 8) or b //pixel
 
