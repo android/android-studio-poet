@@ -72,7 +72,7 @@ class DependencyValidator {
 
     private fun isApp(to: ModuleSplit): Boolean = to.index == 0 && to.type.equals(ANDROID_TYPE)
 
-    private class ModuleSplit(moduleName : String){
+    class ModuleSplit(moduleName : String){
         val type: String
         val index: Int
 

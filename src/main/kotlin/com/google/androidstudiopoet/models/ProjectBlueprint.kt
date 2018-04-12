@@ -20,6 +20,7 @@ import com.google.androidstudiopoet.DEFAULT_AGP_VERSION
 import com.google.androidstudiopoet.DEFAULT_KOTLIN_VERSION
 import com.google.androidstudiopoet.ModuleBlueprintFactory
 import com.google.androidstudiopoet.input.ProjectConfig
+import com.google.androidstudiopoet.utils.DependencyImageGenerator
 import com.google.androidstudiopoet.utils.decrease
 import com.google.androidstudiopoet.utils.increase
 import com.google.androidstudiopoet.utils.joinPath
@@ -79,6 +80,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     fun saveDependencies() {
         val graphFileName = projectRoot.joinPath("dependencies.dot")
         File(graphFileName).printWriter().use { out -> out.print(dependenciesGraphString())}
+        DependencyImageGenerator().generate(this)
         println("Dependency graph written to $graphFileName")
     }
 
