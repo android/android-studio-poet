@@ -26,6 +26,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.File
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
                             private val gradleSettingsGenerator: GradleSettingsGenerator,
@@ -43,26 +44,39 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         projectBuildGradleGenerator.generate(projectBlueprint.buildGradleBlueprint)
         gradleSettingsGenerator.generate(projectBlueprint.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
 
-        val allJobs = mutableListOf<Job>()
-        projectBlueprint.moduleBlueprints.forEach{ blueprint ->
-            val job = launch {
-                writeModule(blueprint)
-                println("Done writing module ${blueprint.name}")
+        print("Writing modules...")
+        val timeSpent = measureTimeMillis {
+            // TODO: use topological sort (as generated in hasCircularDependencies) to reduce the need of cached methodToCall
+            val allJobs = mutableListOf<Job>()
+            projectBlueprint.moduleBlueprints.asReversed().forEach { blueprint ->
+                val job = launch {
+                    writeModule(blueprint)
+                }
+                allJobs.add(job)
             }
-            allJobs.add(job)
-        }
-        var randomCount: Long = 0
-        projectBlueprint.androidModuleBlueprints.forEach{ blueprint ->
-            val random = Random(randomCount++)
-            val job = launch {
-                androidModuleGenerator.generate(blueprint, random)
-                println("Done writing Android module " + blueprint.name)
+            var randomCount: Long = 0
+            projectBlueprint.androidModuleBlueprints.asReversed().forEach { blueprint ->
+                val random = Random(randomCount++)
+                val job = launch {
+                    androidModuleGenerator.generate(blueprint, random)
+                }
+                allJobs.add(job)
             }
-            allJobs.add(job)
+
+            // Wait for jobs to finish and write progress
+            var nextPercentage = 0
+            var jobsDone = 0
+            for (job in allJobs) {
+                job.join()
+                jobsDone++
+                val currentPercentage = (100 * jobsDone) / allJobs.size
+                if (currentPercentage >= nextPercentage) {
+                    nextPercentage = currentPercentage + 1
+                    print(String.format("\rWriting modules... %3d%%", currentPercentage))
+                }
+            }
         }
-        for (job in allJobs) {
-            job.join()
-        }
+        println("\rWriting modules... done in $timeSpent ms")
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint) {

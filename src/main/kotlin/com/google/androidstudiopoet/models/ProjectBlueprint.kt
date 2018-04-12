@@ -49,28 +49,28 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     init {
         var temporaryModuleBlueprints: List<ModuleBlueprint> = listOf()
+        var temporaryAndroidBlueprints: List<AndroidModuleBlueprint> = listOf()
+        print("Generating blueprints... ")
         val timeModels = measureTimeMillis {
             ModuleBlueprintFactory.initCache()
             runBlocking {
-                val deferred = projectConfig.pureModuleConfigs.map {
+                val deferredModules = projectConfig.pureModuleConfigs.map {
                     async {
                         ModuleBlueprintFactory.create(it, projectRoot)
                     }
                 }
-                temporaryModuleBlueprints = deferred.map { it.await() }
+                val deferredAndroid = projectConfig.androidModuleConfigs.map {
+                    async {
+                        ModuleBlueprintFactory.createAndroidModule(projectRoot, it, projectConfig.moduleConfigs)
+                    }
+                }
+                temporaryModuleBlueprints = deferredModules.map { it.await() }
+                temporaryAndroidBlueprints = deferredAndroid.map { it.await() }
             }
         }
         moduleBlueprints = temporaryModuleBlueprints
-        println("Time to create model blueprints: $timeModels")
-
-        var temporaryAndroidBlueprints: List<AndroidModuleBlueprint> = listOf()
-        val timeAndroidModels = measureTimeMillis {
-            temporaryAndroidBlueprints = projectConfig.androidModuleConfigs.map {
-                ModuleBlueprintFactory.createAndroidModule(projectRoot, it, projectConfig.moduleConfigs)
-            }
-        }
         androidModuleBlueprints = temporaryAndroidBlueprints
-        println("Time to create Android model blueprints: $timeAndroidModels")
+        println("done in $timeModels")
         allModuleBlueprints = androidModuleBlueprints + moduleBlueprints
         allModulesNames = allModuleBlueprints.map { it.name }
         allDependencies = allModuleBlueprints.associate { it -> Pair(it.name, it.moduleDependencies) }
@@ -79,7 +79,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     fun saveDependencies() {
         val graphFileName = projectRoot.joinPath("dependencies.dot")
         File(graphFileName).printWriter().use { out -> out.print(dependenciesGraphString())}
-        println("Dependency graph: $graphFileName")
+        println("Dependency graph written to $graphFileName")
     }
 
     private fun dependenciesGraphString() = allModuleBlueprints.joinToString("\n", "digraph $projectName {\n", "\n}") {

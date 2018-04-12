@@ -165,13 +165,12 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
         val timeSpent = measureTimeMillis {
             projectBluePrint = ProjectBlueprint(projectConfig)
             modulesGenerator.generate(projectBluePrint!!)
+            projectBluePrint!!.saveDependencies()
+            if (projectBluePrint!!.hasCircularDependencies()) {
+                println("WARNING: there are circular dependencies")
+            }
         }
         println("Finished in $timeSpent ms")
-        println("Dependency graph written to:")
-        projectBluePrint!!.saveDependencies()
-        if (projectBluePrint!!.hasCircularDependencies()) {
-            println("WARNING: there are circular dependencies")
-        }
     }
 
     private fun createTitleLabel(): JLabel {
