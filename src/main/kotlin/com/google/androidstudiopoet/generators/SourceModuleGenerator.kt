@@ -33,6 +33,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
                             private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
                             private val androidModuleGenerator: AndroidModuleGenerator,
                             private val packagesGenerator: PackagesGenerator,
+                            private val dependencyGraphGenerator: DependencyGraphGenerator,
                             private val fileWriter: FileWriter) {
 
     fun generate(projectBlueprint: ProjectBlueprint) = runBlocking {
@@ -77,6 +78,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
             }
         }
         println("\rWriting modules... done in $timeSpent ms")
+        dependencyGraphGenerator.generate(projectBlueprint)
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint) {
