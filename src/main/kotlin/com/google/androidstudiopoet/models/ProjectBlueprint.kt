@@ -42,7 +42,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     val androidModuleBlueprints: List<AndroidModuleBlueprint>
     val allModuleBlueprints: List<AbstractModuleBlueprint>
     val allModulesNames: List<String>
-    private val allDependencies: Map<String, List<ModuleDependency>>
+    val allDependencies: Map<String, List<ModuleDependency>>
 
     val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion, kotlinVersion)
 
@@ -72,7 +72,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         println("done in $timeModels")
         allModuleBlueprints = androidModuleBlueprints + moduleBlueprints
         allModulesNames = allModuleBlueprints.map { it.name }
-        allDependencies = allModuleBlueprints.associate { it -> Pair(it.name, it.moduleDependencies) }
+        allDependencies = allModuleBlueprints.associate { it.name to it.moduleDependencies }
     }
 
     fun hasCircularDependencies(): Boolean {

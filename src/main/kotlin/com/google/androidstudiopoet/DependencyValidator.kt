@@ -68,11 +68,11 @@ class DependencyValidator {
     }
 
     private fun javaDependsOnAndroid(from: ModuleSplit, to: ModuleSplit): Boolean =
-            from.type.equals(MODULE_TYPE) && to.type.equals(ANDROID_TYPE)
+            from.type == MODULE_TYPE && to.type == ANDROID_TYPE
 
-    private fun isApp(to: ModuleSplit): Boolean = to.index == 0 && to.type.equals(ANDROID_TYPE)
+    private fun isApp(to: ModuleSplit): Boolean = to.index == 0 && to.type == ANDROID_TYPE
 
-    class ModuleSplit(moduleName : String){
+    private class ModuleSplit(moduleName : String){
         val type: String
         val index: Int
 

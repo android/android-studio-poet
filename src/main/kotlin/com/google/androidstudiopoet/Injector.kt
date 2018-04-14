@@ -19,6 +19,7 @@ package com.google.androidstudiopoet
 import com.google.androidstudiopoet.converters.*
 import com.google.androidstudiopoet.deserializers.DependencyConfigDeserializer
 import com.google.androidstudiopoet.deserializers.ModuleConfigDeserializer
+import com.google.androidstudiopoet.generators.DependencyGraphGenerator
 import com.google.androidstudiopoet.generators.ModuleBuildGradleGenerator
 import com.google.androidstudiopoet.generators.PackagesGenerator
 import com.google.androidstudiopoet.generators.android_modules.*
@@ -35,12 +36,14 @@ import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.writers.FileWriter
 import com.google.androidstudiopoet.generators.SourceModuleGenerator
 import com.google.androidstudiopoet.input.DependencyConfig
+import com.google.androidstudiopoet.writers.ImageWriter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
 object Injector {
 
     private val fileWriter = FileWriter()
+    private val imageWriter = ImageWriter()
     val dependencyValidator = DependencyValidator()
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
     private val buildGradleGenerator = ModuleBuildGradleGenerator(fileWriter)
@@ -57,6 +60,7 @@ object Injector {
     private val manifestGenerator: ManifestGenerator = ManifestGenerator(fileWriter)
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
+    private val dependencyGraphGenerator = DependencyGraphGenerator(fileWriter, imageWriter)
 
     private val configPojoToFlavourConfigsConverter = ConfigPojoToFlavourConfigsConverter()
     private val configPojoToBuildTypeConfigsConverter = ConfigPojoToBuildTypeConfigsConverter()
@@ -78,7 +82,8 @@ object Injector {
 
     val modulesWriter =
             SourceModuleGenerator(buildGradleGenerator, gradleSettingsGenerator,
-                    projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator, fileWriter)
+                    projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator,
+                    dependencyGraphGenerator, fileWriter)
 
 
     private val moduleConfigDeserializer = ModuleConfigDeserializer()
