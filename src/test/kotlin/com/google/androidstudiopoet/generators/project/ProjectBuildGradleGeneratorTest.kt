@@ -42,13 +42,13 @@ class ProjectBuildGradleGeneratorTest {
 
     }
 }
+plugins {
+    id 'com.gradle.build-scan' version '1.8'
+}
 allprojects {
     repositories {
 
     }
-}
-plugins {
-    id 'com.gradle.build-scan' version '1.8'
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
@@ -83,14 +83,14 @@ buildScan {
 
     }
 }
+plugins {
+    id 'com.gradle.build-scan' version '1.8'
+}
 allprojects {
     repositories {
         jcenter()
         google()
     }
-}
-plugins {
-    id 'com.gradle.build-scan' version '1.8'
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
@@ -121,17 +121,17 @@ buildScan {
 
     }
     dependencies {
-        classpath 'classpath1'
-        classpath 'classpath2'
+        classpath "classpath1"
+        classpath "classpath2"
     }
+}
+plugins {
+    id 'com.gradle.build-scan' version '1.8'
 }
 allprojects {
     repositories {
 
     }
-}
-plugins {
-    id 'com.gradle.build-scan' version '1.8'
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
@@ -163,13 +163,13 @@ buildScan {
 
     }
 }
+plugins {
+    id 'com.gradle.build-scan' version '1.8'
+}
 allprojects {
     repositories {
 
     }
-}
-plugins {
-    id 'com.gradle.build-scan' version '1.8'
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
