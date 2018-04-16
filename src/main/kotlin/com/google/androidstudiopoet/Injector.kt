@@ -19,9 +19,7 @@ package com.google.androidstudiopoet
 import com.google.androidstudiopoet.converters.*
 import com.google.androidstudiopoet.deserializers.DependencyConfigDeserializer
 import com.google.androidstudiopoet.deserializers.ModuleConfigDeserializer
-import com.google.androidstudiopoet.generators.DependencyGraphGenerator
-import com.google.androidstudiopoet.generators.ModuleBuildGradleGenerator
-import com.google.androidstudiopoet.generators.PackagesGenerator
+import com.google.androidstudiopoet.generators.*
 import com.google.androidstudiopoet.generators.android_modules.*
 import com.google.androidstudiopoet.generators.packages.JavaGenerator
 import com.google.androidstudiopoet.generators.packages.KotlinGenerator
@@ -34,7 +32,6 @@ import com.google.androidstudiopoet.generators.android_modules.resources.Resourc
 import com.google.androidstudiopoet.generators.android_modules.resources.StringResourcesGenerator
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.writers.FileWriter
-import com.google.androidstudiopoet.generators.SourceModuleGenerator
 import com.google.androidstudiopoet.input.DependencyConfig
 import com.google.androidstudiopoet.writers.ImageWriter
 import com.google.gson.Gson
@@ -60,7 +57,8 @@ object Injector {
     private val manifestGenerator: ManifestGenerator = ManifestGenerator(fileWriter)
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
-    private val dependencyGraphGenerator = DependencyGraphGenerator(fileWriter, imageWriter)
+    private val dependencyImageGenerator = DependencyImageGenerator(imageWriter)
+    private val dependencyGraphGenerator = DependencyGraphGenerator(fileWriter, dependencyImageGenerator)
 
     private val configPojoToFlavourConfigsConverter = ConfigPojoToFlavourConfigsConverter()
     private val configPojoToBuildTypeConfigsConverter = ConfigPojoToBuildTypeConfigsConverter()
