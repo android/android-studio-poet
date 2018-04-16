@@ -19,9 +19,7 @@ package com.google.androidstudiopoet.generators.project
 import com.google.androidstudiopoet.generators.toClasspathExpression
 import com.google.androidstudiopoet.generators.toExpression
 import com.google.androidstudiopoet.gradle.*
-import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.models.ProjectBuildGradleBlueprint
-import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
 
 class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
@@ -30,8 +28,8 @@ class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val statements = listOf(
                 getBuildscriptClosure(blueprint),
-                getAllprojectsClosure(blueprint),
                 getPluginsClosure(),
+                getAllprojectsClosure(blueprint),
                 getCleanTask(),
                 getBuildScanClosure())
 
