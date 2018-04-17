@@ -21,7 +21,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 
-class FileWriter {
+class FileWriter : AbstractWriter {
     fun writeToFile(content: String, path: String) {
         var writer: BufferedWriter? = null
         try {
@@ -41,19 +41,5 @@ class FileWriter {
                 e.printStackTrace()
             }
         }
-    }
-
-    fun mkdir(path: String) {
-        val file = File(path)
-        if (file.parentFile != null && !file.parentFile.exists()) {
-            mkdir(file.parent)
-        }
-        File(path).mkdir()
-    }
-
-    fun delete(path: String) {
-        val file = File(path)
-        file.listFiles()?.forEach { delete(it.absolutePath) }
-        file.delete()
     }
 }

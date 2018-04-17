@@ -19,6 +19,7 @@ package com.google.androidstudiopoet.testutils
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
+import java.awt.image.BufferedImage
 
 fun <T> Collection<T>.assertEmpty() {
     assertTrue(this.isEmpty())
@@ -52,4 +53,14 @@ fun Boolean.assertFalse() {
 
 fun Any?.assertNull() {
     assertEquals(null, this)
+}
+
+fun BufferedImage.assertEqualImage(bufferedImage: BufferedImage) {
+    this.height.assertEquals(bufferedImage.height)
+    this.width.assertEquals(bufferedImage.width)
+    for (y in 0..(this.height - 1)) {
+        for  (x in 0..(this.width - 1)){
+            this.getRGB(x, y).assertEquals(bufferedImage.getRGB(x, y))
+        }
+    }
 }

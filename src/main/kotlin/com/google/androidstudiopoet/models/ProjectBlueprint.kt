@@ -25,7 +25,6 @@ import com.google.androidstudiopoet.utils.increase
 import com.google.androidstudiopoet.utils.joinPath
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
-import java.io.File
 import kotlin.system.measureTimeMillis
 
 class ProjectBlueprint(private val projectConfig: ProjectConfig) {
@@ -41,9 +40,9 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val moduleBlueprints: List<ModuleBlueprint>
     val androidModuleBlueprints: List<AndroidModuleBlueprint>
-    private val allModuleBlueprints: List<AbstractModuleBlueprint>
+    val allModuleBlueprints: List<AbstractModuleBlueprint>
     val allModulesNames: List<String>
-    private val allDependencies: Map<String, List<ModuleDependency>>
+    val allDependencies: Map<String, List<ModuleDependency>>
 
     val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion, kotlinVersion)
 
@@ -73,26 +72,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         println("done in $timeModels")
         allModuleBlueprints = androidModuleBlueprints + moduleBlueprints
         allModulesNames = allModuleBlueprints.map { it.name }
-        allDependencies = allModuleBlueprints.associate { it -> Pair(it.name, it.moduleDependencies) }
-    }
-
-    fun saveDependencies() {
-        val graphFileName = projectRoot.joinPath("dependencies.dot")
-        File(graphFileName).printWriter().use { out -> out.print(dependenciesGraphString())}
-        println("Dependency graph written to $graphFileName")
-    }
-
-    private fun dependenciesGraphString() = allModuleBlueprints.joinToString("\n", "digraph $projectName {\n", "\n}") {
-        getDependencyForModuleAsString(it.name, it.moduleDependencies)
-    }
-
-    private fun getDependencyForModuleAsString(name: String, dependencies: List<ModuleDependency>): String {
-        var list = ""
-        if (dependencies.isNotEmpty()) {
-            list = " -> ${dependencies.map { it.name }.sorted().joinToString()}"
-        }
-
-        return "  $name$list;"
+        allDependencies = allModuleBlueprints.associate { it.name to it.moduleDependencies }
     }
 
     fun hasCircularDependencies(): Boolean {
