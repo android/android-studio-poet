@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage
 
 class DependencyImageGenerator(private val imageWriter: ImageWriter) {
     companion object {
-        const val CELL_SIZE = 3
+        const val CELL_SIZE = 20
         const val LINE_WIDTH = 1
         const val HEADER_SIZE = CELL_SIZE + 2 * LINE_WIDTH
         const val GRID_SIZE = CELL_SIZE + LINE_WIDTH
