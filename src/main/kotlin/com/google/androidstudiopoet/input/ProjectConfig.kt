@@ -21,6 +21,7 @@ class ProjectConfig {
     lateinit var root: String
     lateinit var buildSystemConfig: BuildSystemConfig
     lateinit var moduleConfigs: List<ModuleConfig>
+    var repositories: List<RepositoryConfig>? = null
 
     val pureModuleConfigs : List<ModuleConfig> by lazy { moduleConfigs.filter { it !is AndroidModuleConfig } }
     val androidModuleConfigs: List<AndroidModuleConfig> by lazy { moduleConfigs.filterIsInstance<AndroidModuleConfig>() }

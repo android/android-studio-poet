@@ -1,5 +1,6 @@
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.input.RepositoryConfig
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.assertNull
@@ -84,10 +85,27 @@ class ProjectBuildGradleBlueprintTest {
         }
     }
 
+    @Test
+    fun `repositories should contain additonal repos`() {
+        val repoUrl = "http://smth"
+        val additionalRepository = listOf(
+                RepositoryConfig().apply { url = repoUrl }
+        )
+
+        val expectedRepository = Repository.Remote(repoUrl)
+
+        val blueprint = getBlueprint(additionalRepositories = additionalRepository)
+
+        assertOn(blueprint) {
+            repositories.contains(expectedRepository)
+        }
+    }
+
     private fun getBlueprint(
             root: String = "root",
             enableKotlin: Boolean = false,
             agpVersion: String = "3.0.2",
-            kotlinVersion: String = "1.2.20") =
-            ProjectBuildGradleBlueprint(root, enableKotlin, agpVersion, kotlinVersion)
+            kotlinVersion: String = "1.2.20",
+            additionalRepositories: List<RepositoryConfig> = listOf()) =
+            ProjectBuildGradleBlueprint(root, enableKotlin, agpVersion, kotlinVersion, additionalRepositories)
 }

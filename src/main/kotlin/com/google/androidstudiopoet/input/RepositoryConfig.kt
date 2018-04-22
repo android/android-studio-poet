@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.models
+package com.google.androidstudiopoet.input
 
-sealed class Repository {
-    data class Named(val name: String): Repository()
-    data class Remote(val url: String): Repository()
+class RepositoryConfig() {
+    lateinit var url: String
 }

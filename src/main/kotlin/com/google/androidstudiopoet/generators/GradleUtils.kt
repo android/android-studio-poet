@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators
 
+import com.google.androidstudiopoet.gradle.Closure
 import com.google.androidstudiopoet.gradle.Expression
 import com.google.androidstudiopoet.gradle.StringStatement
 import com.google.androidstudiopoet.models.Dependency
@@ -31,7 +32,14 @@ fun String.toApplyPluginExpression() = Expression("apply plugin:", "'$this'")
 
 fun String.toClasspathExpression() = Expression("classpath", "\"$this\"")
 
+fun Repository.toExpression() = when (this) {
+    is Repository.Named -> this.toExpression()
+    is Repository.Remote -> this.toExpression()
+}
+
 fun Repository.Named.toExpression() = StringStatement("${this.name}()")
+
+fun Repository.Remote.toExpression() = Closure("maven", listOf(Expression("url", "\"${this.url}\"")))
 
 fun Dependency.toExpression() = when (this) {
     is ModuleDependency -> this.toExpression()
