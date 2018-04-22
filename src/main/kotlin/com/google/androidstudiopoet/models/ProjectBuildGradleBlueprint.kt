@@ -16,10 +16,11 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.input.RepositoryConfig
 import com.google.androidstudiopoet.utils.joinPath
 
 class ProjectBuildGradleBlueprint(root: String, enableKotlin: Boolean, androidGradlePluginVersion: String,
-                                  kotlinVersion: String) {
+                                  kotlinVersion: String, additionalRepositories: List<RepositoryConfig>?) {
 
     val path = root.joinPath("build.gradle")
     val kotlinExtStatement = if (enableKotlin) "ext.kotlin_version = '$kotlinVersion'" else null
@@ -34,5 +35,5 @@ class ProjectBuildGradleBlueprint(root: String, enableKotlin: Boolean, androidGr
     val repositories = setOf(
             Repository.Named("jcenter"),
             Repository.Named("google")
-    )
+    ) + additionalRepositories.orEmpty().map { Repository.Remote(it.url) }.toSet()
 }

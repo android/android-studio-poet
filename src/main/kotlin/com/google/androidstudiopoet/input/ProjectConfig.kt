@@ -21,6 +21,7 @@ class ProjectConfig {
     lateinit var root: String
     lateinit var buildSystemConfig: BuildSystemConfig
     lateinit var moduleConfigs: List<ModuleConfig>
+    var repositories: List<RepositoryConfig>? = null
 
     // TODO here JSON string
 
