@@ -15,11 +15,11 @@
 package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.converters.ConfigPojoToProjectConfigConverter
+import com.google.androidstudiopoet.generators.SourceModuleGenerator
+import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.input.GenerationConfig
 import com.google.androidstudiopoet.input.ProjectConfig
-import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.models.ProjectBlueprint
-import com.google.androidstudiopoet.generators.SourceModuleGenerator
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -160,6 +160,7 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
         startGeneration(projectConfig)
     }
 
+    // TODO add string JSON parameter
     private fun startGeneration(projectConfig: ProjectConfig) {
         var projectBluePrint: ProjectBlueprint? = null
         val timeSpent = measureTimeMillis {

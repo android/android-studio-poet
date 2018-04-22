@@ -22,6 +22,8 @@ class ProjectConfig {
     lateinit var buildSystemConfig: BuildSystemConfig
     lateinit var moduleConfigs: List<ModuleConfig>
 
+    // TODO here JSON string
+
     val pureModuleConfigs : List<ModuleConfig> by lazy { moduleConfigs.filter { it !is AndroidModuleConfig } }
     val androidModuleConfigs: List<AndroidModuleConfig> by lazy { moduleConfigs.filterIsInstance<AndroidModuleConfig>() }
 }

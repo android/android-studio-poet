@@ -79,6 +79,8 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         }
         println("\rWriting modules... done in $timeSpent ms")
         dependencyGraphGenerator.generate(projectBlueprint)
+
+        // TODO here call to JSONConfig generator
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint) {
