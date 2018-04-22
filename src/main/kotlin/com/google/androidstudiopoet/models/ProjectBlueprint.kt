@@ -44,7 +44,8 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     val allModulesNames: List<String>
     val allDependencies: Map<String, List<ModuleDependency>>
 
-    val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion, kotlinVersion)
+    val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion,
+            kotlinVersion, projectConfig.repositories)
 
     init {
         var temporaryModuleBlueprints: List<ModuleBlueprint> = listOf()

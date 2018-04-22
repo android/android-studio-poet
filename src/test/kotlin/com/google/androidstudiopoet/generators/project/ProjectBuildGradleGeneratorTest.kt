@@ -68,7 +68,7 @@ buildScan {
         val blueprint = getProjectBuildGradleBlueprint(
                 repositories = setOf(
                         Repository.Named("jcenter"),
-                        Repository.Named("google")
+                        Repository.Remote("http://smth")
                 )
         )
 
@@ -77,7 +77,9 @@ buildScan {
         val expected = """buildscript {
     repositories {
         jcenter()
-        google()
+        maven {
+            url "http://smth"
+        }
     }
     dependencies {
 
@@ -89,7 +91,9 @@ plugins {
 allprojects {
     repositories {
         jcenter()
-        google()
+        maven {
+            url "http://smth"
+        }
     }
 }
 task clean(type: Delete) {
@@ -186,7 +190,7 @@ buildScan {
 
     private fun getProjectBuildGradleBlueprint(
             kotlinExtStatement: String? = null,
-            repositories: Set<Repository.Named> = setOf(),
+            repositories: Set<Repository> = setOf(),
             classpaths: Set<String> = setOf()
     ): ProjectBuildGradleBlueprint {
         val blueprint: ProjectBuildGradleBlueprint = mock()
