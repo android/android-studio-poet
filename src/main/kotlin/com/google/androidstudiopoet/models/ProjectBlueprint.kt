@@ -46,8 +46,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion,
             kotlinVersion, projectConfig.repositories)
-
-    // TODO here JSON string from config
+    val jsonText = projectConfig.jsonText
 
     init {
         var temporaryModuleBlueprints: List<ModuleBlueprint> = listOf()

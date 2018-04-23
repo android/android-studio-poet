@@ -21,18 +21,17 @@ import com.google.androidstudiopoet.deserializers.DependencyConfigDeserializer
 import com.google.androidstudiopoet.deserializers.ModuleConfigDeserializer
 import com.google.androidstudiopoet.generators.*
 import com.google.androidstudiopoet.generators.android_modules.*
-import com.google.androidstudiopoet.generators.packages.JavaGenerator
-import com.google.androidstudiopoet.generators.packages.KotlinGenerator
-import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
-import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
-import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.android_modules.resources.ImagesGenerator
 import com.google.androidstudiopoet.generators.android_modules.resources.LayoutResourcesGenerator
 import com.google.androidstudiopoet.generators.android_modules.resources.ResourcesGenerator
 import com.google.androidstudiopoet.generators.android_modules.resources.StringResourcesGenerator
+import com.google.androidstudiopoet.generators.packages.JavaGenerator
+import com.google.androidstudiopoet.generators.packages.KotlinGenerator
+import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
+import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
+import com.google.androidstudiopoet.input.DependencyConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.writers.FileWriter
-import com.google.androidstudiopoet.input.DependencyConfig
 import com.google.androidstudiopoet.writers.ImageWriter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -59,6 +58,7 @@ object Injector {
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
     private val dependencyImageGenerator = DependencyImageGenerator(imageWriter)
     private val dependencyGraphGenerator = DependencyGraphGenerator(fileWriter, dependencyImageGenerator)
+    private val jsonConfigGenerator = JsonConfigGenerator(fileWriter)
 
     private val configPojoToFlavourConfigsConverter = ConfigPojoToFlavourConfigsConverter()
     private val configPojoToBuildTypeConfigsConverter = ConfigPojoToBuildTypeConfigsConverter()
@@ -81,7 +81,7 @@ object Injector {
     val modulesWriter =
             SourceModuleGenerator(buildGradleGenerator, gradleSettingsGenerator,
                     projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator,
-                    dependencyGraphGenerator, fileWriter)
+                    dependencyGraphGenerator, jsonConfigGenerator, fileWriter)
 
 
     private val moduleConfigDeserializer = ModuleConfigDeserializer()

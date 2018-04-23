@@ -23,8 +23,8 @@ class ProjectConfig {
     lateinit var moduleConfigs: List<ModuleConfig>
     var repositories: List<RepositoryConfig>? = null
 
-    // TODO here JSON string
-
     val pureModuleConfigs : List<ModuleConfig> by lazy { moduleConfigs.filter { it !is AndroidModuleConfig } }
     val androidModuleConfigs: List<AndroidModuleConfig> by lazy { moduleConfigs.filterIsInstance<AndroidModuleConfig>() }
+
+    var jsonText: String = ""
 }
