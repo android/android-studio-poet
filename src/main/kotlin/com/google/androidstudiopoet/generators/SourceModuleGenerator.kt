@@ -14,6 +14,7 @@
 
 package com.google.androidstudiopoet.generators
 
+import com.google.androidstudiopoet.JsonConfigGenerator
 import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
@@ -34,6 +35,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
                             private val androidModuleGenerator: AndroidModuleGenerator,
                             private val packagesGenerator: PackagesGenerator,
                             private val dependencyGraphGenerator: DependencyGraphGenerator,
+                            private val jsonConfigGenerator: JsonConfigGenerator,
                             private val fileWriter: FileWriter) {
 
     fun generate(projectBlueprint: ProjectBlueprint) = runBlocking {
@@ -79,6 +81,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         }
         println("\rWriting modules... done in $timeSpent ms")
         dependencyGraphGenerator.generate(projectBlueprint)
+        jsonConfigGenerator.generate(projectBlueprint)
     }
 
     private fun writeModule(moduleBlueprint: ModuleBlueprint) {

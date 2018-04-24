@@ -15,11 +15,11 @@
 package com.google.androidstudiopoet
 
 import com.google.androidstudiopoet.converters.ConfigPojoToProjectConfigConverter
+import com.google.androidstudiopoet.generators.SourceModuleGenerator
+import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.input.GenerationConfig
 import com.google.androidstudiopoet.input.ProjectConfig
-import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.models.ProjectBlueprint
-import com.google.androidstudiopoet.generators.SourceModuleGenerator
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -138,24 +138,26 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
     private fun processInput(jsonText: String) {
         val input = parseInput(jsonText)
         when (input) {
-            is GenerationConfig -> processInput(input)
-            is ConfigPOJO -> processInput(input)
+            is GenerationConfig -> processInput(input, jsonText)
+            is ConfigPOJO -> processInput(input, jsonText)
             else -> println("Can't parse json")
         }
     }
 
-    private fun processInput(config: GenerationConfig) {
+    private fun processInput(config: GenerationConfig, jsonText: String) {
         println("Input version: ${config.inputVersion}")
+        config.projectConfig.jsonText = jsonText
         startGeneration(config.projectConfig)
     }
 
-    private fun processInput(configPOJO: ConfigPOJO) {
+    private fun processInput(configPOJO: ConfigPOJO, jsonText: String) {
 
         if (!dependencyValidator.isValid(configPOJO.dependencies ?: listOf(), configPOJO.numModules, configPOJO.androidModules)) {
             throw IllegalStateException("Incorrect dependencies")
         }
 
         val projectConfig = configPojoToProjectConfigConverter.convert(configPOJO)
+        projectConfig.jsonText = jsonText
 
         startGeneration(projectConfig)
     }
