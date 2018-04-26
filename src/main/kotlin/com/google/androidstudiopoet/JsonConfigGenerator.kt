@@ -21,7 +21,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 class JsonConfigGenerator(val fileWriter: FileWriter) {
 
     fun generate(projectBlueprint: ProjectBlueprint) {
-        val where = projectBlueprint.projectRoot.joinPath("config.json")
+        val where = projectBlueprint.projectRoot.joinPath("as_poet_config.json")
         fileWriter.writeToFile(projectBlueprint.jsonText, where)
     }
 }
