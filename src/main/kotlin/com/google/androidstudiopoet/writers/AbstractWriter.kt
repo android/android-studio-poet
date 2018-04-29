@@ -15,7 +15,7 @@ interface AbstractWriter {
 
     fun delete(path: String) {
         val file = File(path)
-        if (file.isDirectory && !FileUtils.isSymlink(file)) {
+        if (!FileUtils.isSymlink(file)) {
             file.listFiles()?.forEach { delete(it.absolutePath) }
         }
         file.delete()
