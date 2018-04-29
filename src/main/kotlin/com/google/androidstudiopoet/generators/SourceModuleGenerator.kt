@@ -43,6 +43,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
 
         fileWriter.delete(projectBlueprint.projectRoot)
         fileWriter.mkdir(projectBlueprint.projectRoot)
+        fileWriter.writeToFile("android_sdk_repository(name = \"androidsdk\")", projectBlueprint.projectRoot + "/WORKSPACE")
 
         GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint)
         projectBuildGradleGenerator.generate(projectBlueprint.buildGradleBlueprint)

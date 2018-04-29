@@ -99,8 +99,8 @@ class AndroidModuleBlueprint(name: String,
                 packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
     }
 
-    val buildBazelBlueprint: AndroidBazelBuildBlueprint by lazy {
-        AndroidBazelBuildBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
+    val buildBazelBlueprint: AndroidBuildBazelBlueprint by lazy {
+        AndroidBuildBazelBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
                 packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
     }
 }

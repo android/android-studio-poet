@@ -29,7 +29,7 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
                              private val manifestGenerator: ManifestGenerator,
                              private val proguardGenerator: ProguardGenerator,
                              private val buildGradleGenerator: AndroidModuleBuildGradleGenerator,
-                             private val bazelBuildGenerator: AndroidModuleBazelBuildGenerator,
+                             private val buildBazelGenerator: AndroidModuleBuildBazelGenerator,
                              private val fileWriter: FileWriter) {
 
     /**
@@ -40,7 +40,7 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
 
         proguardGenerator.generate(blueprint)
         buildGradleGenerator.generate(blueprint.buildGradleBlueprint)
-        bazelBuildGenerator.generate(blueprint.buildBazelBlueprint)
+        buildBazelGenerator.generate(blueprint.buildBazelBlueprint)
         blueprint.resourcesBlueprint?.let { resourcesGenerator.generate(it, random) }
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
         blueprint.activityBlueprints.forEach({ activityGenerator.generate(it) })

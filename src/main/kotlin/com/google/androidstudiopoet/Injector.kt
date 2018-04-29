@@ -42,7 +42,7 @@ object Injector {
     private val imageWriter = ImageWriter()
     val dependencyValidator = DependencyValidator()
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
-    private val amBazelBuildGenerator = AndroidModuleBazelBuildGenerator(fileWriter)
+    private val amBazelBuildGenerator = AndroidModuleBuildBazelGenerator(fileWriter)
     private val buildGradleGenerator = ModuleBuildGradleGenerator(fileWriter)
     private val buildBazelGenerator = ModuleBazelBuildGenerator(fileWriter)
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)

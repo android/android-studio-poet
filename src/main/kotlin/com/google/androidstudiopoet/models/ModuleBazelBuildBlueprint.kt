@@ -26,6 +26,8 @@ class ModuleBazelBuildBlueprint(
         moduleRoot: String
 ) : ModuleBuildSpecificationBlueprint {
 
+    override val moduleName = moduleRoot.split("/").last()
+
     override val path = moduleRoot.joinPath("BUILD.bazel")
 
     override val plugins: Set<String> = createSetOfPlugins()

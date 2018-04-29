@@ -26,6 +26,8 @@ class ModuleBuildGradleBlueprint(
         moduleRoot: String
 ) : ModuleBuildSpecificationBlueprint {
 
+    override val moduleName = moduleRoot.split("/").last()
+
     override val path = moduleRoot.joinPath("build.gradle")
 
     override val plugins: Set<String> = createSetOfPlugins()
