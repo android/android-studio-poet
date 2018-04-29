@@ -23,7 +23,7 @@ import com.google.androidstudiopoet.gradle.StringStatement
 import com.google.androidstudiopoet.models.ModuleBuildSpecificationBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 
-class ModuleBuildGradleGenerator(private val fileWriter: FileWriter) {
+class ModuleBazelBuildGenerator(private val fileWriter: FileWriter) {
     fun generate(blueprint: ModuleBuildSpecificationBlueprint) {
         val statements = applyPlugins(blueprint.plugins) +
                 dependenciesClosure(blueprint) +

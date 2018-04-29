@@ -18,7 +18,7 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.utils.joinPath
 
-class ModuleBuildGradleBlueprint(
+class ModuleBazelBuildBlueprint(
         additionalDependencies: Set<Dependency>,
         private val enableKotlin: Boolean,
         private val generateTests: Boolean,
@@ -26,7 +26,7 @@ class ModuleBuildGradleBlueprint(
         moduleRoot: String
 ) : ModuleBuildSpecificationBlueprint {
 
-    override val path = moduleRoot.joinPath("build.gradle")
+    override val path = moduleRoot.joinPath("BUILD.bazel")
 
     override val plugins: Set<String> = createSetOfPlugins()
 

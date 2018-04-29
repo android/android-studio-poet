@@ -42,11 +42,14 @@ object Injector {
     private val imageWriter = ImageWriter()
     val dependencyValidator = DependencyValidator()
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
+    private val amBazelBuildGenerator = AndroidModuleBazelBuildGenerator(fileWriter)
     private val buildGradleGenerator = ModuleBuildGradleGenerator(fileWriter)
+    private val buildBazelGenerator = ModuleBazelBuildGenerator(fileWriter)
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator(fileWriter)
     private val stringResourcesGenerator = StringResourcesGenerator(fileWriter)
     private val imageResourcesGenerator = ImagesGenerator(fileWriter)
+
     private val layoutResourcesGenerator = LayoutResourcesGenerator(fileWriter)
     private val resourcesGenerator = ResourcesGenerator(stringResourcesGenerator, imageResourcesGenerator,
             layoutResourcesGenerator, fileWriter)
@@ -76,10 +79,12 @@ object Injector {
                     activityGenerator,
                     manifestGenerator, proguardGenerator,
                     amBuildGradleGenerator,
+                    amBazelBuildGenerator,
                     fileWriter)
 
     val modulesWriter =
-            SourceModuleGenerator(buildGradleGenerator, gradleSettingsGenerator,
+            SourceModuleGenerator(
+                    buildGradleGenerator, buildBazelGenerator, gradleSettingsGenerator,
                     projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator,
                     dependencyGraphGenerator, jsonConfigGenerator, fileWriter)
 

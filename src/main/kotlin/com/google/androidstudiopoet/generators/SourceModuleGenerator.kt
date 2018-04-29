@@ -30,6 +30,7 @@ import java.util.*
 import kotlin.system.measureTimeMillis
 
 class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
+                            private val moduleBazelBuildGenerator: ModuleBazelBuildGenerator,
                             private val gradleSettingsGenerator: GradleSettingsGenerator,
                             private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
                             private val androidModuleGenerator: AndroidModuleGenerator,
@@ -90,6 +91,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
 
         writeLibsFolder(moduleRootFile)
         moduleBuildGradleGenerator.generate(moduleBlueprint.buildGradleBlueprint)
+        moduleBazelBuildGenerator.generate(moduleBlueprint.buildBazelBlueprint)
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
     }

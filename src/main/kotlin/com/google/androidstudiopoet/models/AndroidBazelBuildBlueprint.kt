@@ -21,7 +21,7 @@ import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.utils.joinPath
 
-class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
+class AndroidBazelBuildBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
                                   override val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
                                   buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>) : AndroidModuleBuildSpecificationBlueprint {
@@ -31,7 +31,7 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
 
     override val dependencies = additionalDependencies + libraries
 
-    override val path = moduleRoot.joinPath("build.gradle")
+    override val path = moduleRoot.joinPath("BUILD.bazel")
 
     val minSdkVersion = androidBuildConfig.minSdkVersion
     val targetSdkVersion = androidBuildConfig.targetSdkVersion
