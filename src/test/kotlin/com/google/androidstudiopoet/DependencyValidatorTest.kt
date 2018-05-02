@@ -29,7 +29,7 @@ class DependencyValidatorTest {
     fun `isValid returns true when dependencies field are smaller then numModules`() {
         val moduleCount = 4
         val androidModuleCount = 0
-        val dependencies = listOf(FromToDependencyConfig("module1", "module2"))
+        val dependencies = listOf(FromToDependencyConfig("module1", "module2", DEFAULT_DEPENDENCY_METHOD))
         assertTrue(validator.isValid(dependencies, moduleCount,androidModuleCount))
     }
 
@@ -37,7 +37,7 @@ class DependencyValidatorTest {
     fun `isValid returns false when Dependency#to is bigger then numModules`() {
         val moduleCount = 2
         val androidModuleCount = 0
-        val dependencies = listOf(FromToDependencyConfig("module1", "module2"))
+        val dependencies = listOf(FromToDependencyConfig("module1", "module2", DEFAULT_DEPENDENCY_METHOD))
         assertFalse(validator.isValid(dependencies, moduleCount, androidModuleCount))
     }
 
@@ -45,7 +45,7 @@ class DependencyValidatorTest {
     fun `isValid returns false when Dependency#from is bigger then numModules`() {
         val moduleCount = 2
         val androidModuleCount = 0
-        val dependencies = listOf(FromToDependencyConfig("module2", "module1"))
+        val dependencies = listOf(FromToDependencyConfig("module2", "module1", DEFAULT_DEPENDENCY_METHOD))
         assertFalse(validator.isValid(dependencies, moduleCount, androidModuleCount))
     }
 
@@ -53,7 +53,7 @@ class DependencyValidatorTest {
     fun `isValid returns true when dependencies field are smaller then androidModules`() {
         val moduleCount = 0
         val androidModuleCount = 4
-        val dependencies = listOf(FromToDependencyConfig("androidAppModule1", "androidAppModule2"))
+        val dependencies = listOf(FromToDependencyConfig("androidAppModule1", "androidAppModule2", DEFAULT_DEPENDENCY_METHOD))
         assertTrue(validator.isValid(dependencies, moduleCount,androidModuleCount))
     }
 
@@ -61,7 +61,7 @@ class DependencyValidatorTest {
     fun `isValid returns false when Dependency#to is bigger then androidModules`() {
         val moduleCount = 0
         val androidModuleCount = 2
-        val dependencies = listOf(FromToDependencyConfig("androidAppModule1", "androidAppModule2"))
+        val dependencies = listOf(FromToDependencyConfig("androidAppModule1", "androidAppModule2", DEFAULT_DEPENDENCY_METHOD))
         assertFalse(validator.isValid(dependencies, moduleCount, androidModuleCount))
     }
 
@@ -69,7 +69,7 @@ class DependencyValidatorTest {
     fun `isValid returns false when Dependency#from is bigger then androidModules`() {
         val moduleCount = 2
         val androidModuleCount = 2
-        val dependencies = listOf(FromToDependencyConfig("androidAppModule2", "androidAppModule1"))
+        val dependencies = listOf(FromToDependencyConfig("androidAppModule2", "androidAppModule1", DEFAULT_DEPENDENCY_METHOD))
         assertFalse(validator.isValid(dependencies, moduleCount, androidModuleCount))
     }
 
@@ -77,7 +77,7 @@ class DependencyValidatorTest {
     fun `isValid returns false when Dependency#from is module and to is Android`() {
         val moduleCount = 2
         val androidModuleCount = 2
-        val dependencies = listOf(FromToDependencyConfig("module1", "androidAppModule1"))
+        val dependencies = listOf(FromToDependencyConfig("module1", "androidAppModule1", DEFAULT_DEPENDENCY_METHOD))
         assertFalse(validator.isValid(dependencies, moduleCount, androidModuleCount))
     }
 
@@ -85,7 +85,7 @@ class DependencyValidatorTest {
     fun `isValid returns false when Dependency#to is App`() {
         val moduleCount = 2
         val androidModuleCount = 2
-        val dependencies = listOf(FromToDependencyConfig("androidAppModule1", "androidAppModule0"))
+        val dependencies = listOf(FromToDependencyConfig("androidAppModule1", "androidAppModule0", DEFAULT_DEPENDENCY_METHOD))
         assertFalse(validator.isValid(dependencies, moduleCount, androidModuleCount))
     }
 
@@ -93,7 +93,7 @@ class DependencyValidatorTest {
     fun `isValid returns false when Dependency#from type is invalid`() {
         val moduleCount = 2
         val androidModuleCount = 2
-        val dependencies = listOf(FromToDependencyConfig("invalid0", "androidAppModule0"))
+        val dependencies = listOf(FromToDependencyConfig("invalid0", "androidAppModule0", DEFAULT_DEPENDENCY_METHOD))
         assertFalse(validator.isValid(dependencies, moduleCount, androidModuleCount))
     }
 
@@ -101,7 +101,7 @@ class DependencyValidatorTest {
     fun `isValid returns false when Dependency#to type is invalid`() {
         val moduleCount = 2
         val androidModuleCount = 2
-        val dependencies = listOf(FromToDependencyConfig("module0", "invalid0"))
+        val dependencies = listOf(FromToDependencyConfig("module0", "invalid0", DEFAULT_DEPENDENCY_METHOD))
         assertFalse(validator.isValid(dependencies, moduleCount, androidModuleCount))
     }
 }

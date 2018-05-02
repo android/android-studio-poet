@@ -39,7 +39,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
             hasLaunchActivity = index == 0
 
             val resolvedDependencies = config.resolvedDependencies[moduleName]
-            dependencies = resolvedDependencies?.sortedBy { it.to }?.map { dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to) } ?: emptyList()
+            dependencies = resolvedDependencies?.sortedBy { it.to }?.map { dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to, dependency.method) } ?: emptyList()
 
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs

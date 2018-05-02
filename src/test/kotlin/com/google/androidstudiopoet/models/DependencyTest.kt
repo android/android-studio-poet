@@ -25,9 +25,10 @@ import org.junit.Test
 class DependencyTest {
     @Test
     fun `Dependency deserialized correctly`() {
-        @Language("JSON") val dependencyString = "{\n  \"from\": \"module2\",\n  \"to\": \"module1\"\n}"
+        @Language("JSON") val dependencyString = "{\n  \"from\": \"module2\",\n  \"to\": \"module1\",\n  \"method\": \"api\"\n}"
         val dependency = Gson().fromJson(dependencyString, FromToDependencyConfig::class.java)
         assertEquals("module2", dependency.from)
         assertEquals("module1", dependency.to)
+        assertEquals("api", dependency.method)
     }
 }

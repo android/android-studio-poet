@@ -16,4 +16,4 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-data class FromToDependencyConfig(val from: String, val to: String)
+data class FromToDependencyConfig(val from: String, val to: String, val method: String)
