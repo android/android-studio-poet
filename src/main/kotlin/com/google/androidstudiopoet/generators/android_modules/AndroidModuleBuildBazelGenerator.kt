@@ -25,6 +25,7 @@ class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
         val deps: Set<String> = bazelBlueprint.dependencies.mapNotNull {
             when (it) {
                 is ModuleDependency -> "\"//${it.name}\""
+                is GmavenBazelDependency -> "gmaven_artifact(\"${it.name}\")"
                 else -> ""
             }
         }.toSet()
@@ -32,9 +33,12 @@ class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
     deps = [
         ${deps.joinToString(separator = ",\n        ") { it }}
     ],"""
+
         val ruleClass = if (bazelBlueprint.isApplication) "android_binary" else "android_library"
         val targetName = bazelBlueprint.packageName.split(".")[1]
-        val ruleDefinition = """$ruleClass(
+        val ruleDefinition = """load("@gmaven_rules//:defs.bzl", "gmaven_artifact")
+
+$ruleClass(
     name = "$targetName",
     srcs = glob(["src/main/java/**/*.java"]),
     resource_files = glob(["src/main/res/**/*"]),

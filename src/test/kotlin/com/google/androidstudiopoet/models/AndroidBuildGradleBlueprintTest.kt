@@ -243,7 +243,8 @@ class AndroidBuildGradleBlueprintTest {
                                                   extraLines: List<String>? = null,
                                                   productFlavorConfigs: List<FlavorConfig>? = null,
                                                   buildTypeConfigs: List<BuildTypeConfig>? = null,
-                                                  dependencies: Set<ModuleDependency> = setOf()
+                                                  dependencies: Set<ModuleDependency> = setOf(),
+                                                  generateTests: Boolean = true
     ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig,
-            packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
+            packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, generateTests)
 }

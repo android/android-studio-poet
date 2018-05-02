@@ -23,6 +23,8 @@ class AndroidModuleDependency(name: String, methodToCall: MethodToCall, method: 
 
 data class LibraryDependency(val method: String, val name: String) : Dependency
 
+data class GmavenBazelDependency(val name: String) : Dependency
+
 interface Dependency
 
 const val DEFAULT_DEPENDENCY_METHOD = "implementation"

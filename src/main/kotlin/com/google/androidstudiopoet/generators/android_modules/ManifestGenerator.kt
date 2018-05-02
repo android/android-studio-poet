@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules
 
+import com.google.androidstudiopoet.input.AndroidBuildConfig
 import com.google.androidstudiopoet.models.AndroidModuleBlueprint
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.utils.joinPath
@@ -27,17 +28,18 @@ class ManifestGenerator(private val fileWriter: FileWriter) {
      * generates manifest by blueprint and list of activity names
      */
     fun generate(blueprint: AndroidModuleBlueprint) {
-        val manifestContent = generateManifestTag(blueprint.packageName, generateApplicationTag(blueprint.activityNames, blueprint.hasLaunchActivity))
+        val manifestContent = generateManifestTag(blueprint.packageName, generateApplicationTag(blueprint.activityNames, blueprint.hasLaunchActivity), blueprint.androidBuildConfig)
         fileWriter.writeToFile(manifestContent, blueprint.mainPath.joinPath("AndroidManifest.xml"))
     }
 
-    private fun generateManifestTag(packageName: String, applicationTag: String): String {
+    private fun generateManifestTag(packageName: String, applicationTag: String, androidBuildConfig: AndroidBuildConfig): String {
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
                 "    package=\"$packageName\">\n" +
                 "\n" +
                 "    <uses-permission android:name=\"android.permission.INTERNET\" />\n" +
                 "\n" +
+                "    <uses-sdk android:minSdkVersion=\"${androidBuildConfig.minSdkVersion}\" android:targetSdkVersion=\"${androidBuildConfig.targetSdkVersion}\" />" +
                 applicationTag +
                 "\n" +
                 "</manifest>"

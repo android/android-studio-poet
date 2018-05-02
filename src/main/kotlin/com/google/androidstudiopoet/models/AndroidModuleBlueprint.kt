@@ -34,7 +34,7 @@ class AndroidModuleBlueprint(name: String,
                              extraLines: List<String>?,
                              generateTests: Boolean,
                              dataBindingConfig: DataBindingConfig?,
-                             androidBuildConfig: AndroidBuildConfig
+                             val androidBuildConfig: AndroidBuildConfig
 ) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
         javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
 
@@ -101,6 +101,6 @@ class AndroidModuleBlueprint(name: String,
 
     val buildBazelBlueprint: AndroidBuildBazelBlueprint by lazy {
         AndroidBuildBazelBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
-                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
+                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, generateTests)
     }
 }

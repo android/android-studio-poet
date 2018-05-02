@@ -24,13 +24,14 @@ import com.google.androidstudiopoet.utils.joinPath
 class AndroidBuildBazelBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
                                  moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
                                  override val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
-                                 buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>) : AndroidModuleBuildSpecificationBlueprint {
+                                 buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>,
+                                 private val generateTests: Boolean) : AndroidModuleBuildSpecificationBlueprint {
 //    override val plugins: Set<String> = createSetOfPlugins()
     override val plugins = mutableSetOf<String>()
 
-//    val libraries: Set<LibraryDependency> = createSetOfLibraries()
+    val libraries: Set<GmavenBazelDependency> = createSetOfLibraries()
 
-    override val dependencies = additionalDependencies // + libraries
+    override val dependencies = additionalDependencies + libraries
 
     override val path = moduleRoot.joinPath("BUILD.bazel")
 
@@ -43,16 +44,22 @@ class AndroidBuildBazelBlueprint(val isApplication: Boolean, private val enableK
 //
 //    val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
 
-//    private fun createSetOfLibraries(): Set<LibraryDependency> {
-//        val result = mutableSetOf(
-//                LibraryDependency("implementation", "com.android.support:appcompat-v7:26.1.0"),
-//                LibraryDependency("implementation", "com.android.support.constraint:constraint-layout:1.0.2"),
-//                LibraryDependency("testImplementation", "junit:junit:4.12"),
-//                LibraryDependency("androidTestImplementation", "com.android.support.test:runner:1.0.1"),
-//                LibraryDependency("androidTestImplementation", "com.android.support.test.espresso:espresso-core:3.0.1"),
-//                LibraryDependency("implementation", "com.android.support:multidex:1.0.1")
-//        )
-//
+    private fun createSetOfLibraries(): Set<GmavenBazelDependency> {
+        val result = mutableSetOf(
+                GmavenBazelDependency( "com.android.support:appcompat-v7:aar:26.1.0"),
+                GmavenBazelDependency( "com.android.support.constraint:constraint-layout:aar:1.0.2"),
+                GmavenBazelDependency("com.android.support:multidex:aar:1.0.1")
+        )
+
+        if (generateTests) {
+            result += mutableSetOf(
+                    // TODO(jin): junit doesn't exist on Gmaven, use regular maven_jar
+                    GmavenBazelDependency( "junit:junit::4.12"),
+                    GmavenBazelDependency("com.android.support.test:runner:aar:1.0.1"),
+                    GmavenBazelDependency("com.android.support.test.espresso:espresso-core:aar:3.0.1")
+            )
+        }
+
 //        if (enableKotlin) {
 //            result += LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version")
 //        }
@@ -60,9 +67,9 @@ class AndroidBuildBazelBlueprint(val isApplication: Boolean, private val enableK
 //        if (enableKotlin && enableDataBinding) {
 //            result += LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1")
 //        }
-//
-//        return result
-//    }
+
+        return result
+    }
 //
 //    private fun createSetOfPlugins(): Set<String> {
 //        val result = mutableSetOf<String>()
