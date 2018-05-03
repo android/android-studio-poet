@@ -33,6 +33,8 @@ class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
     deps = [
         ${deps.joinToString(separator = ",\n        ") { it }}
     ],"""
+        val multidexString = """
+    multidex = "native","""
 
         val ruleClass = if (bazelBlueprint.isApplication) "android_binary" else "android_library"
         val targetName = bazelBlueprint.packageName.split(".")[1]
@@ -40,7 +42,7 @@ class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
 
 $ruleClass(
     name = "$targetName",
-    srcs = glob(["src/main/java/**/*.java"]),
+    srcs = glob(["src/main/java/**/*.java"]), ${if (bazelBlueprint.isApplication) multidexString else ""}
     resource_files = glob(["src/main/res/**/*"]),
     manifest = "src/main/AndroidManifest.xml",
     custom_package = "${bazelBlueprint.packageName}",
