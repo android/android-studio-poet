@@ -17,6 +17,8 @@ limitations under the License.
 package com.google.androidstudiopoet.converters
 
 import com.google.androidstudiopoet.input.ConfigPOJO
+import com.google.androidstudiopoet.input.DependencyConfig
+import com.google.androidstudiopoet.models.FromToDependencyConfig
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.assertOn
 import com.google.androidstudiopoet.testutils.mock
@@ -34,6 +36,14 @@ private const val KOTLIN_PACKAGE_COUNT = 8
 private const val KOTLIN_CLASS_COUNT = 9
 
 private const val GENERATE_TESTS = true
+
+private const val MODULE_NAME_0 = "module0"
+private const val MODULE_NAME_1 = "module1"
+private const val MODULE_NAME_3 = "module3"
+private const val METHOD_3_0 = "method30"
+private const val METHOD_3_1 = "method31"
+private val DEPENDENCY_LIST = listOf(DependencyConfig.ModuleDependencyConfig(MODULE_NAME_0, METHOD_3_0),
+        DependencyConfig.ModuleDependencyConfig(MODULE_NAME_1, METHOD_3_1))
 
 class ConfigPojoToModuleConfigConverterTest {
     private val index = 3
@@ -56,14 +66,17 @@ class ConfigPojoToModuleConfigConverterTest {
 
         generateTests = GENERATE_TESTS
 
+        dependencies = listOf(FromToDependencyConfig(MODULE_NAME_3, MODULE_NAME_0, METHOD_3_0),
+                FromToDependencyConfig(MODULE_NAME_3, MODULE_NAME_1, METHOD_3_1))
+
     }
 
     private val converter = ConfigPojoToModuleConfigConverter()
 
     @Test
     fun `convert passes correct values to result ModuleConfig`() {
-        val androidModuleConfig = converter.convert(configPOJO, index)
-        assertOn(androidModuleConfig) {
+        val moduleConfig = converter.convert(configPOJO, index)
+        assertOn(moduleConfig) {
             javaClassCount.assertEquals(JAVA_CLASS_COUNT)
             javaPackageCount.assertEquals(JAVA_PACKAGE_COUNT)
             javaMethodsPerClass.assertEquals(configPOJO.javaMethodsPerClass)
@@ -76,6 +89,7 @@ class ConfigPojoToModuleConfigConverterTest {
 
             extraLines!!.assertEquals(extraLinesForBuildFile)
             generateTests.assertEquals(GENERATE_TESTS)
+            dependencies!!.assertEquals(DEPENDENCY_LIST)
         }
     }
 

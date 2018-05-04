@@ -222,7 +222,7 @@ enum class Topologies {
 
     protected fun getWideness(parameters: Map<String, String>, default: Float = 0.5f) = parameters["wideness"]?.toFloat() ?: default
 
-    protected fun getMethod(parameters: Map<String, String>) = parameters.getOrDefault("method", DEFAULT_DEPENDENCY_METHOD)
+    protected fun getMethod(parameters: Map<String, String>) = parameters["method"]
 
     /**
      * Function that should add dependencies to configPOJO based on the given parameters and the
