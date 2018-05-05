@@ -28,8 +28,8 @@ abstract class AbstractModuleBlueprint(val name: String,
                                    val generateTests : Boolean) {
 
     val moduleRoot = root.joinPath(name)
-    val moduleDependencies = dependencies.filterIsInstance<ModuleDependency>()
-    private val methodsToCallWithIn = moduleDependencies.map { it.methodToCall }
+    val moduleDependencies by lazy{ dependencies.filterIsInstance<ModuleDependency>()}
+    private val methodsToCallWithIn by lazy { moduleDependencies.map { it.methodToCall } }
 
     val packagesBlueprint by lazy {
         PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,

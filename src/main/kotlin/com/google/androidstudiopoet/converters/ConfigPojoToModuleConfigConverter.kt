@@ -37,7 +37,7 @@ class ConfigPojoToModuleConfigConverter {
              generateTests = config.generateTests
 
              moduleName = "module$index"
-             dependencies = config.resolvedDependencies[moduleName]?.map {  DependencyConfig.ModuleDependencyConfig(it.to) } ?: listOf()
+             dependencies = config.resolvedDependencies[moduleName]?.map {  DependencyConfig.ModuleDependencyConfig(it.to, it.method) } ?: listOf()
         }
     }
 }
