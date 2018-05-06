@@ -27,5 +27,6 @@ open class ModuleConfig {
     var useKotlin: Boolean = false
     var extraLines: List<String>? = null
     var dependencies: List<DependencyConfig>? = null
+    var plugins: List<PluginConfig>? = null
     var generateTests: Boolean = true
 }
