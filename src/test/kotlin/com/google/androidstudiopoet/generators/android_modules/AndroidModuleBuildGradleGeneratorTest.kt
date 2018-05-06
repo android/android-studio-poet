@@ -257,6 +257,43 @@ dependencies {
         verify(fileWriter).writeToFile(expected, "path")
     }
 
+    @Test
+    fun `generator adds tasks from the blueprint`() {
+        val blueprint = getAndroidBuildGradleBlueprint(additionalTasks = setOf(
+                GradleTask("task1", listOf("line1", "line2"))
+        ))
+        androidModuleBuildGradleGenerator.generate(blueprint)
+        val expected = """android {
+    compileSdkVersion 0
+    defaultConfig {
+        minSdkVersion 0
+        targetSdkVersion 0
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+task1 {
+    line1
+    line2
+}"""
+        verify(fileWriter).writeToFile(expected, "path")
+    }
+
     private fun getAndroidBuildGradleBlueprint(
             plugins: Set<String> = setOf(),
             compileSdkVersion: Int  = 0,
@@ -265,7 +302,8 @@ dependencies {
             dependencies: Set<Dependency> = setOf(),
             flavorDimensions: Set<String> = setOf(),
             productFlavors: Set<Flavor> = setOf(),
-            buildTypes: Set<BuildType> = setOf()
+            buildTypes: Set<BuildType> = setOf(),
+            additionalTasks: Set<GradleTask> = setOf()
     ): AndroidBuildGradleBlueprint {
         val blueprint = mock<AndroidBuildGradleBlueprint>()
         whenever(blueprint.plugins).thenReturn(plugins)
@@ -276,6 +314,7 @@ dependencies {
         whenever(blueprint.flavorDimensions).thenReturn(flavorDimensions)
         whenever(blueprint.productFlavors).thenReturn(productFlavors)
         whenever(blueprint.buildTypes).thenReturn(buildTypes)
+        whenever(blueprint.additionalTasks).thenReturn(additionalTasks)
         whenever(blueprint.path).thenReturn("path")
         return blueprint
     }
