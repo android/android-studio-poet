@@ -34,7 +34,8 @@ class AndroidModuleBlueprint(name: String,
                              extraLines: List<String>?,
                              generateTests: Boolean,
                              dataBindingConfig: DataBindingConfig?,
-                             androidBuildConfig: AndroidBuildConfig
+                             androidBuildConfig: AndroidBuildConfig,
+                             pluginConfigs: List<PluginConfig>?
 ) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
         javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
 
@@ -96,6 +97,6 @@ class AndroidModuleBlueprint(name: String,
 
     val buildGradleBlueprint: AndroidBuildGradleBlueprint by lazy {
         AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
-                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
+                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, pluginConfigs)
     }
 }

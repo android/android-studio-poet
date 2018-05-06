@@ -19,6 +19,7 @@ package com.google.androidstudiopoet.models
 import com.google.androidstudiopoet.input.AndroidBuildConfig
 import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
+import com.google.androidstudiopoet.input.PluginConfig
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.assertNotContains
@@ -85,6 +86,16 @@ class AndroidBuildGradleBlueprintTest {
     }
 
     @Test
+    fun `plugins contain ids of provided plugins`() {
+        val pluginId = "random plugin name"
+        val blueprint = createAndroidBuildGradleBlueprint(pluginConfigs = listOf(PluginConfig(id = pluginId)))
+
+        assertOn(blueprint) {
+            plugins.assertContains(pluginId)
+        }
+    }
+
+    @Test
     fun `libraries contain default set of libraries`() {
         val blueprint = createAndroidBuildGradleBlueprint()
 
@@ -119,7 +130,7 @@ class AndroidBuildGradleBlueprintTest {
     }
 
     @Test
-    fun `plugins do not contain data binding compiler when Kotlin is enabled and data binding is disabled`() {
+    fun `libraries do not contain data binding compiler when Kotlin is enabled and data binding is disabled`() {
         val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true, enableDataBinding = false)
 
         assertOn(blueprint) {
@@ -128,7 +139,7 @@ class AndroidBuildGradleBlueprintTest {
     }
 
     @Test
-    fun `plugins contain data binding compiler when Kotlin and data binding are enabled`() {
+    fun `libraries contain data binding compiler when Kotlin and data binding are enabled`() {
         val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true, enableDataBinding = true)
 
         assertOn(blueprint) {
@@ -243,7 +254,8 @@ class AndroidBuildGradleBlueprintTest {
                                                   extraLines: List<String>? = null,
                                                   productFlavorConfigs: List<FlavorConfig>? = null,
                                                   buildTypeConfigs: List<BuildTypeConfig>? = null,
-                                                  dependencies: Set<ModuleDependency> = setOf()
+                                                  dependencies: Set<ModuleDependency> = setOf(),
+                                                  pluginConfigs: List<PluginConfig>? = null
     ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig,
-            packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies)
+            packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, pluginConfigs)
 }

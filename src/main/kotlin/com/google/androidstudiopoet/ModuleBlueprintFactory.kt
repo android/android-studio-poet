@@ -133,7 +133,8 @@ object ModuleBlueprintFactory {
                 androidModuleConfig.extraLines,
                 androidModuleConfig.generateTests,
                 androidModuleConfig.dataBindingConfig,
-                androidModuleConfig.androidBuildConfig ?: AndroidBuildConfig())
+                androidModuleConfig.androidBuildConfig ?: AndroidBuildConfig(),
+                androidModuleConfig.plugins)
     }
 
     fun initCache() {

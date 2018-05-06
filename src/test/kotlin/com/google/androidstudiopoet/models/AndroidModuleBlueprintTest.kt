@@ -95,9 +95,10 @@ class AndroidModuleBlueprintTest {
             extraLines: List<String>? = null,
             generateTests: Boolean = true,
             dataBindingConfig: DataBindingConfig? = null,
-            androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig()
+            androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
+            pluginConfigs: List<PluginConfig>? = null
     ) = AndroidModuleBlueprint(name, numOfActivities, resourcesConfig, projectRoot, hasLaunchActivity, useKotlin,
             dependencies, productFlavorConfigs, buildTypeConfigs, javaPackageCount, javaClassCount, javaMethodsPerClass,
             kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests, dataBindingConfig,
-            androidBuildConfig)
+            androidBuildConfig, pluginConfigs)
 }
