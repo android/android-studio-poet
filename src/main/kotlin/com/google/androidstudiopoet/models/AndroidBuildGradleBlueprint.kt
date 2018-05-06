@@ -44,6 +44,9 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
 
     val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
 
+    val additionalTasks: Set<GradleTask> = pluginConfigs?.filter { it.taskName != null }?.map { GradleTask(it.taskName!!,
+            it.taskBody) }?.toSet() ?: setOf()
+
     private fun createSetOfLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf(
                 LibraryDependency("implementation", "com.android.support:appcompat-v7:26.1.0"),

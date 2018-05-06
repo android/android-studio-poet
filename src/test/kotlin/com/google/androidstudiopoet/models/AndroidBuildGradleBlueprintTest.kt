@@ -245,6 +245,23 @@ class AndroidBuildGradleBlueprintTest {
         }
     }
 
+    @Test
+    fun `additionalTasks contain task from provided pluginConfig`() {
+        val pluginId = "random plugin name"
+        val taskName = "someTaskName"
+        val taskBody = listOf("line1", "line2")
+        val blueprint = createAndroidBuildGradleBlueprint(pluginConfigs = listOf(
+                PluginConfig(
+                        id = pluginId,
+                        taskName = taskName,
+                        taskBody = taskBody
+                )))
+
+        assertOn(blueprint) {
+            additionalTasks.assertContains(GradleTask(taskName, taskBody))
+        }
+    }
+
     private fun createAndroidBuildGradleBlueprint(isApplication: Boolean = false,
                                                   enableKotlin: Boolean = false,
                                                   enableDataBinding: Boolean = false,
