@@ -108,7 +108,7 @@ class ConfigPOJO {
             for (parameters in givenTopologies) {
                 val type = parameters["type"] ?: throw InvalidParameterException("No type specified in topology $parameters")
                 val topology: Topologies = Topologies.valueOf(type.toUpperCase())
-                val currentDependencies = topology.generateDependencies(parameters, this)
+                val currentDependencies = topology.generateDependencies(parameters, allModuleNames)
                 addDependencies(allDependencies, currentDependencies)
             }
         }
@@ -122,6 +122,13 @@ class ConfigPOJO {
         allDependencies
     }
 
+    private val allModuleNames: List<String> by lazy {
+        val moduleNames = mutableListOf<String>()
+        (0 until androidModules).mapTo(moduleNames) {getAndroidModuleName(it)}
+        (0 until numModules).mapTo(moduleNames) {getModuleName(it)}
+        moduleNames
+    }
+
     private fun addDependencies(to: MutableMap<String, MutableSet<FromToDependencyConfig>>, from: List<FromToDependencyConfig>) {
         for (dependency in from) {
             val key = dependency.from
@@ -133,5 +140,9 @@ class ConfigPOJO {
             }
         }
     }
+
+    fun getAndroidModuleName(index: Int) = "androidAppModule$index"
+
+    fun getModuleName(index: Int) = "module$index"
 }
 

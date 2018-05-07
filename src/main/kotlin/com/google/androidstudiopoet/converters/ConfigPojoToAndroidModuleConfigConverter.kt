@@ -23,7 +23,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int, productFlavorConfigs: List<FlavorConfig>,
                 buildTypes: List<BuildTypeConfig>): AndroidModuleConfig {
         return AndroidModuleConfig().apply {
-            moduleName = getAndroidModuleName(index)
+            moduleName = config.getAndroidModuleName(index)
             javaPackageCount = config.javaPackageCount!!.toInt()
             javaClassCount = config.javaClassCount!!.toInt()
             javaMethodsPerClass = config.javaMethodsPerClass
@@ -47,6 +47,4 @@ class ConfigPojoToAndroidModuleConfigConverter {
             resourcesConfig = ResourcesConfig(activityCount + 2, activityCount + 5, activityCount)
         }
     }
-
-    private fun getAndroidModuleName(index: Int) = "androidAppModule$index"
 }

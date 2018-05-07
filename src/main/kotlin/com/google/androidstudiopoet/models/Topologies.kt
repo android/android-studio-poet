@@ -16,7 +16,6 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-import com.google.androidstudiopoet.input.ConfigPOJO
 import java.security.InvalidParameterException
 import java.util.*
 import kotlin.collections.LinkedHashSet
@@ -26,15 +25,15 @@ import kotlin.collections.LinkedHashSet
  */
 enum class Topologies {
     FULL {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig> {
-            initialize(parameters, configPOJO)
+        override fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig> {
+            initialize(parameters)
             checkUnusedParameters(parameters)
             val result = mutableListOf<FromToDependencyConfig>()
-            for (from in 0 until allNames.size) {
-                val fromName = allNames[from]
-                for (to in from + 1 until allNames.size) {
+            for (from in 0 until moduleNames.size) {
+                val fromName = moduleNames[from]
+                for (to in from + 1 until moduleNames.size) {
                     if (random.nextFloat() < density) {
-                        result.add(FromToDependencyConfig(fromName, allNames[to], method))
+                        result.add(FromToDependencyConfig(fromName, moduleNames[to], method))
                     }
                 }
             }
@@ -43,17 +42,17 @@ enum class Topologies {
     },
 
     CONNECTED {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig> {
-            initialize(parameters, configPOJO)
+        override fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig> {
+            initialize(parameters)
             checkUnusedParameters(parameters)
             val result = mutableListOf<FromToDependencyConfig>()
             var to = 1
-            while (to < allNames.size) {
+            while (to < moduleNames.size) {
                 var numFrom = 0
-                val toName = allNames[to]
+                val toName = moduleNames[to]
                 for (from in 0 until to) {
                     if (random.nextFloat() < density) {
-                        result.add(FromToDependencyConfig(allNames[from], toName, method))
+                        result.add(FromToDependencyConfig(moduleNames[from], toName, method))
                         numFrom++
                     }
                 }
@@ -66,13 +65,13 @@ enum class Topologies {
     },
 
     LINEAR {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig> {
-            initialize(parameters, configPOJO)
+        override fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig> {
+            initialize(parameters)
             checkUnusedParameters(parameters)
             val result = mutableListOf<FromToDependencyConfig>()
-            for (id in 1 until allNames.size) {
+            for (id in 1 until moduleNames.size) {
                 if (random.nextFloat() < density) {
-                    result.add(FromToDependencyConfig(allNames[id - 1], allNames[id], method))
+                    result.add(FromToDependencyConfig(moduleNames[id - 1], moduleNames[id], method))
                 }
             }
             return result
@@ -80,13 +79,13 @@ enum class Topologies {
     },
 
     STAR {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig> {
-            initialize(parameters, configPOJO)
+        override fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig> {
+            initialize(parameters)
             checkUnusedParameters(parameters)
             val result = mutableListOf<FromToDependencyConfig>()
-            for (id in 1 until allNames.size) {
+            for (id in 1 until moduleNames.size) {
                 if (random.nextFloat() < density) {
-                    result.add(FromToDependencyConfig(allNames[0], allNames[id], method))
+                    result.add(FromToDependencyConfig(moduleNames[0], moduleNames[id], method))
                 }
             }
             return result
@@ -94,15 +93,15 @@ enum class Topologies {
     },
 
     TREE {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig> {
-            initialize(parameters, configPOJO)
+        override fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig> {
+            initialize(parameters)
             val degree = getDegree(parameters)
             checkUnusedParameters(parameters)
 
             val result = mutableListOf<FromToDependencyConfig>()
-            for (id in 1 until allNames.size) {
+            for (id in 1 until moduleNames.size) {
                 if (random.nextFloat() < density) {
-                    result.add(FromToDependencyConfig(allNames[getParent(id, degree)], allNames[id], method))
+                    result.add(FromToDependencyConfig(moduleNames[getParent(id, degree)], moduleNames[id], method))
                 }
             }
             return result
@@ -120,16 +119,16 @@ enum class Topologies {
     },
 
     VARIABLE_TREE {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig> {
-            initialize(parameters, configPOJO)
+        override fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig> {
+            initialize(parameters)
             val wideness = getWideness(parameters)
             checkUnusedParameters(parameters)
 
             val result = mutableListOf<FromToDependencyConfig>()
             var currentParent = 0
-            for (to in 1 until allNames.size) {
+            for (to in 1 until moduleNames.size) {
                 if (random.nextFloat() < density) {
-                    result.add(FromToDependencyConfig(allNames[currentParent], allNames[to], method))
+                    result.add(FromToDependencyConfig(moduleNames[currentParent], moduleNames[to], method))
                 }
                 if (random.nextFloat() >= wideness) {
                     currentParent++
@@ -148,17 +147,17 @@ enum class Topologies {
     },
 
     RECTANGLE {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig> {
-            initialize(parameters, configPOJO)
+        override fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig> {
+            initialize(parameters)
             val width = getWidth(parameters)
             checkUnusedParameters(parameters)
 
             val result = mutableListOf<FromToDependencyConfig>()
-            for (to in width until allNames.size) {
+            for (to in width until moduleNames.size) {
                 val base = ((to / width) - 1) * width
                 for (from in 0 until width) {
                     if (random.nextFloat() < density) {
-                        result.add(FromToDependencyConfig(allNames[base + from], allNames[to], method))
+                        result.add(FromToDependencyConfig(moduleNames[base + from], moduleNames[to], method))
                     }
                 }
             }
@@ -167,19 +166,19 @@ enum class Topologies {
     },
 
     CONNECTED_RECTANGLE {
-        override fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig> {
-            initialize(parameters, configPOJO)
+        override fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig> {
+            initialize(parameters)
             val width = getWidth(parameters)
             checkUnusedParameters(parameters)
 
             val result = mutableListOf<FromToDependencyConfig>()
             var to = width
-            while (to < allNames.size) {
+            while (to < moduleNames.size) {
                 val base = ((to / width) - 1) * width
                 var numFrom = 0
                 for (from in 0 until width) {
                     if (random.nextFloat() < density) {
-                        result.add(FromToDependencyConfig(allNames[base + from], allNames[to], method))
+                        result.add(FromToDependencyConfig(moduleNames[base + from], moduleNames[to], method))
                         numFrom++
                     }
                 }
@@ -197,9 +196,8 @@ enum class Topologies {
     protected var method: String? = null
 
     private var validParameters: LinkedHashSet<String> = linkedSetOf()
-    protected val allNames: MutableList<String> = mutableListOf()
 
-    protected fun initialize(parameters: Map<String, String>, configPOJO: ConfigPOJO) {
+    protected fun initialize(parameters: Map<String, String>) {
         // Clear list of valid parameters
         validParameters.clear()
         validParameters.add("type")
@@ -207,8 +205,6 @@ enum class Topologies {
         density = getOptionalParameter("density", parameters)?.toFloat() ?: 1.0f
         random = randomWithSeed(parameters)
         method = getOptionalParameter("method", parameters)
-        // Generate a list with all module names
-        generateModuleNames(configPOJO)
     }
 
     private fun getOptionalParameter(name: String, parameters: Map<String, String>): String? {
@@ -220,12 +216,6 @@ enum class Topologies {
         val seedInput = getOptionalParameter("seed", parameters)
         val seed : Long = seedInput?.toLong() ?: 0
         return Random(seed)
-    }
-
-    protected fun generateModuleNames( configPOJO: ConfigPOJO) {
-        allNames.clear()
-        (0 until configPOJO.androidModules).mapTo(allNames) {getAndroidModuleNameByIndex(it)}
-        (0 until configPOJO.numModules).mapTo(allNames) {getModuleNameByIndex(it)}
     }
 
     protected fun getRequiredParameter(name: String, parameters: Map<String, String>): String {
@@ -254,13 +244,8 @@ enum class Topologies {
         }
     }
 
-    private fun getAndroidModuleNameByIndex(index: Int) = "androidAppModule$index"
-
-    private fun getModuleNameByIndex(index: Int) = "module$index"
-
     /**
-     * Function that should add dependencies to configPOJO based on the given parameters and the
-     * content of configPOJO
+     * Generate dependencies based on the given parameters, using the given names
      */
-    abstract fun generateDependencies(parameters: Map<String, String>, configPOJO: ConfigPOJO): List<FromToDependencyConfig>
+    abstract fun generateDependencies(parameters: Map<String, String>, moduleNames: List<String>): List<FromToDependencyConfig>
 }
