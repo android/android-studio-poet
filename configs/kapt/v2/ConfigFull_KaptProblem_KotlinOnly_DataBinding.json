@@ -1,10 +1,12 @@
 {
   "inputVersion": "0.1",
   "projectConfig": {
-    "projectName": "genny_NoKotlin_DataBinding",
+    "projectName": "genny_KotlinOnly_DataBinding",
     "root": "./modules/",
     "buildSystemConfig": {
-      "buildSystemVersion": "4.3.1"
+      "buildSystemVersion": "4.7",
+      "agpVersion": "3.1.2",
+      "kotlinVersion": "1.2.41"
     },
     "moduleConfigs": [
       {
@@ -14,9 +16,10 @@
           "targetSdkVersion": 27,
           "compileSdkVersion": 27
         },
-        "javaPackageCount": 20,
-        "javaClassCount": 100,
-        "javaMethodsPerClass": 10,
+        "kotlinPackageCount": 20,
+        "kotlinClassCount": 100,
+        "kotlinMethodsPerClass": 10,
+        "useKotlin": true,
         "moduleName": "applicationModule",
         "activityCount": 5,
         "hasLaunchActivity": true,
@@ -40,9 +43,10 @@
       },
       {
         "moduleType": "android",
-        "javaPackageCount": 20,
-        "javaClassCount": 100,
-        "javaMethodsPerClass": 10,
+        "kotlinPackageCount": 20,
+        "kotlinClassCount": 100,
+        "kotlinMethodsPerClass": 10,
+        "useKotlin": true,
         "moduleName": "libraryModule",
         "activityCount": 5,
         "resourcesConfig": {

@@ -1,0 +1,11 @@
+clean_build {
+    tasks = ["assembleDebug"]
+    cleanup-tasks = ["clean", "cleanBuildCache"]
+}
+
+incremental_build {
+    tasks = ["assembleDebug"]
+
+    apply-abi-change-to = "applicationModule/src/main/java/applicationModulepackageJava0/Foo0.java"
+    apply-non-abi-change-to = "applicationModule/src/main/java/applicationModulepackageJava0/Foo0.java"
+}
