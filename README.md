@@ -9,7 +9,7 @@ Optimise your Android Studio builds, by creating generated projects. Inspired by
 
 Create a real life complexity Android project that mimics your own and observe the build times. If the build times of the generated project are way smaller than yours, it might be worth inspecting deeply your build configs and optimize.
 
-## Feautures
+## Features
 
 * Configurable number of modules
 * Configurable number of packages
