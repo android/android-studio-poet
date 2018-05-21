@@ -1,10 +1,12 @@
 {
   "inputVersion": "0.1",
   "projectConfig": {
-    "projectName": "genny_KotlinOnly_DataBinding",
+    "projectName": "genny_JavaKotlin_DataBinding",
     "root": "./modules/",
     "buildSystemConfig": {
-      "buildSystemVersion": "4.3.1"
+      "buildSystemVersion": "4.7",
+      "agpVersion": "3.1.2",
+      "kotlinVersion": "1.2.41"
     },
     "moduleConfigs": [
       {
@@ -14,7 +16,10 @@
           "targetSdkVersion": 27,
           "compileSdkVersion": 27
         },
-        "kotlinPackageCount": 20,
+        "javaPackageCount": 10,
+        "javaClassCount": 100,
+        "javaMethodsPerClass": 10,
+        "kotlinPackageCount": 10,
         "kotlinClassCount": 100,
         "kotlinMethodsPerClass": 10,
         "useKotlin": true,
@@ -41,7 +46,10 @@
       },
       {
         "moduleType": "android",
-        "kotlinPackageCount": 20,
+        "javaPackageCount": 10,
+        "javaClassCount": 100,
+        "javaMethodsPerClass": 10,
+        "kotlinPackageCount": 10,
         "kotlinClassCount": 100,
         "kotlinMethodsPerClass": 10,
         "useKotlin": true,
