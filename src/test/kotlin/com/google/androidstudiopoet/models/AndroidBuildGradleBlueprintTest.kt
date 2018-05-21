@@ -132,7 +132,7 @@ class AndroidBuildGradleBlueprintTest {
         val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true, enableDataBinding = true)
 
         assertOn(blueprint) {
-            libraries.assertContains(LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1"))
+            libraries.assertContains(LibraryDependency("kapt", "com.android.databinding:compiler:${'$'}androidBuildConf"))
         }
     }
 
