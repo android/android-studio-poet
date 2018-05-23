@@ -14,7 +14,7 @@ was profiled 4 times. The `KotlinOnly` configuration was profiled twice, because
 the gradle-profiler does not support incremental build profiling for Kotlin.
 
 
-#####Steps
+##### Steps
 1. Clean build with build scan profiler
 2. Incremental build with build scan profiler
 3. Clean build with `--benchmark` option (second for “KotlinOnly" configuration)
