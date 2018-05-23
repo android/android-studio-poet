@@ -4,29 +4,28 @@
 
 * Date - 2018 - 5 - 21
 * Tools Version
-
-`
- "buildSystemConfig": {
- "buildSystemVersion": "4.7",
-  "agpVersion": "3.1.2",
-      "kotlinVersion": "1.2.41"
-    },
-`
+  * Gradle version - 4.7
+  * Android Gradle Plugin (AGP) version - 3.1.2
+  * KotlinVersion - 1.2.41
 
 #### Profiling
 The profiling was done with gradle-profiler. Each configuration, except `KotlinOnly`, 
 was profiled 4 times. The `KotlinOnly` configuration was profiled twice, because 
 the gradle-profiler does not support incremental build profiling for Kotlin.
 
-Clean build with build scan profiler
-Incremental build with build scan profiler
-Clean build with `--benchmark` option (second for “KotlinOnly" configuration)
-Incremental build with `--benchmark` option. 
-* [Profiler configs](https://github.com/android/android-studio-poet/blob/master/configs/kapt/v2/gradle-profiler.scenarios) 
+
+#####Steps
+1. Clean build with build scan profiler
+2. Incremental build with build scan profiler
+3. Clean build with `--benchmark` option (second for “KotlinOnly" configuration)
+4. Incremental build with `--benchmark` option. 
+
+* [Profiler scenarios](https://github.com/android/android-studio-poet/blob/master/configs/kapt/v2/gradle-profiler.scenarios) 
 for clean and incremental builds. 
-* [AS Poet scenarios](https://github.com/android/android-studio-poet/tree/master/configs/kapt/v2)
-   * All projects have data binding
-   * Each module has 100 Kotlin and Java classes
+* [AS Poet configs](https://github.com/android/android-studio-poet/tree/master/configs/kapt/v2)
+   * All projects have data binding, which means enabled annotation processing.
+   * Each module has 200 classes with 10 methods each. Depending on configs 
+   it is 100% Java, 100% Kotlin or 50-50 Java Kotlin mix.
    * The tested "variable" is a mix of Java and Kotlin code
 * Branch with 
       [results](https://github.com/NikitaKozlov/android-studio-poet/tree/kapt-problem-v2-with-results/generated_projects).
