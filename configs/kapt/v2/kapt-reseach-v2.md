@@ -1,5 +1,5 @@
 
-## KAPT Reseacrh with Java/Koltin mix
+## KAPT Research with Java/Kotlin mix
 
 
 * Date - 2018 - 5 - 21
