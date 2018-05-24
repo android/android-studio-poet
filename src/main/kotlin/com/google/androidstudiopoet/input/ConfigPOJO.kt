@@ -87,6 +87,9 @@ class ConfigPOJO {
 
     var generateTests : Boolean = false
 
+    // Will use same data binding configuration for all android modules
+    var dataBindingConfig: DataBindingConfig? = null
+
     override fun toString(): String = toJson()
 
     private fun toJson(): String {
