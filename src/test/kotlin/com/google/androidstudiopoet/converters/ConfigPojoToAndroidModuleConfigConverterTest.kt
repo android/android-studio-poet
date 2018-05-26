@@ -40,9 +40,10 @@ private const val ANDROID_MODULE_NAME_0 = "androidAppModule0"
 private const val ANDROID_MODULE_NAME_1 = "androidAppModule1"
 private const val MODULE_NAME_0 = "module0"
 private const val MODULE_NAME_1 = "module1"
+private const val DEPENDENCY_METHOD = "api"
 
 private val PURE_MODULE_LIST = listOf(MODULE_NAME_0, MODULE_NAME_1)
-private val PURE_MODULE_DEPENDENCY_LIST = PURE_MODULE_LIST.map { DependencyConfig.ModuleDependencyConfig(it) }
+private val PURE_MODULE_DEPENDENCY_LIST = PURE_MODULE_LIST.map { DependencyConfig.ModuleDependencyConfig(it, DEPENDENCY_METHOD) }
 
 class ConfigPojoToAndroidModuleConfigConverterTest {
 
@@ -67,11 +68,11 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
 
         generateTests = GENERATE_TESTS
         androidModules = ANDROID_MODULE_COUNT
-        dependencies = listOf(FromToDependencyConfig(ANDROID_MODULE_NAME_0, MODULE_NAME_0),
-                FromToDependencyConfig(ANDROID_MODULE_NAME_0, MODULE_NAME_1),
-                FromToDependencyConfig(ANDROID_MODULE_NAME_1, MODULE_NAME_0),
-                FromToDependencyConfig(ANDROID_MODULE_NAME_1, MODULE_NAME_1),
-                FromToDependencyConfig(ANDROID_MODULE_NAME_0, ANDROID_MODULE_NAME_1))
+        dependencies = listOf(FromToDependencyConfig(ANDROID_MODULE_NAME_0, MODULE_NAME_0, DEPENDENCY_METHOD),
+                FromToDependencyConfig(ANDROID_MODULE_NAME_0, MODULE_NAME_1, DEPENDENCY_METHOD),
+                FromToDependencyConfig(ANDROID_MODULE_NAME_1, MODULE_NAME_0, DEPENDENCY_METHOD),
+                FromToDependencyConfig(ANDROID_MODULE_NAME_1, MODULE_NAME_1, DEPENDENCY_METHOD),
+                FromToDependencyConfig(ANDROID_MODULE_NAME_0, ANDROID_MODULE_NAME_1, DEPENDENCY_METHOD))
     }
 
     private val converter = ConfigPojoToAndroidModuleConfigConverter()
@@ -105,7 +106,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
         val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes)
         assertOn(androidModuleConfig) {
             hasLaunchActivity.assertTrue()
-            dependencies!!.assertEquals(listOf(DependencyConfig.ModuleDependencyConfig(ANDROID_MODULE_NAME_1)) + PURE_MODULE_DEPENDENCY_LIST)
+            dependencies!!.assertEquals(listOf(DependencyConfig.ModuleDependencyConfig(ANDROID_MODULE_NAME_1, DEPENDENCY_METHOD)) + PURE_MODULE_DEPENDENCY_LIST)
             resourcesConfig!!.assertEquals(ResourcesConfig(ACTIVITY_COUNT + 2, ACTIVITY_COUNT + 5, ACTIVITY_COUNT))
         }
     }

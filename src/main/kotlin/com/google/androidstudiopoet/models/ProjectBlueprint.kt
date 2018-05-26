@@ -53,16 +53,17 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         var temporaryAndroidBlueprints: List<AndroidModuleBlueprint> = listOf()
         print("Generating blueprints... ")
         val timeModels = measureTimeMillis {
+            val configMap = projectConfig.moduleConfigs.associateBy { it.moduleName }
             ModuleBlueprintFactory.initCache()
             runBlocking {
                 val deferredModules = projectConfig.pureModuleConfigs.map {
                     async {
-                        ModuleBlueprintFactory.create(it, projectRoot)
+                        ModuleBlueprintFactory.create(it, projectRoot, configMap)
                     }
                 }
                 val deferredAndroid = projectConfig.androidModuleConfigs.map {
                     async {
-                        ModuleBlueprintFactory.createAndroidModule(projectRoot, it, projectConfig.moduleConfigs)
+                        ModuleBlueprintFactory.createAndroidModule(projectRoot, it, configMap)
                     }
                 }
                 temporaryModuleBlueprints = deferredModules.map { it.await() }
@@ -71,10 +72,10 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         }
         moduleBlueprints = temporaryModuleBlueprints
         androidModuleBlueprints = temporaryAndroidBlueprints
-        println("done in $timeModels")
         allModuleBlueprints = androidModuleBlueprints + moduleBlueprints
         allModulesNames = allModuleBlueprints.map { it.name }
         allDependencies = allModuleBlueprints.associate { it.name to it.moduleDependencies }
+        println("\rGenerating blueprints... done in $timeModels ms")
     }
 
     fun hasCircularDependencies(): Boolean {

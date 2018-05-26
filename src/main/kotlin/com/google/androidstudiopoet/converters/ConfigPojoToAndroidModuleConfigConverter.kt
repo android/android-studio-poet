@@ -23,7 +23,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int, productFlavorConfigs: List<FlavorConfig>,
                 buildTypes: List<BuildTypeConfig>): AndroidModuleConfig {
         return AndroidModuleConfig().apply {
-            moduleName = getAndroidModuleName(index)
+            moduleName = config.getAndroidModuleName(index)
             javaPackageCount = config.javaPackageCount!!.toInt()
             javaClassCount = config.javaClassCount!!.toInt()
             javaMethodsPerClass = config.javaMethodsPerClass
@@ -39,7 +39,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
             hasLaunchActivity = index == 0
 
             val resolvedDependencies = config.resolvedDependencies[moduleName]
-            dependencies = resolvedDependencies?.sortedBy { it.to }?.map { dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to) } ?: emptyList()
+            dependencies = resolvedDependencies?.sortedBy { it.to }?.map { dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to, dependency.method) } ?: emptyList()
 
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs
@@ -47,6 +47,4 @@ class ConfigPojoToAndroidModuleConfigConverter {
             resourcesConfig = ResourcesConfig(activityCount + 2, activityCount + 5, activityCount)
         }
     }
-
-    private fun getAndroidModuleName(index: Int) = "androidAppModule$index"
 }

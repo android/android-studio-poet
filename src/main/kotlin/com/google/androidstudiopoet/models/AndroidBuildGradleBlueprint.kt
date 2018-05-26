@@ -23,7 +23,7 @@ import com.google.androidstudiopoet.input.PluginConfig
 import com.google.androidstudiopoet.utils.joinPath
 
 class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
-                                  moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
+                                  moduleRoot: String, private val androidBuildConfig: AndroidBuildConfig, val packageName: String,
                                   val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
                                   buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>,
                                   pluginConfigs: List<PluginConfig>?) {
@@ -62,7 +62,7 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
         }
 
         if (enableKotlin && enableDataBinding) {
-            result += LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1")
+            result += LibraryDependency("kapt", "com.android.databinding:compiler:${'$'}androidBuildConf")
         }
 
         return result

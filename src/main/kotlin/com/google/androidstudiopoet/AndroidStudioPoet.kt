@@ -163,7 +163,7 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
     }
 
     private fun startGeneration(projectConfig: ProjectConfig) {
-        var projectBluePrint: ProjectBlueprint? = null
+        var projectBluePrint: ProjectBlueprint?
         val timeSpent = measureTimeMillis {
             projectBluePrint = ProjectBlueprint(projectConfig)
             modulesGenerator.generate(projectBluePrint!!)

@@ -46,10 +46,12 @@ class AndroidModuleBlueprint(name: String,
     val codePath = mainPath.joinPath("java")
     val packagePath = codePath.joinPaths(packageName.split("."))
 
-    private val resourcesToReferWithin = dependencies
-            .filterIsInstance<AndroidModuleDependency>()
-            .map { it.resourcesToRefer }
-            .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer -> resourcesToRefer.combine(acc) }
+    private val resourcesToReferWithin by lazy {
+        dependencies
+                .filterIsInstance<AndroidModuleDependency>()
+                .map { it.resourcesToRefer }
+                .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer -> resourcesToRefer.combine(acc) }
+    }
 
     val resourcesBlueprint by lazy {
         when (resourcesConfig) {
