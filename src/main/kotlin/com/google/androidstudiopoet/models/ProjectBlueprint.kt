@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.DEFAULT_AGP_VERSION
+import com.google.androidstudiopoet.DEFAULT_GRADLE_VERSION
 import com.google.androidstudiopoet.DEFAULT_KOTLIN_VERSION
 import com.google.androidstudiopoet.ModuleBlueprintFactory
 import com.google.androidstudiopoet.input.ProjectConfig
@@ -33,10 +34,10 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val projectRoot = projectConfig.root.joinPath(projectName)
 
-    private val androidGradlePluginVersion = projectConfig.buildSystemConfig.agpVersion ?: DEFAULT_AGP_VERSION
-    private val kotlinVersion = projectConfig.buildSystemConfig.kotlinVersion ?: DEFAULT_KOTLIN_VERSION
+    private val androidGradlePluginVersion = projectConfig.buildSystemConfig?.agpVersion ?: DEFAULT_AGP_VERSION
+    private val kotlinVersion = projectConfig.buildSystemConfig?.kotlinVersion ?: DEFAULT_KOTLIN_VERSION
     val useKotlin = projectConfig.moduleConfigs.map { it.useKotlin }.find { it } ?: false
-    val gradleVersion = projectConfig.buildSystemConfig.buildSystemVersion!!
+    val gradleVersion = projectConfig.buildSystemConfig?.buildSystemVersion ?: DEFAULT_GRADLE_VERSION
 
     val moduleBlueprints: List<ModuleBlueprint>
     val androidModuleBlueprints: List<AndroidModuleBlueprint>
@@ -45,7 +46,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     val allDependencies: Map<String, List<ModuleDependency>>
 
     val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion,
-            kotlinVersion, projectConfig.repositories)
+            kotlinVersion, projectConfig.repositories, projectConfig.classpathDependencies)
     val jsonText = projectConfig.jsonText
 
     init {

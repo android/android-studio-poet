@@ -18,5 +18,6 @@ package com.google.androidstudiopoet
 
 const val DEFAULT_KOTLIN_VERSION = "1.1.60"
 const val DEFAULT_AGP_VERSION = "3.0.1"
+const val DEFAULT_GRADLE_VERSION = "4.7"
 const val DEFAULT_DEPENDENCY_METHOD = "implementation"
 
