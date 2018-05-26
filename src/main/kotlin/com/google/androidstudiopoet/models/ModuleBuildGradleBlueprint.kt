@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.input.PluginConfig
 import com.google.androidstudiopoet.utils.joinPath
 
 class ModuleBuildGradleBlueprint(
@@ -23,12 +24,13 @@ class ModuleBuildGradleBlueprint(
         private val enableKotlin: Boolean,
         private val generateTests: Boolean,
         val extraLines: List<String>? = null,
-        moduleRoot: String
+        moduleRoot: String,
+        pluginConfigs: List<PluginConfig>?
 ) {
 
     val path = moduleRoot.joinPath("build.gradle")
 
-    val plugins: Set<String> = createSetOfPlugins()
+    val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
 
     val dependencies = additionalDependencies + createSetOfMandatoryLibraries()
 
@@ -46,11 +48,14 @@ class ModuleBuildGradleBlueprint(
         return result
     }
 
-    private fun createSetOfPlugins(): Set<String> {
+    private fun createSetOfPlugins(pluginConfigs: List<PluginConfig>?): Set<String> {
         val result = mutableSetOf("java-library")
         if (enableKotlin) {
             result += listOf("kotlin")
         }
+
+        pluginConfigs?.map { it.id }?.forEach { result.add(it) }
+
         return result
     }
 

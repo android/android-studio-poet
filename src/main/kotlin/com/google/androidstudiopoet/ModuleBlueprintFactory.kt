@@ -33,19 +33,19 @@ object ModuleBlueprintFactory {
         return ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, dependencies,
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
                 moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass,
-                moduleConfig.extraLines, moduleConfig.generateTests)
+                moduleConfig.extraLines, moduleConfig.generateTests, moduleConfig.plugins)
     }
 
     private fun createWithoutDependencies(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
         return ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, setOf(),
                 moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
                 moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass,
-                moduleConfig.extraLines, moduleConfig.generateTests)
+                moduleConfig.extraLines, moduleConfig.generateTests, moduleConfig.plugins)
     }
 
     fun createAndroidModule(projectRoot: String, androidModuleConfig: AndroidModuleConfig, configMap: Map<String, ModuleConfig>): AndroidModuleBlueprint {
         val dependencies = createDependencies(projectRoot, androidModuleConfig, configMap)
-        return  AndroidModuleBlueprint(androidModuleConfig.moduleName,
+        return AndroidModuleBlueprint(androidModuleConfig.moduleName,
                 androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
                 projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
                 dependencies, androidModuleConfig.productFlavorConfigs, androidModuleConfig.buildTypes,

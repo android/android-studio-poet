@@ -86,7 +86,7 @@ class AndroidBuildGradleBlueprintTest {
     }
 
     @Test
-    fun `plugins contain ids of provided plugins`() {
+    fun `plugins contain id of provided plugin`() {
         val pluginId = "random plugin name"
         val blueprint = createAndroidBuildGradleBlueprint(pluginConfigs = listOf(PluginConfig(id = pluginId)))
 
