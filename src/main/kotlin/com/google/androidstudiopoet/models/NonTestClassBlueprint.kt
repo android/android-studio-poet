@@ -16,7 +16,12 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-abstract class NonTestClassBlueprint(packageName: String, className: String): ClassBlueprint(packageName, className) {
+abstract class NonTestClassBlueprint(packageName: String, className: String, val methodsPerClass: Int,
+                                     private val classComplexity: ClassComplexity) : ClassBlueprint(packageName, className) {
+
     override fun getMethodToCallFromOutside(): MethodToCall? =
             MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
+
+    fun lambdaCountInMethod(methodNumber: Int) = classComplexity.lambdaCount / methodsPerClass +
+                if (((classComplexity.lambdaCount % methodsPerClass) - methodNumber) > 0) 1 else 0
 }

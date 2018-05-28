@@ -16,20 +16,27 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-class KotlinClassBlueprint(packageName: String, classNumber: Int, private val methodsPerClass: Int,
+class KotlinClassBlueprint(packageName: String, classNumber: Int, methodsPerClass: Int,
                            private val mainPackage: String, private val methodsToCallWithinClass: List<MethodToCall>) :
-        NonTestClassBlueprint(packageName, "Foo" + classNumber) {
+        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, ClassComplexity(methodsPerClass)) {
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
                 .map { i ->
                     val statements = ArrayList<String>()
+
+                    // adding lambdas
+                    for (j in 0 until lambdaCountInMethod(i)) {
+                        statements += "var anything = { System.out.print(\"anything\")}"
+                    }
+
                     if (i > 0) {
                         statements += "foo" + (i - 1) + "()"
                     } else if (!methodsToCallWithinClass.isEmpty()) {
                         methodsToCallWithinClass.forEach { statements += "${it.className}().${it.methodName}()" }
 
                     }
+
                     MethodBlueprint("foo$i", statements)
                 }
     }

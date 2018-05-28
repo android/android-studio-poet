@@ -1,3 +1,3 @@
 package com.google.androidstudiopoet.models
 
-class ClassComplexity
+class ClassComplexity(val lambdaCount: Int = 0)
