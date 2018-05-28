@@ -16,19 +16,19 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.input.CodeConfig
 import com.google.androidstudiopoet.input.PluginConfig
 
 class ModuleBlueprint(name: String,
                       root: String,
                       useKotlin: Boolean,
                       dependencies: Set<Dependency>,
-                      javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
-                      kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
+                      javaConfig: CodeConfig?,
+                      kotlinConfig: CodeConfig?,
                       extraLines: List<String>?,
                       generateTests: Boolean,
                       pluginConfigs: List<PluginConfig>?)
-    : AbstractModuleBlueprint(name, root, useKotlin, dependencies, javaPackageCount, javaClassCount,
-        javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines,
+    : AbstractModuleBlueprint(name, root, useKotlin, dependencies, javaConfig, kotlinConfig, extraLines,
         generateTests) {
 
     val buildGradleBlueprint by lazy {

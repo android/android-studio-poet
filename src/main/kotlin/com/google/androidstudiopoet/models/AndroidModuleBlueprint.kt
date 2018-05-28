@@ -29,15 +29,14 @@ class AndroidModuleBlueprint(name: String,
                              dependencies: Set<Dependency>,
                              productFlavorConfigs: List<FlavorConfig>?,
                              buildTypeConfigs: List<BuildTypeConfig>?,
-                             javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
-                             kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
+                             javaConfig: CodeConfig?, kotlinConfig: CodeConfig?,
                              extraLines: List<String>?,
                              generateTests: Boolean,
                              dataBindingConfig: DataBindingConfig?,
                              androidBuildConfig: AndroidBuildConfig,
                              pluginConfigs: List<PluginConfig>?
-) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
-        javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
+) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaConfig, kotlinConfig,  extraLines,
+        generateTests) {
 
     val packageName = "com.$name"
     val srcPath = moduleRoot.joinPath("src")

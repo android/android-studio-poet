@@ -16,9 +16,11 @@
           "targetSdkVersion": 27,
           "compileSdkVersion": 27
         },
-        "javaPackageCount": 20,
-        "javaClassCount": 100,
-        "javaMethodsPerClass": 10,
+        "kotlin": {
+          "packages": 20,
+          "classesPerPackage": 100,
+          "methodsPerClass": 10
+        },
         "moduleName": "applicationModule",
         "activityCount": 5,
         "hasLaunchActivity": true,
@@ -42,9 +44,11 @@
       },
       {
         "moduleType": "android",
-        "javaPackageCount": 20,
-        "javaClassCount": 100,
-        "javaMethodsPerClass": 10,
+        "kotlin": {
+          "packages": 20,
+          "classesPerPackage": 100,
+          "methodsPerClass": 10
+        },
         "moduleName": "libraryModule",
         "activityCount": 5,
         "resourcesConfig": {

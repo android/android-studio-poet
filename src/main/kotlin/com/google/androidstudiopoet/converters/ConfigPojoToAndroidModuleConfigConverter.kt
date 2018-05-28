@@ -24,13 +24,19 @@ class ConfigPojoToAndroidModuleConfigConverter {
                 buildTypes: List<BuildTypeConfig>): AndroidModuleConfig {
         return AndroidModuleConfig().apply {
             moduleName = config.getAndroidModuleName(index)
-            javaPackageCount = config.javaPackageCount!!.toInt()
-            javaClassCount = config.javaClassCount!!.toInt()
-            javaMethodsPerClass = config.javaMethodsPerClass
 
-            kotlinPackageCount = config.kotlinPackageCount!!.toInt()
-            kotlinClassCount = config.kotlinClassCount!!.toInt()
-            kotlinMethodsPerClass = config.kotlinMethodsPerClass
+            java = CodeConfig().apply {
+                packages = config.javaPackageCount!!.toInt()
+                classesPerPackage = config.javaClassCount!!.toInt()
+                methodsPerClass = config.javaMethodsPerClass
+            }
+
+            kotlin = CodeConfig().apply {
+                packages = config.kotlinPackageCount!!.toInt()
+                classesPerPackage = config.kotlinClassCount!!.toInt()
+                methodsPerClass = config.kotlinMethodsPerClass
+            }
+
             useKotlin = config.useKotlin
 
             activityCount = config.numActivitiesPerAndroidModule!!.toInt()

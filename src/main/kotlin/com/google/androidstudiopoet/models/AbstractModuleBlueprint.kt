@@ -16,24 +16,24 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.input.CodeConfig
 import com.google.androidstudiopoet.utils.joinPath
 
 abstract class AbstractModuleBlueprint(val name: String,
-                                   root: String,
-                                   val useKotlin: Boolean,
-                                   val dependencies: Set<Dependency>,
-                                   javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
-                                   kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
-                                   val extraLines: List<String>?,
-                                   val generateTests : Boolean) {
+                                       root: String,
+                                       val useKotlin: Boolean,
+                                       val dependencies: Set<Dependency>,
+                                       javaConfig: CodeConfig?,
+                                       kotlinConfig: CodeConfig?,
+                                       val extraLines: List<String>?,
+                                       val generateTests : Boolean) {
 
     val moduleRoot = root.joinPath(name)
     val moduleDependencies by lazy{ dependencies.filterIsInstance<ModuleDependency>()}
     private val methodsToCallWithIn by lazy { moduleDependencies.map { it.methodToCall } }
 
     val packagesBlueprint by lazy {
-        PackagesBlueprint(javaPackageCount, javaClassCount, javaMethodsPerClass, kotlinPackageCount,
-                kotlinClassCount, kotlinMethodsPerClass, moduleRoot, name, methodsToCallWithIn, generateTests)
+        PackagesBlueprint(javaConfig, kotlinConfig, moduleRoot, name, methodsToCallWithIn, generateTests)
     }
 
     val methodToCallFromOutside by lazy {

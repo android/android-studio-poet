@@ -85,13 +85,17 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
             activityCount.assertEquals(ACTIVITY_COUNT)
             extraLines!!.assertEquals(extraLinesForAndroidBuildFile)
 
-            javaClassCount.assertEquals(JAVA_CLASS_COUNT)
-            javaPackageCount.assertEquals(JAVA_PACKAGE_COUNT)
-            javaMethodsPerClass.assertEquals(configPOJO.javaMethodsPerClass)
+            assertOn(java!!) {
+                packages.assertEquals(JAVA_PACKAGE_COUNT)
+                classesPerPackage.assertEquals(JAVA_CLASS_COUNT)
+                methodsPerClass.assertEquals(configPOJO.javaMethodsPerClass)
+            }
 
-            kotlinPackageCount.assertEquals(KOTLIN_PACKAGE_COUNT)
-            kotlinClassCount.assertEquals(KOTLIN_CLASS_COUNT)
-            kotlinMethodsPerClass.assertEquals(configPOJO.kotlinMethodsPerClass)
+            assertOn(kotlin!!) {
+                packages.assertEquals(KOTLIN_PACKAGE_COUNT)
+                classesPerPackage.assertEquals(KOTLIN_CLASS_COUNT)
+                methodsPerClass.assertEquals(configPOJO.kotlinMethodsPerClass)
+            }
 
             useKotlin.assertEquals(configPOJO.useKotlin)
 

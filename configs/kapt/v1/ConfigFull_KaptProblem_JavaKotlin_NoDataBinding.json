@@ -6,19 +6,24 @@
     "buildSystemConfig": {
       "buildSystemVersion": "4.3.1"
     },
-    "moduleConfigs": [{
+    "moduleConfigs": [
+      {
         "moduleType": "android",
         "androidBuildConfig": {
-          "minSdkVersion" : 20,
+          "minSdkVersion": 20,
           "targetSdkVersion": 27,
-          "compileSdkVersion" : 27
+          "compileSdkVersion": 27
         },
-        "javaPackageCount": 10,
-        "javaClassCount": 100,
-        "javaMethodsPerClass": 10,
-        "kotlinPackageCount": 10,
-        "kotlinClassCount": 100,
-        "kotlinMethodsPerClass": 10,
+        "java": {
+          "packages": 10,
+          "classesPerPackage": 100,
+          "methodsPerClass": 10
+        },
+        "kotlin": {
+          "packages": 10,
+          "classesPerPackage": 100,
+          "methodsPerClass": 10
+        },
         "useKotlin": true,
         "moduleName": "applicationModule",
         "activityCount": 5,
