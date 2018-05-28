@@ -1,5 +1,5 @@
 /*
-Copyright 2017 Google Inc.
+Copyright 2018 Google Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,10 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet
+package com.google.androidstudiopoet.input
 
-const val DEFAULT_KOTLIN_VERSION = "1.1.60"
-const val DEFAULT_AGP_VERSION = "3.0.1"
-const val DEFAULT_GRADLE_VERSION = "4.7"
-const val DEFAULT_DEPENDENCY_METHOD = "implementation"
-
+/**
+ * Configuration of a plugin applied to a module.
+ *
+ * @param id Id of the plugin that will be used in the gradle script to apply it
+ * @param taskName Name of the gradle task that is used to customize plugin
+ * @param taskBody Body of the gradle task that is used to customize plugin
+ */
+data class PluginConfig(val id: String, val taskName: String? = null, val taskBody: List<String>? = null)

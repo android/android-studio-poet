@@ -82,7 +82,7 @@ class ConfigPojoToProjectConfigConverterTest {
             root.assertEquals(ROOT)
             pureModuleConfigs.assertEquals(listOf(moduleConfig0, moduleConfig1))
             androidModuleConfigs.assertEquals(listOf(androidModuleConfig0, androidModuleConfig1))
-            buildSystemConfig.assertEquals(buildSystemConfig0)
+            buildSystemConfig!!.assertEquals(buildSystemConfig0)
         }
     }
 }
