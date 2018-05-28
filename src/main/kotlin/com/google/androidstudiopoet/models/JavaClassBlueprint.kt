@@ -18,7 +18,7 @@ package com.google.androidstudiopoet.models
 
 class JavaClassBlueprint(packageName: String, classNumber: Int, methodsPerClass: Int,
                          private val where: String, private val methodsToCallWithinClass: List<MethodToCall>) :
-        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, ClassComplexity((methodsPerClass).toInt())) {
+        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, ClassComplexity((1.5 * methodsPerClass).toInt())) {
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
@@ -27,7 +27,7 @@ class JavaClassBlueprint(packageName: String, classNumber: Int, methodsPerClass:
 
                     // adding lambdas
                     for (j in 0 until lambdaCountInMethod(i)) {
-                        statements += "final Runnable anything = () -> System.out.println(\"anything\")"
+                        statements += getLambda(j)
                     }
                     if (i > 0) {
                         statements += "foo" + (i - 1) + "()"
@@ -41,4 +41,6 @@ class JavaClassBlueprint(packageName: String, classNumber: Int, methodsPerClass:
     }
 
     override fun getClassPath(): String = "$where/$packageName/$className.java"
+
+    private fun getLambda(lambdaNumber: Int) = "final Runnable anything$lambdaNumber = () -> System.out.println(\"anything\")"
 }
