@@ -18,7 +18,7 @@ package com.google.androidstudiopoet.models
 
 class JavaClassBlueprint(packageName: String, classNumber: Int, private val methodsPerClass: Int,
                          private val where: String, private val methodsToCallWithinClass: List<MethodToCall>) :
-        ClassBlueprint(packageName, "Foo" + classNumber) {
+        NonTestClassBlueprint(packageName, "Foo" + classNumber) {
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
@@ -38,7 +38,4 @@ class JavaClassBlueprint(packageName: String, classNumber: Int, private val meth
     }
 
     override fun getClassPath(): String = "$where/$packageName/$className.java"
-
-    override fun getMethodToCallFromOutside(): MethodToCall =
-            MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
 }

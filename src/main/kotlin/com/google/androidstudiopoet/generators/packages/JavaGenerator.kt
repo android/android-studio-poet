@@ -27,7 +27,7 @@ import javax.lang.model.element.Modifier
 
 class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
 
-    override fun generateClass(blueprint: ClassBlueprint): MethodToCall? {
+    override fun generateClass(blueprint: ClassBlueprint) {
 
         val classSpec = blueprint.getMethodBlueprints()
                 .map { generateMethod(it) }
@@ -37,7 +37,6 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
         val javaFile = JavaFile.builder(blueprint.packageName, classSpec).build()
 
         writeFile(blueprint.getClassPath(), javaFile.toString())
-        return blueprint.getMethodToCallFromOutside()
     }
 
     private fun getClazz(blueprint: ClassBlueprint) =
