@@ -23,21 +23,21 @@ data class PackagesBlueprint(private val javaConfig: CodeConfig?,
                              val where: String,
                              private val moduleName: String,
                              private val methodsToCallWithin: List<MethodToCall>,
-                             val generateTests : Boolean) {
+                             val generateTests: Boolean) {
 
     private val javaPackageCount: Int = javaConfig?.packages ?: 0
-    private val javaClassCount: Int  = javaConfig?.classesPerPackage ?: 0
-    private val javaMethodsPerClass: Int  = javaConfig?.methodsPerClass ?: 0
-    private val kotlinPackageCount: Int  = kotlinConfig?.packages ?: 0
-    private val kotlinClassCount: Int  = kotlinConfig?.classesPerPackage ?: 0
-    private val kotlinMethodsPerClass: Int  = kotlinConfig?.methodsPerClass ?: 0
+    private val javaClassCount: Int = javaConfig?.classesPerPackage ?: 0
+    private val javaMethodsPerClass: Int = javaConfig?.methodsPerClass ?: 0
+    private val kotlinPackageCount: Int = kotlinConfig?.packages ?: 0
+    private val kotlinClassCount: Int = kotlinConfig?.classesPerPackage ?: 0
+    private val kotlinMethodsPerClass: Int = kotlinConfig?.methodsPerClass ?: 0
 
     val javaPackageBlueprints = ArrayList<PackageBlueprint>()
     val kotlinPackageBlueprints = ArrayList<PackageBlueprint>()
     var methodToCallFromOutside: MethodToCall
 
     init {
-        var previousClassMethodToCall:List<MethodToCall> = methodsToCallWithin
+        var previousClassMethodToCall: List<MethodToCall> = methodsToCallWithin
         (0 until javaPackageCount).forEach { packageIndex ->
             val packageBlueprint = PackageBlueprint(packageIndex, javaClassCount, javaMethodsPerClass, where, moduleName, Language.JAVA, previousClassMethodToCall, generateTests)
             javaPackageBlueprints += packageBlueprint
@@ -50,10 +50,17 @@ data class PackagesBlueprint(private val javaConfig: CodeConfig?,
             previousClassMethodToCall = listOf(packageBlueprint.methodToCallFromOutside)
         }
 
-        methodToCallFromOutside = if (kotlinPackageCount != 0) {
-            kotlinPackageBlueprints.last().methodToCallFromOutside
+        methodToCallFromOutside = MethodToCall("", "")
+
+        if (kotlinPackageCount != 0) {
+            if (!kotlinPackageBlueprints.isEmpty()) {
+                methodToCallFromOutside = kotlinPackageBlueprints.last().methodToCallFromOutside
+            }
+
         } else {
-            javaPackageBlueprints.last().methodToCallFromOutside
+            if (!javaPackageBlueprints.isEmpty()) {
+                methodToCallFromOutside = javaPackageBlueprints.last().methodToCallFromOutside
+            }
         }
     }
 }
