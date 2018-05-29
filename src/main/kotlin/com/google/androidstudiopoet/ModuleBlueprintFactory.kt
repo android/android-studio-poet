@@ -31,15 +31,13 @@ object ModuleBlueprintFactory {
     fun create(moduleConfig: ModuleConfig, projectRoot: String, configMap: Map<String, ModuleConfig>): ModuleBlueprint {
         val dependencies = createDependencies(projectRoot, moduleConfig, configMap)
         return ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, dependencies,
-                moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
-                moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass,
+                moduleConfig.java, moduleConfig.kotlin,
                 moduleConfig.extraLines, moduleConfig.generateTests, moduleConfig.plugins)
     }
 
     private fun createWithoutDependencies(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
         return ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, setOf(),
-                moduleConfig.javaPackageCount, moduleConfig.javaClassCount, moduleConfig.javaMethodsPerClass,
-                moduleConfig.kotlinPackageCount, moduleConfig.kotlinClassCount, moduleConfig.kotlinMethodsPerClass,
+                moduleConfig.java, moduleConfig.kotlin,
                 moduleConfig.extraLines, moduleConfig.generateTests, moduleConfig.plugins)
     }
 
@@ -49,9 +47,7 @@ object ModuleBlueprintFactory {
                 androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
                 projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
                 dependencies, androidModuleConfig.productFlavorConfigs, androidModuleConfig.buildTypes,
-                androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
-                androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
-                androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass,
+                androidModuleConfig.java, androidModuleConfig.kotlin,
                 androidModuleConfig.extraLines,
                 androidModuleConfig.generateTests,
                 androidModuleConfig.dataBindingConfig,
@@ -64,9 +60,7 @@ object ModuleBlueprintFactory {
                     androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
                     projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
                     setOf(), androidModuleConfig.productFlavorConfigs, androidModuleConfig.buildTypes,
-                    androidModuleConfig.javaPackageCount, androidModuleConfig.javaClassCount,
-                    androidModuleConfig.javaMethodsPerClass, androidModuleConfig.kotlinPackageCount,
-                    androidModuleConfig.kotlinClassCount, androidModuleConfig.kotlinMethodsPerClass,
+                    androidModuleConfig.java, androidModuleConfig.kotlin,
                     androidModuleConfig.extraLines,
                     androidModuleConfig.generateTests,
                     androidModuleConfig.dataBindingConfig,

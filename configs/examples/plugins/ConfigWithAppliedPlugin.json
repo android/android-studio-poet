@@ -9,9 +9,11 @@
     "moduleConfigs": [
       {
         "moduleType": "android",
-        "kotlinPackageCount": 10,
-        "kotlinClassCount": 10,
-        "kotlinMethodsPerClass": 10,
+        "kotlin": {
+          "packages": 10,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
         "useKotlin": true,
         "moduleName": "applicationModule",
         "activityCount": 5,
