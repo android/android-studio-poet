@@ -62,5 +62,5 @@ data class PackagesBlueprint(private val javaConfig: CodeConfig?,
         }
     }
 
-    private fun CodeConfig?.getCodeComplexity() = ClassComplexity((1.5 * (this?.methodsPerClass ?: 1)).toInt())
+    private fun CodeConfig?.getCodeComplexity() = ClassComplexity(this?.complexity?.lambdaCount ?: 0)
 }

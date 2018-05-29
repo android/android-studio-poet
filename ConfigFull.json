@@ -55,12 +55,18 @@
         "java": {
           "packages": "10",
           "classesPerPackage": "10",
-          "methodsPerClass": "10"
+          "methodsPerClass": "10",
+          "complexity": {
+            "lambdaCount": 3
+          }
         },
         "kotlin": {
           "packages": "10",
           "classesPerPackage": "10",
-          "methodsPerClass": "10"
+          "methodsPerClass": "10",
+          "complexity": {
+            "lambdaCount": 3
+          }
         },
         "useKotlin": true,
         "moduleName": "applicationModule",
