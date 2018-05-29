@@ -18,7 +18,7 @@ package com.google.androidstudiopoet.models
 
 class KotlinClassBlueprint(packageName: String, classNumber: Int, methodsPerClass: Int,
                            private val mainPackage: String, private val methodsToCallWithinClass: List<MethodToCall>) :
-        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, ClassComplexity(methodsPerClass)) {
+        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, ClassComplexity((1.5 * methodsPerClass).toInt())) {
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
@@ -27,7 +27,7 @@ class KotlinClassBlueprint(packageName: String, classNumber: Int, methodsPerClas
 
                     // adding lambdas
                     for (j in 0 until lambdaCountInMethod(i)) {
-                        statements += "var anything = { System.out.print(\"anything\")}"
+                        statements += getLambda(j)
                     }
 
                     if (i > 0) {
@@ -40,6 +40,8 @@ class KotlinClassBlueprint(packageName: String, classNumber: Int, methodsPerClas
                     MethodBlueprint("foo$i", statements)
                 }
     }
+
+    private fun getLambda(lambdaNumber: Int) = "var anything$lambdaNumber = { System.out.print(\"anything\")}"
 
     override fun getClassPath(): String = "$mainPackage/$packageName/$className.kt"
 }
