@@ -62,7 +62,7 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
         }
 
         if (enableKotlin && enableDataBinding) {
-            result += LibraryDependency("kapt", "com.android.databinding:compiler:${'$'}androidBuildConf")
+            result += LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1")
         }
 
         return result

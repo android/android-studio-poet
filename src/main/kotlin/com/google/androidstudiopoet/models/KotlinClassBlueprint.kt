@@ -16,26 +16,32 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-class KotlinClassBlueprint(packageName: String, classNumber: Int, private val methodsPerClass: Int,
-                           private val mainPackage: String, private val methodsToCallWithinClass: List<MethodToCall>) :
-        ClassBlueprint(packageName, "Foo" + classNumber) {
+class KotlinClassBlueprint(packageName: String, classNumber: Int, methodsPerClass: Int,
+                           private val mainPackage: String, private val methodsToCallWithinClass: List<MethodToCall>, classComplexity: ClassComplexity) :
+        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, classComplexity) {
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
                 .map { i ->
                     val statements = ArrayList<String>()
+
+                    // adding lambdas
+                    for (j in 0 until lambdaCountInMethod(i)) {
+                        statements += getLambda(j)
+                    }
+
                     if (i > 0) {
                         statements += "foo" + (i - 1) + "()"
                     } else if (!methodsToCallWithinClass.isEmpty()) {
                         methodsToCallWithinClass.forEach { statements += "${it.className}().${it.methodName}()" }
 
                     }
+
                     MethodBlueprint("foo$i", statements)
                 }
     }
 
-    override fun getClassPath(): String = "$mainPackage/$packageName/$className.kt"
+    private fun getLambda(lambdaNumber: Int) = "var anything$lambdaNumber = { System.out.print(\"anything\")}"
 
-    override fun getMethodToCallFromOutside(): MethodToCall =
-            MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
+    override fun getClassPath(): String = "$mainPackage/$packageName/$className.kt"
 }

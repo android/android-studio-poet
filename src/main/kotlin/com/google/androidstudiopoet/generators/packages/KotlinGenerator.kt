@@ -23,7 +23,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 
 class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
 
-    override fun generateClass(blueprint: ClassBlueprint): MethodToCall? {
+    override fun generateClass(blueprint: ClassBlueprint) {
         val buff = StringBuilder()
 
         buff.append("package ${blueprint.packageName};\n\n")
@@ -41,7 +41,6 @@ class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fil
         buff.append("}")
 
         writeFile(blueprint.getClassPath(), buff.toString())
-        return blueprint.getMethodToCallFromOutside()
     }
 
     private fun generateMethod(blueprint: MethodBlueprint): String {

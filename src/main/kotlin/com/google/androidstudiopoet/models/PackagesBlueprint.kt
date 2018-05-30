@@ -32,6 +32,9 @@ data class PackagesBlueprint(private val javaConfig: CodeConfig?,
     private val kotlinClassCount: Int = kotlinConfig?.classesPerPackage ?: 0
     private val kotlinMethodsPerClass: Int = kotlinConfig?.methodsPerClass ?: 0
 
+    private val javaCodeComplexity = javaConfig.getCodeComplexity()
+    private val kotlinCodeComplexity = kotlinConfig.getCodeComplexity()
+
     val javaPackageBlueprints = ArrayList<PackageBlueprint>()
     val kotlinPackageBlueprints = ArrayList<PackageBlueprint>()
     var methodToCallFromOutside: MethodToCall
@@ -39,13 +42,15 @@ data class PackagesBlueprint(private val javaConfig: CodeConfig?,
     init {
         var previousClassMethodToCall: List<MethodToCall> = methodsToCallWithin
         (0 until javaPackageCount).forEach { packageIndex ->
-            val packageBlueprint = PackageBlueprint(packageIndex, javaClassCount, javaMethodsPerClass, where, moduleName, Language.JAVA, previousClassMethodToCall, generateTests)
+            val packageBlueprint = PackageBlueprint(packageIndex, javaClassCount, javaMethodsPerClass, where, moduleName,
+                    Language.JAVA, previousClassMethodToCall, generateTests, javaCodeComplexity)
             javaPackageBlueprints += packageBlueprint
             previousClassMethodToCall = listOf(packageBlueprint.methodToCallFromOutside)
         }
 
         (0 until kotlinPackageCount).map { packageIndex ->
-            val packageBlueprint = PackageBlueprint(packageIndex, kotlinClassCount, kotlinMethodsPerClass, where, moduleName, Language.KOTLIN, previousClassMethodToCall, generateTests)
+            val packageBlueprint = PackageBlueprint(packageIndex, kotlinClassCount, kotlinMethodsPerClass, where,
+                    moduleName, Language.KOTLIN, previousClassMethodToCall, generateTests, kotlinCodeComplexity)
             kotlinPackageBlueprints += packageBlueprint
             previousClassMethodToCall = listOf(packageBlueprint.methodToCallFromOutside)
         }
@@ -63,4 +68,6 @@ data class PackagesBlueprint(private val javaConfig: CodeConfig?,
             }
         }
     }
+
+    private fun CodeConfig?.getCodeComplexity() = ClassComplexity(this?.complexity?.lambdaCount ?: 0)
 }

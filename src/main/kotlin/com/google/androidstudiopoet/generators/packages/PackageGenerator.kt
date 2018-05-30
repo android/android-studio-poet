@@ -46,7 +46,7 @@ abstract class PackageGenerator(private val fileWriter: FileWriter) {
         return blueprint.methodToCallFromOutside
     }
 
-    abstract fun generateClass(blueprint: ClassBlueprint): MethodToCall?
+    abstract fun generateClass(blueprint: ClassBlueprint)
 
     protected fun writeFile(path: String, content: String) {
         fileWriter.writeToFile(content, path)

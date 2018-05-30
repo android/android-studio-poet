@@ -20,4 +20,5 @@ class CodeConfig {
     var packages = 0
     var classesPerPackage = 0
     var methodsPerClass = 0
+    var complexity: CodeComplexityConfig? = null
 }
