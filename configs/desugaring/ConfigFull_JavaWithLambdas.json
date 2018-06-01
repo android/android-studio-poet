@@ -1,0 +1,38 @@
+{
+  "inputVersion": "0.1",
+  "projectConfig": {
+    "projectName": "genny_JavaWithLambdas",
+    "root": "../generated_projects/",
+    "buildSystemConfig": {
+      "buildSystemVersion": "4.7",
+      "agpVersion": "3.1.2",
+      "kotlinVersion": "1.2.41"
+    },
+    "moduleConfigs": [
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 19,
+          "targetSdkVersion": 27,
+          "compileSdkVersion": 27
+        },
+        "java": {
+          "packages": "10",
+          "classesPerPackage": "1000",
+          "methodsPerClass": "10",
+          "complexity": {
+            "lambdaCount": 3
+          }
+        },
+        "moduleName": "applicationModule",
+        "activityCount": 5,
+        "hasLaunchActivity": true,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        }
+      }
+    ]
+  }
+}
