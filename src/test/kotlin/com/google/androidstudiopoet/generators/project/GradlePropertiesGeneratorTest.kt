@@ -1,11 +1,31 @@
+/*
+Copyright 2018 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ */
+
+
 package com.google.androidstudiopoet.generators.project
 
 import com.google.androidstudiopoet.models.GradlePropertiesBlueprint
 import com.google.androidstudiopoet.testutils.mock
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Test
 
 class GradlePropertiesGeneratorTest {
@@ -22,14 +42,14 @@ class GradlePropertiesGeneratorTest {
         val key2 = "randomKey2"
         val value2 = "randomValue2"
         generator.generate(getGradlePropertiesBlueprint(
-                root = "root",
+                path = "path",
                 properties = mapOf(
                         key1 to value1,
                         key2 to value2
                 )
         ))
 
-        verify(fileWriter).writeToFile("$key1=$value1\n$key2=$value2", "root".joinPath("gradle.properties"))
+        verify(fileWriter).writeToFile("$key1=$value1\n$key2=$value2", "path")
     }
 
     @Test
@@ -38,8 +58,16 @@ class GradlePropertiesGeneratorTest {
                 properties = null
         ))
 
-        verify(fileWriter, never())
+    verifyZeroInteractions(fileWriter)
     }
 
-    private fun getGradlePropertiesBlueprint(root: String = "root", properties: Map<String, String>? = mapOf()) = GradlePropertiesBlueprint(root, properties)
+    private fun getGradlePropertiesBlueprint(
+            path: String = "path",
+            properties: Map<String, String>? = mapOf()
+    ): GradlePropertiesBlueprint {
+        return mock<GradlePropertiesBlueprint>().apply {
+            whenever(this.path).thenReturn(path)
+            whenever(this.properties).thenReturn(properties)
+        }
+    }
 }

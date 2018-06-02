@@ -18,6 +18,15 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.utils.joinPath
 
-class GradlePropertiesBlueprint(projectRoot: String, val properties: Map<String, String>?) {
+class GradlePropertiesBlueprint(projectRoot: String, overrideProperties: Map<String, String>?) {
+    private val defaultProperties = mapOf(
+            "org.gradle.jvmargs"  to "-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError",
+            "org.gradle.daemon" to "true",
+            "org.gradle.parallel" to "true",
+            "org.gradle.caching" to "true"
+    )
+
     val path = projectRoot.joinPath("gradle.properties")
+    val properties = defaultProperties.plus(overrideProperties ?: mapOf())
+
 }
