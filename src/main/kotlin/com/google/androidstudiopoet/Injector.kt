@@ -81,7 +81,7 @@ object Injector {
                     fileWriter)
 
     val modulesWriter =
-            SourceModuleGenerator(buildGradleGenerator, gradleSettingsGenerator,
+            SourceModuleGenerator(buildGradleGenerator, gradleSettingsGenerator, gradlePropertiesGenerator,
                     projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator,
                     dependencyGraphGenerator, jsonConfigGenerator, fileWriter)
 
