@@ -48,7 +48,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion,
             kotlinVersion, projectConfig.repositories, projectConfig.classpathDependencies)
 
-    val gradleProperties = projectConfig.buildSystemConfig?.properties
+    val gradlePropertiesBlueprint = GradlePropertiesBlueprint(projectRoot, projectConfig.buildSystemConfig?.properties)
 
     val jsonText = projectConfig.jsonText
 
@@ -109,7 +109,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
         }
         // No circular dependencies if and only if all modules can be sorted
         if (topologicalOrder.size != allModulesNames.size) {
-            println("Found circular dependencies that affect modules ${dependencyCounter.filter{ counter -> counter.value > 0 }.keys}")
+            println("Found circular dependencies that affect modules ${dependencyCounter.filter { counter -> counter.value > 0 }.keys}")
             return true
         }
         return false
