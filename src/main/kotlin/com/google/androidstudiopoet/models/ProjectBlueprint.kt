@@ -47,6 +47,9 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
 
     val buildGradleBlueprint = ProjectBuildGradleBlueprint(projectRoot, useKotlin, androidGradlePluginVersion,
             kotlinVersion, projectConfig.repositories, projectConfig.classpathDependencies)
+
+    val gradleProperties = projectConfig.buildSystemConfig?.properties
+
     val jsonText = projectConfig.jsonText
 
     init {

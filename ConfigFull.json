@@ -4,7 +4,10 @@
     "projectName": "genny",
     "root": "./modules/",
     "buildSystemConfig": {
-      "buildSystemVersion": "4.3.1"
+      "buildSystemVersion": "4.3.1",
+      "properties": {
+        "org.gradle.daemon": "true"
+      }
     },
     "moduleConfigs": [
       {
