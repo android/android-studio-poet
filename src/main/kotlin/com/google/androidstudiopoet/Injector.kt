@@ -27,6 +27,7 @@ import com.google.androidstudiopoet.generators.android_modules.resources.Resourc
 import com.google.androidstudiopoet.generators.android_modules.resources.StringResourcesGenerator
 import com.google.androidstudiopoet.generators.packages.JavaGenerator
 import com.google.androidstudiopoet.generators.packages.KotlinGenerator
+import com.google.androidstudiopoet.generators.project.GradlePropertiesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
 import com.google.androidstudiopoet.input.DependencyConfig
@@ -45,6 +46,7 @@ object Injector {
     private val buildGradleGenerator = ModuleBuildGradleGenerator(fileWriter)
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator(fileWriter)
+    private val gradlePropertiesGenerator = GradlePropertiesGenerator(fileWriter)
     private val stringResourcesGenerator = StringResourcesGenerator(fileWriter)
     private val imageResourcesGenerator = ImagesGenerator(fileWriter)
     private val layoutResourcesGenerator = LayoutResourcesGenerator(fileWriter)
@@ -79,7 +81,7 @@ object Injector {
                     fileWriter)
 
     val modulesWriter =
-            SourceModuleGenerator(buildGradleGenerator, gradleSettingsGenerator,
+            SourceModuleGenerator(buildGradleGenerator, gradleSettingsGenerator, gradlePropertiesGenerator,
                     projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator,
                     dependencyGraphGenerator, jsonConfigGenerator, fileWriter)
 
