@@ -4,7 +4,7 @@
     "projectName": "genny_JavaWithoutLambdasApi21",
     "root": "../generated_projects/",
     "buildSystemConfig": {
-      "buildSystemVersion": "4.7",
+      "buildSystemVersion": "4.8",
       "agpVersion": "3.1.2",
       "kotlinVersion": "1.2.41"
     },
@@ -17,9 +17,9 @@
           "compileSdkVersion": 27
         },
         "java": {
-          "packages": "10",
+          "packages": "20",
           "classesPerPackage": "1000",
-          "methodsPerClass": "13"
+          "methodsPerClass": "6"
         },
         "moduleName": "applicationModule",
         "activityCount": 5,
