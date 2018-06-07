@@ -1,8 +1,8 @@
 {
   "inputVersion": "0.1",
   "projectConfig": {
-    "projectName": "genny_G4-3-1_AGP3-0-1_Kotlin1-1-60",
-    "root": "../generated_projects/build-tool-versions",
+    "projectName": "genny_G4-5_AGP3-0-1_Kotlin1-2-20",
+    "root": "../generated_projects/build-tools-versions",
     "buildSystemConfig": {
       "buildSystemVersion": "4.5",
       "agpVersion": "3.0.1",
@@ -12,9 +12,7 @@
       {
         "moduleType": "android",
         "androidBuildConfig": {
-          "minSdkVersion": 20,
-          "targetSdkVersion": 27,
-          "compileSdkVersion": 27
+          "minSdkVersion": 21
         },
         "java": {
           "packages": 10,
@@ -43,6 +41,9 @@
       },
       {
         "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 21
+        },
         "java": {
           "packages": 10,
           "classesPerPackage": 250,
@@ -60,14 +61,7 @@
           "stringCount": 5,
           "imageCount": 5,
           "layoutCount": 5
-        },
-        "flavors": [
-          {
-            "name": "red",
-            "dimension": "color",
-            "count": 2
-          }
-        ]
+        }
       }
     ]
   }

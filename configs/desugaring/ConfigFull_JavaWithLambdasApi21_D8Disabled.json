@@ -1,0 +1,41 @@
+{
+  "inputVersion": "0.1",
+  "projectConfig": {
+    "projectName": "genny_JavaWithLambdasApi21_D8Disabled",
+    "root": "../generated_projects/",
+    "buildSystemConfig": {
+      "buildSystemVersion": "4.8",
+      "agpVersion": "3.1.2",
+      "kotlinVersion": "1.2.41",
+      "properties": {
+        "android.enableD8":"false"
+      }
+    },
+    "moduleConfigs": [
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 21,
+          "targetSdkVersion": 27,
+          "compileSdkVersion": 27
+        },
+        "java": {
+          "packages": "10",
+          "classesPerPackage": "1000",
+          "methodsPerClass": "10",
+          "complexity": {
+            "lambdaCount": 1
+          }
+        },
+        "moduleName": "applicationModule",
+        "activityCount": 5,
+        "hasLaunchActivity": true,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        }
+      }
+    ]
+  }
+}

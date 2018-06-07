@@ -1,12 +1,12 @@
 {
   "inputVersion": "0.1",
   "projectConfig": {
-    "projectName": "genny_G4-6_AGP3-1-0_Kotlin1-2-30",
+    "projectName": "genny_G4-6_AGP3-1-2_Kotlin1-2-41",
     "root": "../generated_projects/build-tools-versions",
     "buildSystemConfig": {
       "buildSystemVersion": "4.6",
-      "agpVersion": "3.1.0",
-      "kotlinVersion": "1.2.30"
+      "agpVersion": "3.1.2",
+      "kotlinVersion": "1.2.41"
     },
     "moduleConfigs": [
       {
