@@ -1,6 +1,7 @@
 clean_build {
     tasks = ["assembleDebug"]
     cleanup-tasks = ["clean", "cleanBuildCache"]
+    warm-ups = 6
 }
 
 java_inc_build {
@@ -8,10 +9,14 @@ java_inc_build {
 
     apply-abi-change-to = "applicationModule/src/main/java/applicationModulepackageJava0/Foo0.java"
     apply-non-abi-change-to = "applicationModule/src/main/java/applicationModulepackageJava0/Foo0.java"
+
+    warm-ups = 6
 }
 
 kotlin_inc_build {
     tasks = ["assembleDebug"]
 
     apply-kotlin-change-to = "applicationModule/src/main/java/applicationModulepackageKt3/Foo2.kt"
+
+    warm-ups = 6
 }
