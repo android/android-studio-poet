@@ -35,4 +35,6 @@ The following combinations were profiled:
 |G:4.7, AGP 3.1.2, Kotlin 1.2.41 | 1m 10s [buildscan](https://scans.gradle.com/s/ulf32prjxbkny)| 55s [buildscan](https://scans.gradle.com/s/zvbhbskzpd6be) |
 |G:4.8, AGP 3.1.2, Kotlin 1.2.41 | 1m 12s [buildscan](https://scans.gradle.com/s/2jbjvjhapt7pa)| 1m 11s [buildscan](https://scans.gradle.com/s/nmrtqbgq3yya6) |
   
-  
+Notes:
+    * Time for incremental build is constantly decrease for all the versions, but Gradle 4.8.
+    * Clean build for AGP 3.1.2 is significantly faster then AGP 3.1.0.  

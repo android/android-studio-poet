@@ -29,11 +29,16 @@ For each of the following variants two configs are created one with `minSdkVersi
 |-------------|-------------| ----------------- |
 |Java with Lambdas | 2m 50s [buildscan](https://scans.gradle.com/s/7mpfqw3jve6xw)| 1m 2s [buildscan](https://scans.gradle.com/s/bugatuedxthpi)|
 |Java with Lambdas, min SDK 21 | 2m 46s [buildscan](https://scans.gradle.com/s/o65u2svlmgcmu)| 38s [buildscan](https://scans.gradle.com/s/57iaid27hk3sm) |
-|Kotlin with Lambdas | [buildscan]() | 1m 26s [buildscan](https://scans.gradle.com/s/2g5424pq27vre) |
+|Kotlin with Lambdas | 4m 7s [buildscan](https://scans.gradle.com/s/awoh2u5cvttm4) | 1m 26s [buildscan](https://scans.gradle.com/s/2g5424pq27vre) |
 |Kotlin with Lambdas, min SDK 21 | 3m 53s [buildscan](https://scans.gradle.com/s/umukzli3std5c) | 35s [buildscan](https://scans.gradle.com/s/3qgzlu5hkt4gm) |
-|Java without Lambdas | 2m 19s[buildscan](https://scans.gradle.com/s/xn5qduoedgwmg) | 1m 36s [buildscan](https://scans.gradle.com/s/pjig5ehivuufq) |
+|Java without Lambdas | 2m 19s [buildscan](https://scans.gradle.com/s/xn5qduoedgwmg) | 1m 36s [buildscan](https://scans.gradle.com/s/pjig5ehivuufq) |
 |Java without Lambdas, min SDK 21 | 2m 28s [buildscan](https://scans.gradle.com/s/3azcgfe43vd2u) | 1m 15s [buildscan](https://scans.gradle.com/s/wnjlm7jitv2ni) |
 |Java without Lambdas with reduced amount of classes | 1m 7s [buildscan](https://scans.gradle.com/s/lizettzqhc4lu) | 43s [buildscan](https://gradle.com/s/qxjmitf5emo66) |
 |Java without Lambdas with reduced amount of classes, min SDK 21 | 1m 5s [buildscan](https://scans.gradle.com/s/wrqpuqjti2ljm) | 36s [buildscan](https://scans.gradle.com/s/nntf735budeqs) |
+
+Notes:
+    * Incremental build with min SDK 21 is faster for all variants
+    * Clean build for Kotlin variant is more then 50% longer then Java. But incremental build with min SDK 21 is the fastest.
+    * Incremental build for "Java without Lambdas" variant took surprisingly long, but the clean build is faster then any variant with lambdas.  
   
   
