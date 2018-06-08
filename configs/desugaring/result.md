@@ -1,16 +1,16 @@
-
-##If lambdas slow build down in Java? Kotlin?
+ 
+## Do lambdas slow build down in Java? Kotlin?
 
 Date - 7th July 2018
   
-###Setup
+### Setup
   
 Profiling is done with gradle-profiler. Profiling scenarios could be found [here](). Commands that were used to profile 
 can be found [here]().
 
 Please note, that gradle-profiler was modified to support incremental Kotlin profiling.
 
-###Variants
+### Variants
 All variants use the following tools versions:
   * Gradle version - 4.7
   * Android Gradle Plugin (AGP) version - 3.1.2
@@ -23,7 +23,7 @@ For each of the following variants two configs are created one with `minSdkVersi
   * Java without Lambdas. 20 000 classes with 6 methods. This variant is suppose to represent case when user writes classes instead of using lambdas. Because each lambda is transformed into a separate class the amount of classes is doubled, but because lambda has less methods amount of methods per class is reduced.
   * Java without Lambdas with reduced amount of classes. 10 000 classes with 10 methods. This variant is added to check how big overhead lambdas bring.  
 
-####Summary of the results
+#### Summary of the results
 
 |             | Clean build | Incremental build |
 |-------------|-------------| ----------------- |
