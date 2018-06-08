@@ -1,0 +1,3 @@
+gradle-profiler --profile buildscan --project-dir . --scenario-file ../gradle-profiler.scenarios clean_build
+
+gradle-profiler --profile buildscan --project-dir . --scenario-file ../gradle-profiler.scenarios inc_build

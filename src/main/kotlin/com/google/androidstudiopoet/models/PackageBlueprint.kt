@@ -39,7 +39,7 @@ data class PackageBlueprint(private val packageIndex: Int, private val classesPe
             previousClassMethodToCall = listOf(classBlueprint.getMethodToCallFromOutside()!!)
         }
 
-        methodToCallFromOutside = classBlueprints.last().getMethodToCallFromOutside()!!
+        methodToCallFromOutside = classBlueprints.first().getMethodToCallFromOutside()!!
 
         if (generateTests) {
             for (classIndex in 0 until classesPerPackage) {
