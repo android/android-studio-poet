@@ -1,5 +1,5 @@
-
 ## If lambdas slow build down in Java? Kotlin?
+
 
 Date - 7th July 2018
   
@@ -24,6 +24,7 @@ For each of the following variants two configs are created one with `minSdkVersi
   * Java without Lambdas with reduced amount of classes. 10 000 classes with 10 methods. This variant is added to check how big overhead lambdas bring.  
 
 ### Summary of the results
+
 
 |             | Clean build | Incremental build |
 |-------------|-------------| ----------------- |
