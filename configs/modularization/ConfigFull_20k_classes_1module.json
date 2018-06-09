@@ -1,7 +1,7 @@
 {
   "inputVersion": "0.1",
   "projectConfig": {
-    "projectName": "genny_30k_classes_1module",
+    "projectName": "genny_20k_classes_1module",
     "root": "../generated_projects/modularization",
     "buildSystemConfig": {
       "buildSystemVersion": "4.8",
@@ -15,13 +15,13 @@
           "minSdkVersion": 21
         },
         "java": {
-          "packages": 15,
-          "classesPerPackage": 1000,
+          "packages": 50,
+          "classesPerPackage": 200,
           "methodsPerClass": 10
         },
         "kotlin": {
-          "packages": 15,
-          "classesPerPackage": 1000,
+          "packages": 50,
+          "classesPerPackage": 200,
           "methodsPerClass": 10
         },
         "useKotlin": true,
