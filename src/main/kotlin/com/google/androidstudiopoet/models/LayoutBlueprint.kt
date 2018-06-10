@@ -16,10 +16,14 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-class LayoutBlueprint(val filePath: String,
+import com.google.androidstudiopoet.utils.joinPath
+
+class LayoutBlueprint(val layoutName: String, layoutsDir: String,
                       stringsWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
                       imagesWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
                       val layoutsToInclude: List<String>) {
+
+    val filePath = layoutsDir.joinPath(layoutName) + ".xml"
     val textViewsBlueprints = stringsWithDataBindingListenersToUse.map {
         TextViewBlueprint(it.first, it.second?.toOnClickAction())
     }

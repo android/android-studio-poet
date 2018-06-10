@@ -18,7 +18,6 @@ package com.google.androidstudiopoet.generators.android_modules
 
 import com.google.androidstudiopoet.models.ActivityBlueprint
 import com.google.androidstudiopoet.models.ClassBlueprint
-import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.javapoet.*
 import javax.lang.model.element.Modifier
@@ -42,7 +41,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
     }
 
     private fun getOnCreateMethodStatements(blueprint: ActivityBlueprint): List<String> {
-        val classBlueprint = blueprint.classBlueprint
+        val classBlueprint = blueprint.classToReferFromActivity
         val statements = getMethodStatementFromClassToCall(classBlueprint)?.let { mutableListOf(it) } ?: mutableListOf()
 
         if (blueprint.hasDataBinding) {

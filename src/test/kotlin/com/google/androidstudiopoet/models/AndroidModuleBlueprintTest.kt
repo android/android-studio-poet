@@ -45,7 +45,7 @@ class AndroidModuleBlueprintTest {
         )
 
         assertOn(androidModuleBlueprint) {
-            activityBlueprints[0].classBlueprint.assertEquals(
+            activityBlueprints[0].classToReferFromActivity.assertEquals(
                     androidModuleBlueprint.packagesBlueprint.kotlinPackageBlueprints[0].classBlueprints[0])
         }
     }
