@@ -45,7 +45,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         val statements = getMethodStatementFromClassToCall(classBlueprint)?.let { mutableListOf(it) } ?: mutableListOf()
 
         if (blueprint.hasDataBinding) {
-            statements.addAll(getDataBindingMethodStatements(blueprint.layout, blueprint.dataBindingClassName, blueprint.listenerClassesForDataBinding))
+            statements.addAll(getDataBindingMethodStatements(blueprint.layout.name, blueprint.dataBindingClassName, blueprint.listenerClassesForDataBinding))
         } else {
             statements.add("setContentView(R.layout.${blueprint.layout})")
         }

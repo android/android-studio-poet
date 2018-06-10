@@ -18,12 +18,12 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.utils.joinPath
 
-class LayoutBlueprint(val layoutName: String, layoutsDir: String,
+class LayoutBlueprint(val name: String, layoutsDir: String,
                       stringsWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
                       imagesWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
                       val layoutsToInclude: List<String>) {
 
-    val filePath = layoutsDir.joinPath(layoutName) + ".xml"
+    val filePath = layoutsDir.joinPath(name) + ".xml"
     val textViewsBlueprints = stringsWithDataBindingListenersToUse.map {
         TextViewBlueprint(it.first, it.second?.toOnClickAction())
     }
