@@ -35,7 +35,7 @@ class AndroidModuleBlueprint(name: String,
                              dataBindingConfig: DataBindingConfig?,
                              androidBuildConfig: AndroidBuildConfig,
                              pluginConfigs: List<PluginConfig>?
-) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaConfig, kotlinConfig,  extraLines,
+) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaConfig, kotlinConfig, extraLines,
         generateTests) {
 
     val packageName = "com.$name"
@@ -73,7 +73,7 @@ class AndroidModuleBlueprint(name: String,
     val activityBlueprints by lazy {
         (0 until numOfActivities).map {
             ActivityBlueprint(activityNames[it], layoutBlueprints[it], packagePath, packageName,
-                    classToReferFromActivity, listenerClassesForDataBindingPerLayout[it])
+                    classToReferFromActivity, listenerClassesForDataBindingPerLayout[it], hasButterknifeDependency())
         }
     }
 
@@ -100,4 +100,7 @@ class AndroidModuleBlueprint(name: String,
         AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
                 packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, pluginConfigs)
     }
+
+    private fun hasButterknifeDependency(): Boolean = buildGradleBlueprint.plugins
+            .find { it.startsWith("com.jakewharton.butterknife") } != null
 }

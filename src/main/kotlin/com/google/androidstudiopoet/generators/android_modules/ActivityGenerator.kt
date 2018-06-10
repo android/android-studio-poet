@@ -47,7 +47,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         if (blueprint.hasDataBinding) {
             statements.addAll(getDataBindingMethodStatements(blueprint.layout.name, blueprint.dataBindingClassName, blueprint.listenerClassesForDataBinding))
         } else {
-            statements.add("setContentView(R.layout.${blueprint.layout})")
+            statements.add("setContentView(R.layout.${blueprint.layout.name})")
         }
         return statements
     }
