@@ -80,4 +80,6 @@ class ActivityGenerator(var fileWriter: FileWriter) {
         return builder.build()
     }
 
+
+
 }

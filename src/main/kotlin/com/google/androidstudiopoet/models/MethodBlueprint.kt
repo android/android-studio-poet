@@ -17,4 +17,5 @@ limitations under the License.
 package com.google.androidstudiopoet.models
 
 data class MethodBlueprint(val methodName: String, val statements: List<String?>, val annotations: List<Class<*>> = listOf()) {
+    val annotationBlueprints = annotations.map { AnnotationBlueprint(it) }
 }

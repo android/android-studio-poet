@@ -16,10 +16,12 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.packages
 
+import com.google.androidstudiopoet.models.AnnotationBlueprint
 import com.google.androidstudiopoet.models.ClassBlueprint
 import com.google.androidstudiopoet.models.MethodBlueprint
 import com.google.androidstudiopoet.models.MethodToCall
 import com.google.androidstudiopoet.writers.FileWriter
+import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
@@ -49,10 +51,14 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
                 .addModifiers(Modifier.PUBLIC)
                 .returns(Void.TYPE)
 
-        blueprint.annotations.forEach { annotation -> method.addAnnotation(annotation) }
+        blueprint.annotationBlueprints.forEach { it -> method.addAnnotation(it.toJavaSpec()) }
 
         blueprint.statements.forEach { statement -> statement?.let { method.addStatement(it) } }
 
         return method.build()
+    }
+
+    private fun AnnotationBlueprint.toJavaSpec(): AnnotationSpec {
+        return AnnotationSpec.builder(clazz).build()
     }
 }
