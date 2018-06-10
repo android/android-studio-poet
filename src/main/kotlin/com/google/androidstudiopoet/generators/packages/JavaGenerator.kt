@@ -58,8 +58,10 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
 
         return method.build()
     }
+}
 
-    private fun AnnotationBlueprint.toJavaSpec(): AnnotationSpec {
-        return AnnotationSpec.builder(ClassName.bestGuess(className)).build()
-    }
+fun AnnotationBlueprint.toJavaSpec(): AnnotationSpec {
+    val builder = AnnotationSpec.builder(ClassName.bestGuess(className))
+    params.forEach { builder.addMember(it.key, "\$L", it.value) }
+    return builder.build()
 }

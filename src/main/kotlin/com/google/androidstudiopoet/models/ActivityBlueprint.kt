@@ -14,7 +14,7 @@ data class ActivityBlueprint(val className: String, val layout: LayoutBlueprint,
 
     private fun ImageViewBlueprint.getAnnotations(): List<AnnotationBlueprint> {
         if (useButterknife) {
-            listOf(AnnotationBlueprint("butterknife.BindView"))
+            return listOf(AnnotationBlueprint("butterknife.BindView", mapOf("value" to "R2.id.$id")))
         }
         return listOf()
     }

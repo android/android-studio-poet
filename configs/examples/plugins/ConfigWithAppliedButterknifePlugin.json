@@ -1,0 +1,57 @@
+{
+  "inputVersion": "0.1",
+  "projectConfig": {
+    "projectName": "genny_WithAppliedButterknifePlugin",
+    "root": "./modules/",
+    "classpathDependencies": [
+      "com.jakewharton:butterknife-gradle-plugin:9.0.0-SNAPSHOT"
+    ],
+    "moduleConfigs": [
+      {
+        "moduleType": "android",
+        "java": {
+          "packages": 10,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "kotlin": {
+          "packages": 10,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "applicationModule",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "layoutCount": 5,
+          "imageCount": 5,
+          "stringCount": 5
+        },
+        "hasLaunchActivity": true,
+        "plugins": [
+          {
+            "id": "kotlin-kapt"
+          },
+          {
+            "id": "com.jakewharton.butterknife"
+          }
+        ],
+        "dependencies": [
+          {
+            "library": "com.jakewharton:butterknife:9.0.0-SNAPSHOT",
+            "method": "implementation"
+          },
+          {
+            "library": "com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT",
+            "method": "kapt"
+          }
+        ]
+      }
+    ],
+    "repositories": [
+      {
+        "url": "https://oss.sonatype.org/content/repositories/snapshots"
+      }
+    ]
+  }
+}

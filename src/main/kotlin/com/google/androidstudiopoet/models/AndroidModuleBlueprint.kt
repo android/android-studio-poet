@@ -102,5 +102,7 @@ class AndroidModuleBlueprint(name: String,
     }
 
     private fun hasButterknifeDependency(): Boolean = buildGradleBlueprint.plugins
-            .find { it.startsWith("com.jakewharton.butterknife") } != null
+            .find { it == "com.jakewharton.butterknife" } != null &&
+            dependencies.filterIsInstance<LibraryDependency>()
+                    .find { it.name.startsWith("com.jakewharton:butterknife") } != null
 }
