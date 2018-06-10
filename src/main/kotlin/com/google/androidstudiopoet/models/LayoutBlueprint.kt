@@ -24,12 +24,12 @@ class LayoutBlueprint(val name: String, layoutsDir: String,
                       val layoutsToInclude: List<String>) {
 
     val filePath = layoutsDir.joinPath(name) + ".xml"
-    val textViewsBlueprints = stringsWithDataBindingListenersToUse.map {
-        TextViewBlueprint(it.first, it.second?.toOnClickAction())
+    val textViewsBlueprints = stringsWithDataBindingListenersToUse.mapIndexed { index, it ->
+        TextViewBlueprint("$name${it.first}$index", it.first, it.second?.toOnClickAction())
     }
 
-    val imageViewsBlueprints = imagesWithDataBindingListenersToUse.map {
-        ImageViewBlueprint(it.first, it.second?.toOnClickAction())
+    val imageViewsBlueprints = imagesWithDataBindingListenersToUse.mapIndexed { index, it ->
+        ImageViewBlueprint("$name${it.first}$index", it.first, it.second?.toOnClickAction())
     }
 
     val classesToBind
