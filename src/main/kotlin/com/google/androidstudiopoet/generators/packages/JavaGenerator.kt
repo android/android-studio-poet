@@ -22,6 +22,7 @@ import com.google.androidstudiopoet.models.MethodBlueprint
 import com.google.androidstudiopoet.models.MethodToCall
 import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.javapoet.AnnotationSpec
+import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
@@ -59,6 +60,6 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
     }
 
     private fun AnnotationBlueprint.toJavaSpec(): AnnotationSpec {
-        return AnnotationSpec.builder(clazz).build()
+        return AnnotationSpec.builder(ClassName.bestGuess(className)).build()
     }
 }

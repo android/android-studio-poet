@@ -10,7 +10,7 @@ class JavaTestClassBlueprint(packageName: String, private val classNumber: Int, 
         return (0 until methodsPerClass)
                 .map { i ->
                     val statements = listOf("new Foo$classNumber().foo$i()")
-                    MethodBlueprint("testFoo$i", statements, listOf(Test::class.java))
+                    MethodBlueprint("testFoo$i", statements, listOf(Test::class.java.name))
                 }
     }
 
