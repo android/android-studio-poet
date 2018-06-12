@@ -24,11 +24,11 @@ class AndroidModuleBlueprintTest {
         assertOn(androidModuleBlueprint) {
             activityBlueprints.assertEquals(listOf(ActivityBlueprint(
                     "Activity0",
-                    androidModuleBlueprint.resourcesBlueprint!!.layoutNames[0],
+                    androidModuleBlueprint.resourcesBlueprint!!.layoutBlueprints[0],
                     androidModuleBlueprint.packagePath,
                     androidModuleBlueprint.packageName,
                     androidModuleBlueprint.packagesBlueprint.javaPackageBlueprints[0].classBlueprints[0],
-                    listOf())))
+                    listOf(), false)))
         }
     }
 
