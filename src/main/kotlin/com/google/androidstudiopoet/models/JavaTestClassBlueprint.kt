@@ -6,6 +6,8 @@ class JavaTestClassBlueprint(packageName: String, private val classNumber: Int, 
                              private val where: String) :
         ClassBlueprint(packageName, "Foo${classNumber}Test") {
 
+    override fun getFieldBlueprints(): List<FieldBlueprint> = listOf()
+
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
                 .map { i ->

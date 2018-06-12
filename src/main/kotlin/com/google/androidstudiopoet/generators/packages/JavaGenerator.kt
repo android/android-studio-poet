@@ -18,11 +18,13 @@ package com.google.androidstudiopoet.generators.packages
 
 import com.google.androidstudiopoet.models.AnnotationBlueprint
 import com.google.androidstudiopoet.models.ClassBlueprint
+import com.google.androidstudiopoet.models.FieldBlueprint
 import com.google.androidstudiopoet.models.MethodBlueprint
 import com.google.androidstudiopoet.models.MethodToCall
 import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
@@ -32,12 +34,17 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
 
     override fun generateClass(blueprint: ClassBlueprint) {
 
-        val classSpec = blueprint.getMethodBlueprints()
-                .map { generateMethod(it) }
-                .fold(getClazz(blueprint)) { acc, methodSpec -> acc.addMethod(methodSpec) }
-                .build()
+        val classBuilder = getClazz(blueprint)
 
-        val javaFile = JavaFile.builder(blueprint.packageName, classSpec).build()
+        blueprint.getFieldBlueprints()
+                .map { it.toJavaSpec() }
+                .forEach { classBuilder.addField(it) }
+
+        blueprint.getMethodBlueprints()
+                .map { generateMethod(it) }
+                .forEach { classBuilder.addMethod(it) }
+
+        val javaFile = JavaFile.builder(blueprint.packageName, classBuilder.build()).build()
 
         writeFile(blueprint.getClassPath(), javaFile.toString())
     }
@@ -64,4 +71,10 @@ fun AnnotationBlueprint.toJavaSpec(): AnnotationSpec {
     val builder = AnnotationSpec.builder(ClassName.bestGuess(className))
     params.forEach { builder.addMember(it.key, "\$L", it.value) }
     return builder.build()
+}
+
+fun FieldBlueprint.toJavaSpec(): FieldSpec {
+    val fieldSpecBuilder = FieldSpec.builder(ClassName.bestGuess(typeName), name)
+    annotations.forEach { fieldSpecBuilder.addAnnotation(it.toJavaSpec()) }
+    return fieldSpecBuilder.build()
 }

@@ -18,9 +18,10 @@ package com.google.androidstudiopoet.models
 
 class JavaClassBlueprint(packageName: String, classNumber: Int, methodsPerClass: Int, fieldsPerClass: Int,
                          private val where: String, private val methodsToCallWithinClass: List<MethodToCall>, classComplexity: ClassComplexity) :
-        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, classComplexity) {
+        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, fieldsPerClass, classComplexity) {
     override fun getFieldBlueprints(): List<FieldBlueprint> {
-        return listOf()
+        return (0 until fieldsPerClass)
+                .map { i -> FieldBlueprint("int$i", "java.lang.Integer", listOf()) }
     }
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {

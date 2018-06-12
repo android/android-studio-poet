@@ -16,10 +16,8 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-abstract class NonTestClassBlueprint(packageName: String, className: String, val methodsPerClass: Int,
+abstract class NonTestClassBlueprint(packageName: String, className: String, val methodsPerClass: Int, val fieldsPerClass: Int,
                                      private val classComplexity: ClassComplexity) : ClassBlueprint(packageName, className) {
-
-    abstract fun getFieldBlueprints(): List<FieldBlueprint>
 
     override fun getMethodToCallFromOutside(): MethodToCall? =
             MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
