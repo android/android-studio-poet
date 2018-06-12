@@ -19,6 +19,8 @@ package com.google.androidstudiopoet.models
 abstract class NonTestClassBlueprint(packageName: String, className: String, val methodsPerClass: Int,
                                      private val classComplexity: ClassComplexity) : ClassBlueprint(packageName, className) {
 
+    abstract fun getFieldBlueprints(): List<FieldBlueprint>
+
     override fun getMethodToCallFromOutside(): MethodToCall? =
             MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
 

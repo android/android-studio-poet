@@ -16,9 +16,12 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-class JavaClassBlueprint(packageName: String, classNumber: Int, methodsPerClass: Int,
+class JavaClassBlueprint(packageName: String, classNumber: Int, methodsPerClass: Int, fieldsPerClass: Int,
                          private val where: String, private val methodsToCallWithinClass: List<MethodToCall>, classComplexity: ClassComplexity) :
         NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, classComplexity) {
+    override fun getFieldBlueprints(): List<FieldBlueprint> {
+        return listOf()
+    }
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
