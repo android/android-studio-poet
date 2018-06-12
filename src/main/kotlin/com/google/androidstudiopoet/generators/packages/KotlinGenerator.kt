@@ -34,6 +34,10 @@ class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fil
 
         buff.append("class ${blueprint.className} {\n")
 
+        blueprint.getFieldBlueprints()
+                .joinToString(separator = "\n", postfix = "\n") { it ->  "val ${it.name}: ${it.typeName}? = null"}
+                .let { buff.append(it) }
+
         blueprint.getMethodBlueprints()
                 .withIndex().map { (if (it.index != 0) "\n" else "") + generateMethod(it.value) }
                 .fold(buff) { acc, method -> acc.append(method) }

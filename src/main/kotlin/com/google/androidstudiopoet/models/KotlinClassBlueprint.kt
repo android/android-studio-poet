@@ -21,7 +21,8 @@ class KotlinClassBlueprint(packageName: String, classNumber: Int, methodsPerClas
                            classComplexity: ClassComplexity) :
         NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, fieldsPerClass, classComplexity) {
     override fun getFieldBlueprints(): List<FieldBlueprint> {
-        return listOf()
+        return (0 until fieldsPerClass)
+                .map { i -> FieldBlueprint("int$i", "Int", listOf()) }
     }
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {

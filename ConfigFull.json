@@ -19,7 +19,8 @@
         "kotlin": {
           "packages": "10",
           "classesPerPackage": "10",
-          "methodsPerClass": "10"
+          "methodsPerClass": "10",
+          "fieldsPerClass": "3"
         },
         "useKotlin": true,
         "moduleName": "pureModule2"
