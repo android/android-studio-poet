@@ -19,7 +19,8 @@ package com.google.androidstudiopoet.models
 import com.google.androidstudiopoet.utils.joinPaths
 
 data class PackageBlueprint(private val packageIndex: Int, private val classesPerPackage: Int,
-                            private val methodsPerClass: Int, private val where: String, private val moduleName: String,
+                            private val methodsPerClass: Int, private val fieldsPerClass: Int,
+                            private val where: String, private val moduleName: String,
                             val language: Language, private val methodsToCallWithinPackage: List<MethodToCall>,
                             val generateTests : Boolean, private val classComplexity: ClassComplexity) {
 
@@ -50,9 +51,9 @@ data class PackageBlueprint(private val packageIndex: Int, private val classesPe
 
     private fun createClassBlueprint(classIndex: Int, methodsToCallWithinClass: List<MethodToCall>): ClassBlueprint =
             when (language) {
-                Language.JAVA -> JavaClassBlueprint(packageName, classIndex, methodsPerClass, srcFolder,
+                Language.JAVA -> JavaClassBlueprint(packageName, classIndex, methodsPerClass, fieldsPerClass, srcFolder,
                         methodsToCallWithinClass, classComplexity)
-                Language.KOTLIN -> KotlinClassBlueprint(packageName, classIndex, methodsPerClass, srcFolder,
+                Language.KOTLIN -> KotlinClassBlueprint(packageName, classIndex, methodsPerClass, fieldsPerClass, srcFolder,
                         methodsToCallWithinClass, classComplexity)
             }
 
