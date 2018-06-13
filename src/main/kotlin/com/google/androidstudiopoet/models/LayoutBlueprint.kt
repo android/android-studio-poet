@@ -16,16 +16,20 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-class LayoutBlueprint(val filePath: String,
+import com.google.androidstudiopoet.utils.joinPath
+
+class LayoutBlueprint(val name: String, layoutsDir: String,
                       stringsWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
                       imagesWithDataBindingListenersToUse: List<Pair<String, ClassBlueprint?>>,
                       val layoutsToInclude: List<String>) {
-    val textViewsBlueprints = stringsWithDataBindingListenersToUse.map {
-        TextViewBlueprint(it.first, it.second?.toOnClickAction())
+
+    val filePath = layoutsDir.joinPath(name) + ".xml"
+    val textViewsBlueprints = stringsWithDataBindingListenersToUse.mapIndexed { index, it ->
+        TextViewBlueprint("$name${it.first}$index", it.first, it.second?.toOnClickAction())
     }
 
-    val imageViewsBlueprints = imagesWithDataBindingListenersToUse.map {
-        ImageViewBlueprint(it.first, it.second?.toOnClickAction())
+    val imageViewsBlueprints = imagesWithDataBindingListenersToUse.mapIndexed { index, it ->
+        ImageViewBlueprint("$name${it.first}$index", it.first, it.second?.toOnClickAction())
     }
 
     val classesToBind

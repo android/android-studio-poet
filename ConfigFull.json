@@ -5,7 +5,7 @@
     "root": "./modules/",
     "buildSystemConfig": {
       "buildSystemVersion": "4.7",
-      "agpVersion": "3.1.2",
+      "agpVersion": "3.0.1",
       "kotlinVersion": "1.2.41"
     },
     "moduleConfigs": [

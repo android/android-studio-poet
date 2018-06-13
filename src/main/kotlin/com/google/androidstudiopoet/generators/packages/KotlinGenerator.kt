@@ -45,7 +45,7 @@ class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fil
 
     private fun generateMethod(blueprint: MethodBlueprint): String {
         val buff = StringBuilder()
-        blueprint.annotations.forEach { annotation -> buff.append("  @${annotation.name}\n") }
+        blueprint.annotationBlueprints.forEach { it -> buff.append("  @${it.className}\n") }
         buff.append("  fun ${blueprint.methodName}(){\n")
         blueprint.statements.forEach { statement -> statement?.let { buff.append("    $it\n") } }
         buff.append("  }\n")

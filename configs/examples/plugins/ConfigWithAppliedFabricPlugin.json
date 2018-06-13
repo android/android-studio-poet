@@ -1,7 +1,7 @@
 {
   "inputVersion": "0.1",
   "projectConfig": {
-    "projectName": "genny_WithAppliedPlugin",
+    "projectName": "genny_WithAppliedFabricPlugin",
     "root": "./modules/",
     "classpathDependencies": [
       "io.fabric.tools:gradle:1.24.1"
