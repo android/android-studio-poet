@@ -35,7 +35,7 @@ class ProjectBuildGradleBlueprint(root: String, enableKotlin: Boolean, androidGr
     }
 
     val repositories = setOf(
-            Repository.Named("jcenter"),
-            Repository.Named("google")
+            Repository.Named("google"),
+            Repository.Named("jcenter")
     ) + additionalRepositories.orEmpty().map { Repository.Remote(it.url) }.toSet()
 }
