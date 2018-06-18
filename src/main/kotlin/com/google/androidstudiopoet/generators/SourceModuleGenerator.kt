@@ -48,7 +48,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
 
         val workspaceContent = """android_sdk_repository(name = "androidsdk")
 # Google Maven Repository
-GMAVEN_TAG = "0.1.0"
+GMAVEN_TAG = "20180607-1"
 
 http_archive(
     name = "gmaven_rules",
