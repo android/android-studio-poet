@@ -1,0 +1,37 @@
+{
+  "inputVersion": "0.1",
+  "projectConfig": {
+    "projectName": "genny_WithAppliedFabricPlugin",
+    "root": "./modules/",
+    "classpathDependencies": [
+      "io.fabric.tools:gradle:1.24.1"
+    ],
+    "moduleConfigs": [
+      {
+        "moduleType": "android",
+        "kotlin": {
+          "packages": 10,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "applicationModule",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "layoutCount": 5
+        },
+        "hasLaunchActivity": true,
+        "plugins": [
+          {
+            "id": "io.fabric"
+          }
+        ]
+      }
+    ],
+    "repositories": [
+      {
+        "url": "https://maven.fabric.io/public"
+      }
+    ]
+  }
+}

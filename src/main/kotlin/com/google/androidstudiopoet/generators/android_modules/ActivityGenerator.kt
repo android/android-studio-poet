@@ -16,9 +16,10 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules
 
+import com.google.androidstudiopoet.generators.packages.toJavaSpec
 import com.google.androidstudiopoet.models.ActivityBlueprint
 import com.google.androidstudiopoet.models.ClassBlueprint
-import com.google.androidstudiopoet.utils.fold
+import com.google.androidstudiopoet.models.FieldBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.javapoet.*
 import javax.lang.model.element.Modifier
@@ -32,23 +33,30 @@ class ActivityGenerator(var fileWriter: FileWriter) {
 
         val onCreateMethod = getOnCreateMethod(onCreateMethodStatements)
 
-        val activityClass = getClazzSpec(blueprint.className)
+        val activityClassBuilder = getClazzSpec(blueprint.className)
                 .addMethod(onCreateMethod)
+
+        blueprint.fields.map {
+            it.toJavaSpec()
+        }.forEach {
+            activityClassBuilder.addField(it)
+        }
+
+        val activityClass = activityClassBuilder
                 .build()
 
         val javaFile = JavaFile.builder(blueprint.packageName, activityClass).build()
         fileWriter.writeToFile(javaFile.toString(), "${blueprint.where}/${blueprint.className}.java")
-
     }
 
     private fun getOnCreateMethodStatements(blueprint: ActivityBlueprint): List<String> {
-        val classBlueprint = blueprint.classBlueprint
+        val classBlueprint = blueprint.classToReferFromActivity
         val statements = getMethodStatementFromClassToCall(classBlueprint)?.let { mutableListOf(it) } ?: mutableListOf()
 
         if (blueprint.hasDataBinding) {
-            statements.addAll(getDataBindingMethodStatements(blueprint.layout, blueprint.dataBindingClassName, blueprint.listenerClassesForDataBinding))
+            statements.addAll(getDataBindingMethodStatements(blueprint.layout.name, blueprint.dataBindingClassName, blueprint.listenerClassesForDataBinding))
         } else {
-            statements.add("setContentView(R.layout.${blueprint.layout})")
+            statements.add("setContentView(R.layout.${blueprint.layout.name})")
         }
         return statements
     }

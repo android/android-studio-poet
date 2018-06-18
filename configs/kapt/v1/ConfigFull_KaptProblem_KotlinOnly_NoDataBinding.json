@@ -1,22 +1,23 @@
 {
   "inputVersion": "0.1",
   "projectConfig": {
-    "projectName": "genny_KotlinOnly_DataBinding",
+    "projectName": "genny_KotlinOnly_NoDataBinding",
     "root": "./modules/",
     "buildSystemConfig": {
       "buildSystemVersion": "4.3.1"
     },
-    "moduleConfigs": [
-      {
+    "moduleConfigs": [{
         "moduleType": "android",
         "androidBuildConfig": {
-          "minSdkVersion": 20,
+          "minSdkVersion" : 20,
           "targetSdkVersion": 27,
-          "compileSdkVersion": 27
+          "compileSdkVersion" : 27
         },
-        "kotlinPackageCount": 20,
-        "kotlinClassCount": 100,
-        "kotlinMethodsPerClass": 10,
+      "kotlin": {
+        "packages": 20,
+        "classesPerPackage": 100,
+        "methodsPerClass": 10
+      },
         "useKotlin": true,
         "moduleName": "applicationModule",
         "activityCount": 5,
@@ -25,9 +26,6 @@
           "stringCount": 5,
           "imageCount": 5,
           "layoutCount": 5
-        },
-        "dataBindingConfig": {
-          "listenerCount": 10
         },
         "dependencies": [
           {
@@ -41,9 +39,11 @@
       },
       {
         "moduleType": "android",
-        "kotlinPackageCount": 20,
-        "kotlinClassCount": 100,
-        "kotlinMethodsPerClass": 10,
+        "kotlin": {
+          "packages": 20,
+          "classesPerPackage": 100,
+          "methodsPerClass": 10
+        },
         "useKotlin": true,
         "moduleName": "libraryModule",
         "activityCount": 5,
@@ -51,9 +51,6 @@
           "stringCount": 5,
           "imageCount": 5,
           "layoutCount": 5
-        },
-        "dataBindingConfig": {
-          "listenerCount": 10
         },
         "flavors": [
           {

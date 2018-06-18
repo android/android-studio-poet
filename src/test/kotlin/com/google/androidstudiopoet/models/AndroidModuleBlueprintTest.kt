@@ -24,11 +24,11 @@ class AndroidModuleBlueprintTest {
         assertOn(androidModuleBlueprint) {
             activityBlueprints.assertEquals(listOf(ActivityBlueprint(
                     "Activity0",
-                    androidModuleBlueprint.resourcesBlueprint!!.layoutNames[0],
+                    androidModuleBlueprint.resourcesBlueprint!!.layoutBlueprints[0],
                     androidModuleBlueprint.packagePath,
                     androidModuleBlueprint.packageName,
                     androidModuleBlueprint.packagesBlueprint.javaPackageBlueprints[0].classBlueprints[0],
-                    listOf())))
+                    listOf(), false)))
         }
     }
 
@@ -37,13 +37,15 @@ class AndroidModuleBlueprintTest {
         whenever(resourcesConfig0.layoutCount).thenReturn(1)
 
         val androidModuleBlueprint = getAndroidModuleBlueprint(
-                javaClassCount = 0,
-                javaMethodsPerClass = 0,
-                javaPackageCount = 0
+                javaConfig = CodeConfig().apply {
+                    packages = 0
+                    classesPerPackage = 0
+                    methodsPerClass = 0
+                }
         )
 
         assertOn(androidModuleBlueprint) {
-            activityBlueprints[0].classBlueprint.assertEquals(
+            activityBlueprints[0].classToReferFromActivity.assertEquals(
                     androidModuleBlueprint.packagesBlueprint.kotlinPackageBlueprints[0].classBlueprints[0])
         }
     }
@@ -86,18 +88,20 @@ class AndroidModuleBlueprintTest {
             dependencies: Set<Dependency> = setOf(),
             productFlavorConfigs: List<FlavorConfig>? = null,
             buildTypeConfigs: List<BuildTypeConfig>? = null,
-            javaPackageCount: Int = 1,
-            javaClassCount: Int = 1,
-            javaMethodsPerClass: Int = 1,
-            kotlinPackageCount: Int = 1,
-            kotlinClassCount: Int = 1,
-            kotlinMethodsPerClass: Int = 1,
+            javaConfig: CodeConfig? = defaultCodeConfig(),
+            kotlinConfig: CodeConfig? = defaultCodeConfig(),
             extraLines: List<String>? = null,
             generateTests: Boolean = true,
             dataBindingConfig: DataBindingConfig? = null,
-            androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig()
+            androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
+            pluginConfigs: List<PluginConfig>? = null
     ) = AndroidModuleBlueprint(name, numOfActivities, resourcesConfig, projectRoot, hasLaunchActivity, useKotlin,
-            dependencies, productFlavorConfigs, buildTypeConfigs, javaPackageCount, javaClassCount, javaMethodsPerClass,
-            kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests, dataBindingConfig,
-            androidBuildConfig)
+            dependencies, productFlavorConfigs, buildTypeConfigs, javaConfig, kotlinConfig,
+            extraLines, generateTests, dataBindingConfig, androidBuildConfig, pluginConfigs)
+
+    private fun defaultCodeConfig() = CodeConfig().apply {
+        packages = 1
+        classesPerPackage = 1
+        methodsPerClass = 1
+    }
 }

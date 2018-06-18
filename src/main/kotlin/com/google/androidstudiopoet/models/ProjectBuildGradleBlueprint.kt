@@ -20,20 +20,22 @@ import com.google.androidstudiopoet.input.RepositoryConfig
 import com.google.androidstudiopoet.utils.joinPath
 
 class ProjectBuildGradleBlueprint(root: String, enableKotlin: Boolean, androidGradlePluginVersion: String,
-                                  kotlinVersion: String, additionalRepositories: List<RepositoryConfig>?) {
+                                  kotlinVersion: String, additionalRepositories: List<RepositoryConfig>?,
+                                  additionalClasspaths: List<String>?) {
 
     val path = root.joinPath("build.gradle")
     val kotlinExtStatement = if (enableKotlin) "ext.kotlin_version = '$kotlinVersion'" else null
 
-    val classpaths by lazy {
+    val classpaths: Set<String> by lazy {
         listOfNotNull(
                 "com.android.tools.build:gradle:$androidGradlePluginVersion",
-                if (enableKotlin) "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version" else null
+                if (enableKotlin) "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}kotlin_version" else null,
+                *additionalClasspaths?.toTypedArray().orEmpty()
         ).toSet()
     }
 
     val repositories = setOf(
-            Repository.Named("jcenter"),
-            Repository.Named("google")
+            Repository.Named("google"),
+            Repository.Named("jcenter")
     ) + additionalRepositories.orEmpty().map { Repository.Remote(it.url) }.toSet()
 }

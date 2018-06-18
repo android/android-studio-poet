@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.input.PluginConfig
 import com.google.androidstudiopoet.testutils.assertContains
 import com.google.androidstudiopoet.testutils.assertEmpty
 import com.google.androidstudiopoet.testutils.assertEquals
@@ -40,6 +41,16 @@ class ModuleBuildGradleBlueprintTest {
 
         assertOn(blueprint) {
             plugins.assertContains("kotlin")
+        }
+    }
+
+    @Test
+    fun `plugins contain id of provided plugin`() {
+        val pluginId = "random plugin name"
+        val blueprint = createModuleBuildGradleBlueprint(pluginConfigs = listOf(PluginConfig(id = pluginId)))
+
+        assertOn(blueprint) {
+            plugins.assertContains(pluginId)
         }
     }
 
@@ -84,6 +95,7 @@ class ModuleBuildGradleBlueprintTest {
             enableKotlin: Boolean = false,
             generateTests: Boolean = false,
             extraLines: List<String>? = null,
-            moduleRoot: String = ""
-    ) = ModuleBuildGradleBlueprint(dependencies, enableKotlin, generateTests, extraLines, moduleRoot)
+            moduleRoot: String = "",
+            pluginConfigs: List<PluginConfig>? = null
+    ) = ModuleBuildGradleBlueprint(dependencies, enableKotlin, generateTests, extraLines, moduleRoot, pluginConfigs)
 }

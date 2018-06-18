@@ -19,14 +19,16 @@ package com.google.androidstudiopoet.models
 import com.google.androidstudiopoet.input.AndroidBuildConfig
 import com.google.androidstudiopoet.input.BuildTypeConfig
 import com.google.androidstudiopoet.input.FlavorConfig
+import com.google.androidstudiopoet.input.PluginConfig
 import com.google.androidstudiopoet.utils.joinPath
 
 class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
                                   override val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
                                   buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>,
-                                  private val generateTests: Boolean) : AndroidModuleBuildSpecificationBlueprint {
-    override val plugins: Set<String> = createSetOfPlugins()
+                                  private val generateTests: Boolean,
+                                  pluginConfigs: List<PluginConfig>?) : AndroidModuleBuildSpecificationBlueprint {
+    override val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
 
@@ -42,6 +44,9 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
     val flavorDimensions = productFlavors?.mapNotNull { it.dimension }?.toSet()
 
     val buildTypes = buildTypeConfigs?.map { BuildType(it.name, it.body) }?.toSet()
+
+    val additionalTasks: Set<GradleTask> = pluginConfigs?.filter { it.taskName != null }?.map { GradleTask(it.taskName!!,
+            it.taskBody) }?.toSet() ?: setOf()
 
     private fun createSetOfLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf(
@@ -69,7 +74,7 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
         return result
     }
 
-    private fun createSetOfPlugins(): Set<String> {
+    private fun createSetOfPlugins(pluginConfigs: List<PluginConfig>?): Set<String> {
         val result = mutableSetOf<String>()
         result += if (isApplication) "com.android.application" else "com.android.library"
         if (enableKotlin) {
@@ -78,6 +83,9 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
         if (enableKotlin && enableDataBinding) {
             result += "kotlin-kapt"
         }
+
+        pluginConfigs?.map { it.id }?.forEach { result.add(it) }
+
         return result
     }
 }

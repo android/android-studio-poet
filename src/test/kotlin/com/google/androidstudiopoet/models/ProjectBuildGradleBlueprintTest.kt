@@ -106,6 +106,8 @@ class ProjectBuildGradleBlueprintTest {
             enableKotlin: Boolean = false,
             agpVersion: String = "3.0.2",
             kotlinVersion: String = "1.2.20",
-            additionalRepositories: List<RepositoryConfig> = listOf()) =
-            ProjectBuildGradleBlueprint(root, enableKotlin, agpVersion, kotlinVersion, additionalRepositories)
+            additionalRepositories: List<RepositoryConfig> = listOf(),
+            additionalClasspaths: List<String>? = null) =
+            ProjectBuildGradleBlueprint(root, enableKotlin, agpVersion, kotlinVersion, additionalRepositories,
+                    additionalClasspaths)
 }

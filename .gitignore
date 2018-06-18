@@ -32,3 +32,5 @@ modules/**
 
 out/**
 local.properties
+
+**.DS_Store

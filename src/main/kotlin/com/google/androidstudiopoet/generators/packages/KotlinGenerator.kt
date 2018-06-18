@@ -23,7 +23,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 
 class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileWriter) {
 
-    override fun generateClass(blueprint: ClassBlueprint): MethodToCall? {
+    override fun generateClass(blueprint: ClassBlueprint) {
         val buff = StringBuilder()
 
         buff.append("package ${blueprint.packageName};\n\n")
@@ -34,6 +34,10 @@ class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fil
 
         buff.append("class ${blueprint.className} {\n")
 
+        blueprint.getFieldBlueprints()
+                .joinToString(separator = "\n", postfix = "\n") { it ->  "val ${it.name}: ${it.typeName}? = null"}
+                .let { buff.append(it) }
+
         blueprint.getMethodBlueprints()
                 .withIndex().map { (if (it.index != 0) "\n" else "") + generateMethod(it.value) }
                 .fold(buff) { acc, method -> acc.append(method) }
@@ -41,12 +45,11 @@ class KotlinGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fil
         buff.append("}")
 
         writeFile(blueprint.getClassPath(), buff.toString())
-        return blueprint.getMethodToCallFromOutside()
     }
 
     private fun generateMethod(blueprint: MethodBlueprint): String {
         val buff = StringBuilder()
-        blueprint.annotations.forEach { annotation -> buff.append("  @${annotation.name}\n") }
+        blueprint.annotationBlueprints.forEach { it -> buff.append("  @${it.className}\n") }
         buff.append("  fun ${blueprint.methodName}(){\n")
         blueprint.statements.forEach { statement -> statement?.let { buff.append("    $it\n") } }
         buff.append("  }\n")

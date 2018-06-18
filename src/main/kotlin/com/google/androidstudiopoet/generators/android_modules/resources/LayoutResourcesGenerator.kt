@@ -90,6 +90,7 @@ ${generateVariableTags(blueprint.classesToBind)}
     private fun generateTextViews(textViewBlueprints: List<TextViewBlueprint>): String {
         return textViewBlueprints.map {
             """<TextView
+        android:id="@+id/${it.id}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/${it.stringName}"
@@ -101,6 +102,7 @@ ${generateVariableTags(blueprint.classesToBind)}
     private fun generateImageViews(imageViewBlueprints: List<ImageViewBlueprint>): String {
         return imageViewBlueprints.map {
             """<ImageView
+        android:id="@+id/${it.id}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/${it.imageName}"

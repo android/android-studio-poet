@@ -52,7 +52,7 @@ data class ResourcesBlueprint(private val moduleName: String,
     }
 
     val layoutBlueprints = layoutNames.mapIndexed { index, layoutName ->
-        LayoutBlueprint(layoutsDir.joinPath(layoutName) + ".xml",
+        LayoutBlueprint(layoutName, layoutsDir,
                 stringsWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
                 imagesWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
                 if (index == 0) resourcesToReferWithin.layouts else listOf())

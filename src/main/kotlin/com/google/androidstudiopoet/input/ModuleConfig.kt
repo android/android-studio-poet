@@ -18,6 +18,8 @@ package com.google.androidstudiopoet.input
 
 open class ModuleConfig {
     lateinit var moduleName: String
+    var java: CodeConfig? = null
+    var kotlin: CodeConfig? = null
     var javaPackageCount: Int = 0
     var javaClassCount: Int = 0
     var javaMethodsPerClass: Int = 0
@@ -27,5 +29,6 @@ open class ModuleConfig {
     var useKotlin: Boolean = false
     var extraLines: List<String>? = null
     var dependencies: List<DependencyConfig>? = null
+    var plugins: List<PluginConfig>? = null
     var generateTests: Boolean = true
 }

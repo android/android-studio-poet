@@ -29,14 +29,14 @@ class AndroidModuleBlueprint(name: String,
                              dependencies: Set<Dependency>,
                              productFlavorConfigs: List<FlavorConfig>?,
                              buildTypeConfigs: List<BuildTypeConfig>?,
-                             javaPackageCount: Int, javaClassCount: Int, javaMethodsPerClass: Int,
-                             kotlinPackageCount: Int, kotlinClassCount: Int, kotlinMethodsPerClass: Int,
+                             javaConfig: CodeConfig?, kotlinConfig: CodeConfig?,
                              extraLines: List<String>?,
                              generateTests: Boolean,
                              dataBindingConfig: DataBindingConfig?,
-                             val androidBuildConfig: AndroidBuildConfig
-) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaPackageCount, javaClassCount,
-        javaMethodsPerClass, kotlinPackageCount, kotlinClassCount, kotlinMethodsPerClass, extraLines, generateTests) {
+                             val androidBuildConfig: AndroidBuildConfig,
+                             pluginConfigs: List<PluginConfig>?
+) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaConfig, kotlinConfig, extraLines,
+        generateTests) {
 
     val packageName = "com.$name"
     val srcPath = moduleRoot.joinPath("src")
@@ -45,10 +45,12 @@ class AndroidModuleBlueprint(name: String,
     val codePath = mainPath.joinPath("java")
     val packagePath = codePath.joinPaths(packageName.split("."))
 
-    private val resourcesToReferWithin = dependencies
-            .filterIsInstance<AndroidModuleDependency>()
-            .map { it.resourcesToRefer }
-            .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer -> resourcesToRefer.combine(acc) }
+    private val resourcesToReferWithin by lazy {
+        dependencies
+                .filterIsInstance<AndroidModuleDependency>()
+                .map { it.resourcesToRefer }
+                .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer -> resourcesToRefer.combine(acc) }
+    }
 
     val resourcesBlueprint by lazy {
         when (resourcesConfig) {
@@ -59,8 +61,8 @@ class AndroidModuleBlueprint(name: String,
         }
     }
 
-    private val layoutNames by lazy {
-        resourcesBlueprint?.layoutNames ?: listOf()
+    private val layoutBlueprints by lazy {
+        resourcesBlueprint?.layoutBlueprints ?: listOf()
     }
     val activityNames = (0 until numOfActivities).map { "Activity$it" }
 
@@ -70,8 +72,8 @@ class AndroidModuleBlueprint(name: String,
 
     val activityBlueprints by lazy {
         (0 until numOfActivities).map {
-            ActivityBlueprint(activityNames[it], layoutNames[it], packagePath, packageName,
-                    classToReferFromActivity, listenerClassesForDataBindingPerLayout[it])
+            ActivityBlueprint(activityNames[it], layoutBlueprints[it], packagePath, packageName,
+                    classToReferFromActivity, listenerClassesForDataBindingPerLayout[it], hasButterknifeDependency())
         }
     }
 
@@ -96,11 +98,16 @@ class AndroidModuleBlueprint(name: String,
 
     val buildGradleBlueprint: AndroidBuildGradleBlueprint by lazy {
         AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
-                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, generateTests)
+                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, generateTests, pluginConfigs)
     }
 
     val buildBazelBlueprint: AndroidBuildBazelBlueprint by lazy {
         AndroidBuildBazelBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
                 packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, generateTests)
     }
+
+    private fun hasButterknifeDependency(): Boolean = buildGradleBlueprint.plugins
+            .find { it == "com.jakewharton.butterknife" } != null &&
+            dependencies.filterIsInstance<LibraryDependency>()
+                    .find { it.name.startsWith("com.jakewharton:butterknife") } != null
 }

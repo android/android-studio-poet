@@ -16,16 +16,23 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-class JavaClassBlueprint(packageName: String, classNumber: Int, private val methodsPerClass: Int,
-                         private val where: String, private val methodsToCallWithinClass: List<MethodToCall>) :
-        ClassBlueprint(packageName, "Foo" + classNumber) {
+class JavaClassBlueprint(packageName: String, classNumber: Int, methodsPerClass: Int, fieldsPerClass: Int,
+                         private val where: String, private val methodsToCallWithinClass: List<MethodToCall>, classComplexity: ClassComplexity) :
+        NonTestClassBlueprint(packageName, "Foo" + classNumber, methodsPerClass, fieldsPerClass, classComplexity) {
+    override fun getFieldBlueprints(): List<FieldBlueprint> {
+        return (0 until fieldsPerClass)
+                .map { i -> FieldBlueprint("int$i", "java.lang.Integer", listOf()) }
+    }
 
     override fun getMethodBlueprints(): List<MethodBlueprint> {
         return (0 until methodsPerClass)
                 .map { i ->
                     val statements = ArrayList<String>()
-                    // adding lambda
-                    statements += "final Runnable anything = () -> System.out.println(\"anything\")"
+
+                    // adding lambdas
+                    for (j in 0 until lambdaCountInMethod(i)) {
+                        statements += getLambda(j)
+                    }
                     if (i > 0) {
                         statements += "foo" + (i - 1) + "()"
                     } else if (!methodsToCallWithinClass.isEmpty()) {
@@ -39,6 +46,5 @@ class JavaClassBlueprint(packageName: String, classNumber: Int, private val meth
 
     override fun getClassPath(): String = "$where/$packageName/$className.java"
 
-    override fun getMethodToCallFromOutside(): MethodToCall =
-            MethodToCall(getMethodBlueprints().last().methodName, fullClassName)
+    private fun getLambda(lambdaNumber: Int) = "final Runnable anything$lambdaNumber = () -> System.out.println(\"anything\")"
 }

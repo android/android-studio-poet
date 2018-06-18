@@ -1,0 +1,9 @@
+"Java vs Java with Lambdas vs Kotlin with Lambdas"
+
+In total there were six configurations:
+    - Java with 20k classes with 6 methods each and `minSdkVersion=19`
+    - Java with 20k classes with 6 methods each and `minSdkVersion=21`
+    - Java with 10k classes with 10 methods and 1 lambda each and `minSdkVersion=19`
+    - Java with 10k classes with 10 methods and 1 lambda each and `minSdkVersion=21`
+    - Kotlin with 10k classes with 10 methods and 1 lambda each and `minSdkVersion=19`
+    - Kotlin with 10k classes with 10 methods and 1 lambda each and `minSdkVersion=21`

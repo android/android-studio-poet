@@ -19,9 +19,10 @@ package com.google.androidstudiopoet.input
 class ProjectConfig {
     lateinit var projectName: String
     lateinit var root: String
-    lateinit var buildSystemConfig: BuildSystemConfig
+    var buildSystemConfig: BuildSystemConfig? = null
     lateinit var moduleConfigs: List<ModuleConfig>
     var repositories: List<RepositoryConfig>? = null
+    var classpathDependencies: List<String>? = null
 
     val pureModuleConfigs : List<ModuleConfig> by lazy { moduleConfigs.filter { it !is AndroidModuleConfig } }
     val androidModuleConfigs: List<AndroidModuleConfig> by lazy { moduleConfigs.filterIsInstance<AndroidModuleConfig>() }

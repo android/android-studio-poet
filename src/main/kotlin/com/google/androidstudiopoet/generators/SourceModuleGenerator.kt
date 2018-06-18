@@ -16,6 +16,7 @@ package com.google.androidstudiopoet.generators
 
 import com.google.androidstudiopoet.JsonConfigGenerator
 import com.google.androidstudiopoet.generators.android_modules.AndroidModuleGenerator
+import com.google.androidstudiopoet.generators.project.GradlePropertiesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
@@ -32,6 +33,7 @@ import kotlin.system.measureTimeMillis
 class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
                             private val moduleBazelBuildGenerator: ModuleBazelBuildGenerator,
                             private val gradleSettingsGenerator: GradleSettingsGenerator,
+                            private val gradlePropertiesGenerator: GradlePropertiesGenerator,
                             private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
                             private val androidModuleGenerator: AndroidModuleGenerator,
                             private val packagesGenerator: PackagesGenerator,
@@ -63,6 +65,7 @@ gmaven_rules()
         GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint)
         projectBuildGradleGenerator.generate(projectBlueprint.buildGradleBlueprint)
         gradleSettingsGenerator.generate(projectBlueprint.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
+        gradlePropertiesGenerator.generate(projectBlueprint.gradlePropertiesBlueprint)
 
         print("Writing modules...")
         val timeSpent = measureTimeMillis {

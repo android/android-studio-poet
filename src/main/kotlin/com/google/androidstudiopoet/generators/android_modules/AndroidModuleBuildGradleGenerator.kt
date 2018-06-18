@@ -22,10 +22,7 @@ import com.google.androidstudiopoet.gradle.Closure
 import com.google.androidstudiopoet.gradle.Expression
 import com.google.androidstudiopoet.gradle.Statement
 import com.google.androidstudiopoet.gradle.StringStatement
-import com.google.androidstudiopoet.models.AndroidBuildGradleBlueprint
-import com.google.androidstudiopoet.models.Flavor
-import com.google.androidstudiopoet.models.LibraryDependency
-import com.google.androidstudiopoet.models.ModuleDependency
+import com.google.androidstudiopoet.models.*
 import com.google.androidstudiopoet.utils.isNullOrEmpty
 import com.google.androidstudiopoet.writers.FileWriter
 
@@ -35,6 +32,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
         val statements = applyPlugins(blueprint.plugins) +
                 androidClosure(blueprint) +
                 dependenciesClosure(blueprint) +
+                additionalTasksClosures(blueprint) +
                 (blueprint.extraLines?.map { StringStatement(it) } ?: listOf())
 
         val gradleText = statements.joinToString(separator = "\n") { it.toGroovy(0) }
@@ -125,5 +123,12 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                 dependencyExpressions
         return Closure("dependencies", statements)
     }
+
+    private fun additionalTasksClosures(blueprint: AndroidBuildGradleBlueprint): Set<Closure> =
+            blueprint.additionalTasks.map { task ->
+                Closure(
+                        task.name,
+                        task.body?.map { StringStatement(it) } ?: listOf())
+            }.toSet()
 }
 

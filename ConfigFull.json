@@ -4,26 +4,38 @@
     "projectName": "genny",
     "root": "./modules/",
     "buildSystemConfig": {
-      "buildSystemVersion": "4.3.1"
+      "buildSystemVersion": "4.7",
+      "agpVersion": "3.0.1",
+      "kotlinVersion": "1.2.41"
     },
     "moduleConfigs": [
       {
-        "javaPackageCount": "10",
-        "javaClassCount": "10",
-        "javaMethodsPerClass": "10",
-        "kotlinPackageCount": "10",
-        "kotlinClassCount": "10",
-        "kotlinMethodsPerClass": "10",
+        "java": {
+          "packages": "10",
+          "classesPerPackage": "10",
+          "methodsPerClass": "10",
+          "fieldsPerClass": "3"
+        },
+        "kotlin": {
+          "packages": "10",
+          "classesPerPackage": "10",
+          "methodsPerClass": "10",
+          "fieldsPerClass": "3"
+        },
         "useKotlin": true,
         "moduleName": "pureModule2"
       },
       {
-        "javaPackageCount": "10",
-        "javaClassCount": "10",
-        "javaMethodsPerClass": "10",
-        "kotlinPackageCount": "10",
-        "kotlinClassCount": "10",
-        "kotlinMethodsPerClass": "10",
+        "java": {
+          "packages": "10",
+          "classesPerPackage": "10",
+          "methodsPerClass": "10"
+        },
+        "kotlin": {
+          "packages": "10",
+          "classesPerPackage": "10",
+          "methodsPerClass": "10"
+        },
         "useKotlin": true,
         "moduleName": "pureModule",
         "dependencies": [
@@ -40,16 +52,26 @@
       {
         "moduleType": "android",
         "androidBuildConfig": {
-          "minSdkVersion" : 20,
+          "minSdkVersion": 20,
           "targetSdkVersion": 27,
-          "compileSdkVersion" : 27
+          "compileSdkVersion": 27
         },
-        "javaPackageCount": 10,
-        "javaClassCount": 10,
-        "javaMethodsPerClass": 10,
-        "kotlinPackageCount": 10,
-        "kotlinClassCount": 10,
-        "kotlinMethodsPerClass": 10,
+        "java": {
+          "packages": "10",
+          "classesPerPackage": "10",
+          "methodsPerClass": "10",
+          "complexity": {
+            "lambdaCount": 3
+          }
+        },
+        "kotlin": {
+          "packages": "10",
+          "classesPerPackage": "10",
+          "methodsPerClass": "10",
+          "complexity": {
+            "lambdaCount": 3
+          }
+        },
         "useKotlin": true,
         "moduleName": "applicationModule",
         "activityCount": 5,
@@ -78,12 +100,16 @@
       },
       {
         "moduleType": "android",
-        "javaPackageCount": 10,
-        "javaClassCount": 10,
-        "javaMethodsPerClass": 10,
-        "kotlinPackageCount": 10,
-        "kotlinClassCount": 10,
-        "kotlinMethodsPerClass": 10,
+        "java": {
+          "packages": "10",
+          "classesPerPackage": "10",
+          "methodsPerClass": "10"
+        },
+        "kotlin": {
+          "packages": "10",
+          "classesPerPackage": "10",
+          "methodsPerClass": "10"
+        },
         "useKotlin": true,
         "moduleName": "libraryModule",
         "activityCount": 5,
