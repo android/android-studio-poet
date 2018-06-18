@@ -51,7 +51,6 @@ object Injector {
     private val gradlePropertiesGenerator = GradlePropertiesGenerator(fileWriter)
     private val stringResourcesGenerator = StringResourcesGenerator(fileWriter)
     private val imageResourcesGenerator = ImagesGenerator(fileWriter)
-
     private val layoutResourcesGenerator = LayoutResourcesGenerator(fileWriter)
     private val resourcesGenerator = ResourcesGenerator(stringResourcesGenerator, imageResourcesGenerator,
             layoutResourcesGenerator, fileWriter)

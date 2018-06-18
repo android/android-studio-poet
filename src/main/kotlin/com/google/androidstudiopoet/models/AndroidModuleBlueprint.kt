@@ -98,12 +98,11 @@ class AndroidModuleBlueprint(name: String,
 
     val buildGradleBlueprint: AndroidBuildGradleBlueprint by lazy {
         AndroidBuildGradleBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
-                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, generateTests, pluginConfigs)
+                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, pluginConfigs)
     }
 
     val buildBazelBlueprint: AndroidBuildBazelBlueprint by lazy {
-        AndroidBuildBazelBlueprint(hasLaunchActivity, useKotlin, hasDataBinding, moduleRoot, androidBuildConfig,
-                packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, generateTests)
+        AndroidBuildBazelBlueprint(hasLaunchActivity, moduleRoot, packageName, extraLines, dependencies)
     }
 
     private fun hasButterknifeDependency(): Boolean = buildGradleBlueprint.plugins

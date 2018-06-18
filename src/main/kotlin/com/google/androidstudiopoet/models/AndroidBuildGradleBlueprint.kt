@@ -26,7 +26,6 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
                                   override val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
                                   buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>,
-                                  private val generateTests: Boolean,
                                   pluginConfigs: List<PluginConfig>?) : AndroidModuleBuildSpecificationBlueprint {
     override val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
 
@@ -52,16 +51,11 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
         val result = mutableSetOf(
                 LibraryDependency("implementation", "com.android.support:appcompat-v7:26.1.0"),
                 LibraryDependency("implementation", "com.android.support.constraint:constraint-layout:1.0.2"),
-                LibraryDependency("implementation", "com.android.support:multidex:1.0.1")
-        )
-
-        if (generateTests) {
-            result += mutableSetOf(
                 LibraryDependency("testImplementation", "junit:junit:4.12"),
                 LibraryDependency("androidTestImplementation", "com.android.support.test:runner:1.0.1"),
-                LibraryDependency("androidTestImplementation", "com.android.support.test.espresso:espresso-core:3.0.1")
-            )
-        }
+                LibraryDependency("androidTestImplementation", "com.android.support.test.espresso:espresso-core:3.0.1"),
+                LibraryDependency("implementation", "com.android.support:multidex:1.0.1")
+        )
 
         if (enableKotlin) {
             result += LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version")
