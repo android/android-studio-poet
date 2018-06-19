@@ -77,18 +77,19 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
             """.trimIndent()
     }
 
-    fun run() {
-        if (filename != null) {
-           if(File(filename).isDirectory) {
-               File(filename).walk().forEach {
-                   processFile(it.canonicalPath)
-               }
-           }
-           else {
-               processFile(filename)
-           }
+    fun run() = if (filename != null) {
+        runCommandLineParams()
+    } else {
+        showUI(CONFIG_COMPACT)
+    }
+
+    private fun runCommandLineParams() {
+        if (File(filename).isDirectory) {
+            File(filename).walk().forEach {
+                processFile(it.canonicalPath)
+            }
         } else {
-            showUI(CONFIG_COMPACT)
+            processFile(filename)
         }
     }
 
