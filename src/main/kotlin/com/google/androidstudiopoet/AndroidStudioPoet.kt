@@ -77,10 +77,9 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
             """.trimIndent()
     }
 
-    fun run() = if (filename != null) {
-        runCommandLineParams()
-    } else {
-        showUI(CONFIG_COMPACT)
+    fun run() = when {
+        filename != null -> runCommandLineParams()
+        else -> showUI(CONFIG_COMPACT)
     }
 
     private fun runCommandLineParams() {
