@@ -78,9 +78,17 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
     }
 
     fun run() {
-        when {
-            filename != null -> processFile(filename)
-            else -> showUI(CONFIG_COMPACT)
+        if (filename != null) {
+           if(File(filename).isDirectory) {
+               File(filename).walk().forEach {
+                   processFile(it.canonicalPath)
+               }
+           }
+           else {
+               processFile(filename)
+           }
+        } else {
+            showUI(CONFIG_COMPACT)
         }
     }
 
@@ -125,8 +133,8 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
 
         val dim = Toolkit.getDefaultToolkit().screenSize
 
-        frame.setLocation((dim.width - frame.size.width)/3,
-                (dim.height - frame.height)/5 )
+        frame.setLocation((dim.width - frame.size.width) / 3,
+                (dim.height - frame.height) / 5)
 
         frame.defaultCloseOperation = EXIT_ON_CLOSE
         frame.contentPane = contentPane
@@ -152,7 +160,8 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
 
     private fun processInput(configPOJO: ConfigPOJO, jsonText: String) {
 
-        if (!dependencyValidator.isValid(configPOJO.dependencies ?: listOf(), configPOJO.numModules, configPOJO.androidModules)) {
+        if (!dependencyValidator.isValid(configPOJO.dependencies
+                        ?: listOf(), configPOJO.numModules, configPOJO.androidModules)) {
             throw IllegalStateException("Incorrect dependencies")
         }
 
