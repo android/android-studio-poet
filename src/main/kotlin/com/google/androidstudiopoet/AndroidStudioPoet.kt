@@ -84,12 +84,11 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
     }
 
     private fun runCommandLineParams() {
-        if (File(filename).isDirectory) {
-            File(filename).walk().forEach {
+        when {
+            File(filename).isDirectory -> File(filename).walk().forEach {
                 processFile(it.canonicalPath)
             }
-        } else {
-            processFile(filename)
+            else -> processFile(filename)
         }
     }
 
