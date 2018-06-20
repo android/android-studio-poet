@@ -32,7 +32,6 @@ import javax.swing.JFrame.EXIT_ON_CLOSE
 import javax.swing.border.EmptyBorder
 import kotlin.system.measureTimeMillis
 
-
 class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, private val filename: String?,
                         private val configPojoToProjectConfigConverter: ConfigPojoToProjectConfigConverter,
                         private val dependencyValidator: DependencyValidator, private val gson: Gson) {
@@ -78,20 +77,38 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
     }
 
     fun run() = when {
-        filename != null -> runCommandLineParams()
-        else -> showUI(CONFIG_COMPACT)
+        filename != null -> runWithCommandLineArgs()
+        else -> runWithUI(CONFIG_COMPACT)
     }
 
-    private fun runCommandLineParams() {
+    private fun runWithCommandLineArgs() {
+
         when {
-            File(filename).isDirectory -> File(filename).walk().forEach {
-                processFile(it.canonicalPath)
+            File(filename).isDirectory -> {
+
+                var configCount = 0
+                File(filename).walk().forEach {
+                    if (it.name.endsWith(".json")) {
+                        configCount++
+                    }
+                }
+
+                var currentConfig = 0
+                println("Generating $configCount configs")
+
+                File(filename).walk().forEach {
+                    if (it.name.endsWith(".json")) {
+                        currentConfig++
+                        println("Generating $currentConfig out of $configCount")
+                        processConfigFile(it.canonicalPath)
+                    }
+                }
             }
-            else -> processFile(filename)
+            else -> processConfigFile(filename)
         }
     }
 
-    private fun showUI(jsonText: String) {
+    private fun runWithUI(jsonText: String) {
         EventQueue.invokeLater {
             try {
                 val frame = createUI(jsonText)
@@ -201,7 +218,7 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
         }
     }
 
-    private fun processFile(filename: String?): Any? = when {
+    private fun processConfigFile(filename: String?): Any? = when {
         filename == null -> null
         !File(filename).canRead() -> null
         else -> File(filename).readText().let { processInput(it) }
