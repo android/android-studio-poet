@@ -22,6 +22,12 @@ Create a real life complexity Android project that mimics your own and observe t
 To run, grab the [latest JAR](https://github.com/android/android-studio-poet/releases)
 and run `java -jar as-poet.jar`.
 
+## Command line arguments
+Android Studio Poet supports the following command line arguments
+1. Config - just run  `java -jar as-poet.jar MyConfig.json`
+2. Folder with configs - just run  `java -jar as-poet.jar <path to a folder with configs>` Android Studio Poet 
+will crawl the folder recursively and execute each config in turn.
+
 ## Build & Run
 1. Clone the repo
 2. `./gradlew fatJar`
