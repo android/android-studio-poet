@@ -36,8 +36,15 @@ class JavaClassBlueprint(packageName: String, classNumber: Int, methodsPerClass:
                     if (i > 0) {
                         statements += "foo" + (i - 1) + "()"
                     } else if (!methodsToCallWithinClass.isEmpty()) {
-                        methodsToCallWithinClass.forEach({ statements += "new ${it.className}().${it.methodName}()" })
-
+                        // fill top method, with inter class calling
+                        // due to optimizations can't extract the code below
+                        // to a separate method
+                        methodsToCallWithinClass.forEach {
+                            if(it.className.isEmpty() || it.methodName.isEmpty()) {
+                                // skip empty declarations new ().()
+                            } else {
+                                statements += "new ${it.className}().${it.methodName}()" }
+                        }
                     }
 
                     MethodBlueprint("foo$i", statements)
