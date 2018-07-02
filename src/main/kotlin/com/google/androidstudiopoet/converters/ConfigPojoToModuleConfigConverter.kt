@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.converters
 
+import com.google.androidstudiopoet.input.CodeConfig
 import com.google.androidstudiopoet.input.ModuleConfig
 import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.input.DependencyConfig
@@ -23,21 +24,26 @@ import com.google.androidstudiopoet.input.DependencyConfig
 class ConfigPojoToModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int): ModuleConfig {
         return ModuleConfig().apply {
-             javaPackageCount = config.javaPackageCount!!.toInt()
-             javaClassCount = config.javaClassCount!!.toInt()
-             javaMethodsPerClass = config.javaMethodsPerClass
+            java = CodeConfig().apply {
+                packages = config.javaPackageCount!!.toInt()
+                classesPerPackage = config.javaClassCount!!.toInt()
+                methodsPerClass = config.javaMethodsPerClass
+            }
 
-             kotlinPackageCount = config.kotlinPackageCount!!.toInt()
-             kotlinClassCount = config.kotlinClassCount!!.toInt()
-             kotlinMethodsPerClass = config.kotlinMethodsPerClass
-             useKotlin = config.useKotlin
+            kotlin = CodeConfig().apply {
+                packages = config.kotlinPackageCount!!.toInt()
+                classesPerPackage = config.kotlinClassCount!!.toInt()
+                methodsPerClass = config.kotlinMethodsPerClass
+            }
 
-             extraLines = config.extraBuildFileLines
+            useKotlin = config.useKotlin
 
-             generateTests = config.generateTests
+            extraLines = config.extraBuildFileLines
 
-             moduleName = config.getModuleName(index)
-             dependencies = config.resolvedDependencies[moduleName]?.map {  DependencyConfig.ModuleDependencyConfig(it.to, it.method) } ?: listOf()
+            generateTests = config.generateTests
+
+            moduleName = config.getModuleName(index)
+            dependencies = config.resolvedDependencies[moduleName]?.map { DependencyConfig.ModuleDependencyConfig(it.to, it.method) } ?: listOf()
         }
     }
 }

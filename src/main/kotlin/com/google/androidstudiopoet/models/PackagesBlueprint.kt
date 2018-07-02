@@ -58,17 +58,10 @@ data class PackagesBlueprint(private val javaConfig: CodeConfig?,
             previousClassMethodToCall = listOf(packageBlueprint.methodToCallFromOutside)
         }
 
-        methodToCallFromOutside = MethodToCall("", "")
-
-        if (kotlinPackageCount != 0) {
-            if (!kotlinPackageBlueprints.isEmpty()) {
-                methodToCallFromOutside = kotlinPackageBlueprints.last().methodToCallFromOutside
-            }
-
+        methodToCallFromOutside = if (kotlinPackageCount != 0) {
+            kotlinPackageBlueprints.last().methodToCallFromOutside
         } else {
-            if (!javaPackageBlueprints.isEmpty()) {
-                methodToCallFromOutside = javaPackageBlueprints.last().methodToCallFromOutside
-            }
+            javaPackageBlueprints.last().methodToCallFromOutside
         }
     }
 
