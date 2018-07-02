@@ -20,12 +20,6 @@ open class ModuleConfig {
     lateinit var moduleName: String
     var java: CodeConfig? = null
     var kotlin: CodeConfig? = null
-    var javaPackageCount: Int = 0
-    var javaClassCount: Int = 0
-    var javaMethodsPerClass: Int = 0
-    var kotlinPackageCount: Int = 0
-    var kotlinClassCount: Int = 0
-    var kotlinMethodsPerClass: Int = 0
     var useKotlin: Boolean = false
     var extraLines: List<String>? = null
     var dependencies: List<DependencyConfig>? = null
