@@ -44,8 +44,9 @@ class ConfigPojoToAndroidModuleConfigConverter {
             generateTests = config.generateTests
             hasLaunchActivity = index == 0
 
-            val resolvedDependencies = config.resolvedDependencies[moduleName]
-            dependencies = resolvedDependencies?.sortedBy { it.to }?.map { dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to, dependency.method) } ?: emptyList()
+            val resolvedDependencies = config.resolvedDependencies[moduleName]?.sortedBy { it.to }
+                    ?.map { dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to, dependency.method) } ?: emptyList()
+            dependencies = if (config.libraries != null) resolvedDependencies + config.libraries!! else resolvedDependencies
 
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs

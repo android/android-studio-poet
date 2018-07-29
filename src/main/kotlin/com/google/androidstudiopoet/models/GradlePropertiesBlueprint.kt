@@ -27,6 +27,6 @@ class GradlePropertiesBlueprint(projectRoot: String, overrideProperties: Map<Str
     )
 
     val path = projectRoot.joinPath("gradle.properties")
-    val properties = defaultProperties.plus(overrideProperties ?: mapOf())
+    val properties: Map<String, String>? = defaultProperties + (overrideProperties ?: mapOf())
 
 }

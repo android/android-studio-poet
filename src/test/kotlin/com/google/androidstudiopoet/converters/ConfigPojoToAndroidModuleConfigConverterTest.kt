@@ -41,9 +41,13 @@ private const val ANDROID_MODULE_NAME_1 = "androidAppModule1"
 private const val MODULE_NAME_0 = "module0"
 private const val MODULE_NAME_1 = "module1"
 private const val DEPENDENCY_METHOD = "api"
+private const val LIBRARY_NAME_0 = "library0"
+private const val LIBRARY_NAME_1 = "library1"
 
 private val PURE_MODULE_LIST = listOf(MODULE_NAME_0, MODULE_NAME_1)
 private val PURE_MODULE_DEPENDENCY_LIST = PURE_MODULE_LIST.map { DependencyConfig.ModuleDependencyConfig(it, DEPENDENCY_METHOD) }
+private val LIBRARY_LIST = listOf(DependencyConfig.LibraryDependencyConfig(LIBRARY_NAME_0, DEPENDENCY_METHOD),
+        DependencyConfig.LibraryDependencyConfig(LIBRARY_NAME_1, DEPENDENCY_METHOD))
 
 class ConfigPojoToAndroidModuleConfigConverterTest {
 
@@ -73,6 +77,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
                 FromToDependencyConfig(ANDROID_MODULE_NAME_1, MODULE_NAME_0, DEPENDENCY_METHOD),
                 FromToDependencyConfig(ANDROID_MODULE_NAME_1, MODULE_NAME_1, DEPENDENCY_METHOD),
                 FromToDependencyConfig(ANDROID_MODULE_NAME_0, ANDROID_MODULE_NAME_1, DEPENDENCY_METHOD))
+        libraries = LIBRARY_LIST
     }
 
     private val converter = ConfigPojoToAndroidModuleConfigConverter()
@@ -101,7 +106,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
 
             generateTests.assertEquals(GENERATE_TESTS)
             hasLaunchActivity.assertFalse()
-            dependencies!!.assertEquals(PURE_MODULE_DEPENDENCY_LIST )
+            dependencies!!.assertEquals(PURE_MODULE_DEPENDENCY_LIST + LIBRARY_LIST)
         }
     }
 
@@ -110,7 +115,7 @@ class ConfigPojoToAndroidModuleConfigConverterTest {
         val androidModuleConfig = converter.convert(configPOJO, 0, productFlavorConfigs, buildTypes)
         assertOn(androidModuleConfig) {
             hasLaunchActivity.assertTrue()
-            dependencies!!.assertEquals(listOf(DependencyConfig.ModuleDependencyConfig(ANDROID_MODULE_NAME_1, DEPENDENCY_METHOD)) + PURE_MODULE_DEPENDENCY_LIST)
+            dependencies!!.assertEquals(listOf(DependencyConfig.ModuleDependencyConfig(ANDROID_MODULE_NAME_1, DEPENDENCY_METHOD)) + PURE_MODULE_DEPENDENCY_LIST + LIBRARY_LIST)
             resourcesConfig!!.assertEquals(ResourcesConfig(ACTIVITY_COUNT + 2, ACTIVITY_COUNT + 5, ACTIVITY_COUNT))
         }
     }

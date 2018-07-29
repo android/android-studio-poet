@@ -79,7 +79,11 @@ class ConfigPOJO {
 
     var androidGradlePluginVersion: String? = null
 
+    var gradleProperties: Map<String, String>? = null
+
     private val topologies: List<Map<String, String>>? = null
+
+    var libraries: List<DependencyConfig.LibraryDependencyConfig>? = null
 
     var extraBuildFileLines : List<String>? = null
 

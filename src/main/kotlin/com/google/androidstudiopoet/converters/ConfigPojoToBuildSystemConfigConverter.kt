@@ -6,6 +6,6 @@ import com.google.androidstudiopoet.input.ConfigPOJO
 class ConfigPojoToBuildSystemConfigConverter {
     fun convert(configPojo: ConfigPOJO): BuildSystemConfig {
         return BuildSystemConfig(configPojo.gradleVersion, configPojo.androidGradlePluginVersion,
-                configPojo.kotlinVersion, mapOf())
+                configPojo.kotlinVersion, configPojo.gradleProperties)
     }
 }

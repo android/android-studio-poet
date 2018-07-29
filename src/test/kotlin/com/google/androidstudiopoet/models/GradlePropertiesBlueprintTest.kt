@@ -9,7 +9,7 @@ class GradlePropertiesBlueprintTest {
 
     @Test
     fun `properties contains default settings when no overrideProperties is passed`() {
-        GradlePropertiesBlueprint("root", null).properties
+        GradlePropertiesBlueprint("root", null).properties!!
                 .assertEquals(mapOf(
                         "org.gradle.jvmargs" to "-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError",
                         "org.gradle.daemon" to "true",
@@ -24,7 +24,7 @@ class GradlePropertiesBlueprintTest {
         GradlePropertiesBlueprint("root", mapOf(
                 "org.gradle.daemon" to "false",
                 "randomKey" to "randomValue"
-        )).properties
+        )).properties!!
                 .assertEquals(mapOf(
                         "org.gradle.jvmargs" to "-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError",
                         "org.gradle.daemon" to "false",
