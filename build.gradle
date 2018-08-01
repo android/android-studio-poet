@@ -2,7 +2,7 @@ group 'com.google.androidstudio.poet'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.31'
 
     repositories {
         jcenter()
@@ -17,6 +17,13 @@ repositories {
     jcenter()
 }
 
+allprojects {
+    repositories {
+        jcenter()
+    }
+
+}
+
 apply plugin: 'kotlin'
 
 dependencies {
@@ -26,6 +33,7 @@ dependencies {
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
     compile 'junit:junit:4.12'
     compile 'commons-io:commons-io:2.6'
+    compile project(':aspoet-input')
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-inline:2.15.0'

@@ -1,2 +1,4 @@
 rootProject.name = 'android-studio-poet'
 
+include 'aspoet', 'aspoet-input'
+
