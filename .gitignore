@@ -27,10 +27,13 @@ src/META-INF/MANIFEST.MF
 *.iml
 .gradle/
 /build
+*/build
+
 
 modules/**
 
 out/**
+*/out/**
 local.properties
 
 **.DS_Store

@@ -85,9 +85,9 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
 }
 
 private fun FlavorConfig.toFlavors(): List<Flavor> {
-    return if (this.count == null || this.count <= 1) {
+    return if (this.count == null || this.count!! <= 1) {
         listOf(Flavor(this.name, this.dimension))
     } else {
-        (0 until this.count).map { Flavor(this.name + it, this.dimension) }
+        (0 until this.count!!).map { Flavor(this.name + it, this.dimension) }
     }
 }
