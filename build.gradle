@@ -46,17 +46,7 @@ task runGenerator(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-// java -jar build/libs/java-generator-all-1.0-SNAPSHOT.jar
-task fatJar(type: Jar) {
-    manifest {
-        attributes (
-                'Main-Class': 'com.google.androidstudiopoet.AndroidStudioPoet',
-        )
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.directory ? it : zipTree(it) } }
-    with jar
-}
+
 
 kotlin {
     experimental {

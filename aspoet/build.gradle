@@ -14,3 +14,15 @@ dependencies {
     testCompile 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
     testCompile "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
 }
+
+// java -jar build/libs/java-generator-all-1.0-SNAPSHOT.jar
+task fatJar(type: Jar) {
+    manifest {
+        attributes (
+                'Main-Class': 'com.google.androidstudiopoet.AndroidStudioPoet',
+        )
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.directory ? it : zipTree(it) } }
+    with jar
+}
