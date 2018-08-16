@@ -15,7 +15,7 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
 }
 
-// java -jar build/libs/java-generator-all-1.0-SNAPSHOT.jar
+// java -jar aspoet/build/libs/aspoet-all.jar
 task fatJar(type: Jar) {
     manifest {
         attributes (
