@@ -71,7 +71,7 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
                 {"from": "module1", "to": "module0"}
               ],
               "buildTypes": 2,
-              "generateTests": true,
+              "generateTests": true
             }
             """.trimIndent()
     }
