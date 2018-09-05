@@ -24,7 +24,7 @@ class AndroidBuildBazelBlueprint(val isApplication: Boolean,
                                  additionalDependencies: Set<Dependency>) : AndroidModuleBuildSpecificationBlueprint {
     override val plugins = mutableSetOf<String>()
 
-    private val libraries: Set<GmavenBazelDependency> = createSetOfLibraries()
+    val libraries: Set<GmavenBazelDependency> = createSetOfLibraries()
 
     override val dependencies = additionalDependencies + libraries
 
