@@ -23,7 +23,6 @@ import org.junit.Test
 
 class AndroidBuildBazelBlueprintTest {
 
-
     @Test
     fun `libraries contain default set of libraries`() {
         val blueprint = createAndroidBuildBazelBlueprint()
@@ -54,4 +53,5 @@ class AndroidBuildBazelBlueprintTest {
                                                   dependencies: Set<ModuleDependency> = setOf()
     ) = AndroidBuildBazelBlueprint(isApplication, moduleRoot,
             packageName, extraLines, dependencies)
+
 }

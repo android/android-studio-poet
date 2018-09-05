@@ -45,7 +45,7 @@ object Injector {
     private val amBuildGradleGenerator = AndroidModuleBuildGradleGenerator(fileWriter)
     private val amBazelBuildGenerator = AndroidModuleBuildBazelGenerator(fileWriter)
     private val buildGradleGenerator = ModuleBuildGradleGenerator(fileWriter)
-    private val buildBazelGenerator = ModuleBazelBuildGenerator(fileWriter)
+    private val buildBazelGenerator = ModuleBuildBazelGenerator(fileWriter)
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator(fileWriter)
     private val gradlePropertiesGenerator = GradlePropertiesGenerator(fileWriter)

@@ -31,7 +31,7 @@ import java.util.*
 import kotlin.system.measureTimeMillis
 
 class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
-                            private val moduleBazelBuildGenerator: ModuleBazelBuildGenerator,
+                            private val moduleBuildBazelGenerator: ModuleBuildBazelGenerator,
                             private val gradleSettingsGenerator: GradleSettingsGenerator,
                             private val gradlePropertiesGenerator: GradlePropertiesGenerator,
                             private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
@@ -116,7 +116,7 @@ gmaven_rules()
         moduleBuildGradleGenerator.generate(moduleBlueprint.buildGradleBlueprint)
 
         if (generateBazelFiles) {
-          moduleBazelBuildGenerator.generate(moduleBlueprint.buildBazelBlueprint)
+          moduleBuildBazelGenerator.generate(moduleBlueprint.buildBazelBlueprint)
         }
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)

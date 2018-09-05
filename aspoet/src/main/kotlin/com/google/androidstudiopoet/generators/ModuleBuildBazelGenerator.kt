@@ -20,9 +20,8 @@ import com.google.androidstudiopoet.models.ModuleBuildSpecificationBlueprint
 import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.writers.FileWriter
 
-class ModuleBazelBuildGenerator(private val fileWriter: FileWriter) {
+class ModuleBuildBazelGenerator(private val fileWriter: FileWriter) {
     fun generate(blueprint: ModuleBuildSpecificationBlueprint) {
-
         val deps: Set<String> = blueprint.dependencies.mapNotNull {
             when (it) {
                 is ModuleDependency -> "\"//${it.name}\""
@@ -38,9 +37,8 @@ class ModuleBazelBuildGenerator(private val fileWriter: FileWriter) {
         val ruleDefinition = """$ruleClass(
     name = "$targetName",
     srcs = glob(["src/main/java/**/*.java"]),
-    visibility = ["//visibility:public"], ${if (deps.isNotEmpty()) depsString else ""}
-)
-        """
+    visibility = ["//visibility:public"],${if (deps.isNotEmpty()) depsString else ""}
+)"""
 
         fileWriter.writeToFile(ruleDefinition, blueprint.path)
     }
