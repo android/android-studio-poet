@@ -30,31 +30,8 @@ class ModuleBazelBuildBlueprint(
 
     override val path = moduleRoot.joinPath("BUILD.bazel")
 
-    override val plugins: Set<String> = createSetOfPlugins()
+    override val plugins: Set<String> = setOf();
 
-    override val dependencies = additionalDependencies + createSetOfMandatoryLibraries()
-
-    private fun createSetOfMandatoryLibraries(): Set<LibraryDependency> {
-        val result = mutableSetOf<LibraryDependency>()
-
-        if (enableKotlin) {
-            result += LibraryDependency("compile", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version")
-        }
-
-        if (generateTests) {
-            result += LibraryDependency("testCompile", "junit:junit:4.12")
-        }
-
-        return result
-    }
-
-    private fun createSetOfPlugins(): Set<String> {
-        val result = mutableSetOf("java-library")
-        if (enableKotlin) {
-            result += listOf("kotlin")
-        }
-        return result
-    }
-
+    override val dependencies = additionalDependencies
 
 }
