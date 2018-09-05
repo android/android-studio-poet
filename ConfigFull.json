@@ -6,7 +6,8 @@
     "buildSystemConfig": {
       "buildSystemVersion": "4.7",
       "agpVersion": "3.0.1",
-      "kotlinVersion": "1.2.41"
+      "kotlinVersion": "1.2.41",
+      "generateBazelFiles": "false"
     },
     "moduleConfigs": [
       {
