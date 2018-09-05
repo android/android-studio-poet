@@ -46,7 +46,8 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         fileWriter.delete(projectBlueprint.projectRoot)
         fileWriter.mkdir(projectBlueprint.projectRoot)
 
-        val workspaceContent = """android_sdk_repository(name = "androidsdk")
+        if (projectBlueprint.generateBazelFiles) {
+          val bazelWorkspaceContent = """android_sdk_repository(name = "androidsdk")
 # Google Maven Repository
 GMAVEN_TAG = "20180607-1"
 
@@ -60,7 +61,10 @@ load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
 gmaven_rules()
 """
 
-        fileWriter.writeToFile(workspaceContent, projectBlueprint.projectRoot + "/WORKSPACE")
+          fileWriter.writeToFile(
+              bazelWorkspaceContent,
+              projectBlueprint.projectRoot + "/WORKSPACE")
+        }
 
         GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint)
         projectBuildGradleGenerator.generate(projectBlueprint.buildGradleBlueprint)
@@ -73,7 +77,7 @@ gmaven_rules()
             val allJobs = mutableListOf<Job>()
             projectBlueprint.moduleBlueprints.asReversed().forEach { blueprint ->
                 val job = launch {
-                    writeModule(blueprint)
+                    writeModule(blueprint, projectBlueprint.generateBazelFiles)
                 }
                 allJobs.add(job)
             }
@@ -104,13 +108,16 @@ gmaven_rules()
         jsonConfigGenerator.generate(projectBlueprint)
     }
 
-    private fun writeModule(moduleBlueprint: ModuleBlueprint) {
+    private fun writeModule(moduleBlueprint: ModuleBlueprint, generateBazelFiles: Boolean) {
         val moduleRootFile = File(moduleBlueprint.moduleRoot)
         moduleRootFile.mkdir()
 
         writeLibsFolder(moduleRootFile)
         moduleBuildGradleGenerator.generate(moduleBlueprint.buildGradleBlueprint)
-        moduleBazelBuildGenerator.generate(moduleBlueprint.buildBazelBlueprint)
+
+        if (generateBazelFiles) {
+          moduleBazelBuildGenerator.generate(moduleBlueprint.buildBazelBlueprint)
+        }
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
     }

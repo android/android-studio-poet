@@ -39,6 +39,8 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     val useKotlin = projectConfig.moduleConfigs.map { it.useKotlin }.find { it } ?: false
     val gradleVersion = projectConfig.buildSystemConfig?.buildSystemVersion ?: DEFAULT_GRADLE_VERSION
 
+    val generateBazelFiles = projectConfig.buildSystemConfig?.generateBazelFiles ?: false
+
     val moduleBlueprints: List<ModuleBlueprint>
     val androidModuleBlueprints: List<AndroidModuleBlueprint>
     val allModuleBlueprints: List<AbstractModuleBlueprint>
