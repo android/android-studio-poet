@@ -85,7 +85,7 @@ gmaven_rules()
             projectBlueprint.androidModuleBlueprints.asReversed().forEach { blueprint ->
                 val random = Random(randomCount++)
                 val job = launch {
-                    androidModuleGenerator.generate(blueprint, random)
+                    androidModuleGenerator.generate(blueprint, random, projectBlueprint.generateBazelFiles)
                 }
                 allJobs.add(job)
             }
