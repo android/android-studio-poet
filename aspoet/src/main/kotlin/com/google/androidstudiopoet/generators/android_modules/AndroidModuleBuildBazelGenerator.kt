@@ -42,13 +42,12 @@ class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
 
 $ruleClass(
     name = "$targetName",
-    srcs = glob(["src/main/java/**/*.java"]), ${if (bazelBlueprint.isApplication) multidexString else ""}
+    srcs = glob(["src/main/java/**/*.java"]),${if (bazelBlueprint.isApplication) multidexString else ""}
     resource_files = glob(["src/main/res/**/*"]),
     manifest = "src/main/AndroidManifest.xml",
     custom_package = "${bazelBlueprint.packageName}",
-    visibility = ["//visibility:public"], ${if (deps.isNotEmpty()) depsString else ""}
-)
-        """
+    visibility = ["//visibility:public"],${if (deps.isNotEmpty()) depsString else ""}
+)"""
 
         fileWriter.writeToFile(ruleDefinition, bazelBlueprint.path)
     }
