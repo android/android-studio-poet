@@ -20,8 +20,6 @@ import com.google.androidstudiopoet.utils.joinPath
 
 class ModuleBuildBazelBlueprint(
         additionalDependencies: Set<Dependency>,
-        private val enableKotlin: Boolean,
-        private val generateTests: Boolean,
         override val extraLines: List<String>? = null,
         moduleRoot: String
 ) : ModuleBuildSpecificationBlueprint {

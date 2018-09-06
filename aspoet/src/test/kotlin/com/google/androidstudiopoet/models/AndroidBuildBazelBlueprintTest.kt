@@ -38,7 +38,7 @@ class AndroidBuildBazelBlueprintTest {
     }
 
     @Test
-    fun `path is module root joined with build gradle`() {
+    fun `path is module root joined with bazel build file`() {
         val blueprint = createAndroidBuildBazelBlueprint(moduleRoot = "moduleRoot")
 
         assertOn(blueprint) {
@@ -51,7 +51,6 @@ class AndroidBuildBazelBlueprintTest {
                                                   packageName: String = "com.example",
                                                   extraLines: List<String>? = null,
                                                   dependencies: Set<ModuleDependency> = setOf()
-    ) = AndroidBuildBazelBlueprint(isApplication, moduleRoot,
-            packageName, extraLines, dependencies)
+    ) = AndroidBuildBazelBlueprint(isApplication, moduleRoot, packageName, extraLines, dependencies)
 
 }

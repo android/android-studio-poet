@@ -37,6 +37,6 @@ class ModuleBlueprint(name: String,
     }
 
     val buildBazelBlueprint by lazy {
-        ModuleBuildBazelBlueprint(dependencies.toSet(), useKotlin, generateTests, extraLines, moduleRoot)
+        ModuleBuildBazelBlueprint(dependencies.toSet(), extraLines, moduleRoot)
     }
 }
