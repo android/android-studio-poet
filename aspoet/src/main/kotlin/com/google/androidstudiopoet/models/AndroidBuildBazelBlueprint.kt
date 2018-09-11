@@ -19,11 +19,10 @@ package com.google.androidstudiopoet.models
 import com.google.androidstudiopoet.utils.joinPath
 
 class AndroidBuildBazelBlueprint(val isApplication: Boolean,
-                                 moduleRoot: String, val packageName: String,
-                                 override val extraLines: List<String>?,
-                                 additionalDependencies: Set<Dependency>) : AndroidModuleBuildSpecificationBlueprint {
-    override val plugins = mutableSetOf<String>()
-
+                                 moduleRoot: String,
+                                 val packageName: String,
+                                 additionalDependencies: Set<Dependency>,
+                                 val name: String) : AndroidModuleBuildSpecificationBlueprint {
     val libraries: Set<GmavenBazelDependency> = createSetOfLibraries()
 
     override val dependencies = additionalDependencies + libraries
@@ -37,6 +36,5 @@ class AndroidBuildBazelBlueprint(val isApplication: Boolean,
                 GmavenBazelDependency("com.android.support:multidex:aar:1.0.1"),
                 GmavenBazelDependency("com.android.support.test:runner:aar:1.0.1"),
                 GmavenBazelDependency("com.android.support.test.espresso:espresso-core:aar:3.0.1"))
-        // TODO: Add Junit
     }
 }

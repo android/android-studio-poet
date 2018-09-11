@@ -47,10 +47,10 @@ class AndroidBuildBazelBlueprintTest {
     }
 
     private fun createAndroidBuildBazelBlueprint(isApplication: Boolean = false,
-                                                  moduleRoot: String = "",
-                                                  packageName: String = "com.example",
-                                                  extraLines: List<String>? = null,
-                                                  dependencies: Set<ModuleDependency> = setOf()
-    ) = AndroidBuildBazelBlueprint(isApplication, moduleRoot, packageName, extraLines, dependencies)
+                                                 moduleRoot: String = "",
+                                                 packageName: String = "com.example",
+                                                 dependencies: Set<ModuleDependency> = setOf(),
+                                                 name: String = "targetName"
+    ) = AndroidBuildBazelBlueprint(isApplication, moduleRoot, packageName, dependencies, name)
 
 }

@@ -67,7 +67,7 @@ android_library(
 
     @Test
     fun `generator sets correct target name from the blueprint`() {
-        val blueprint = getAndroidBuildBazelBlueprint(packageName = "com.foo")
+        val blueprint = getAndroidBuildBazelBlueprint(packageName = "com.foo", targetName = "foo")
         androidModuleBuildBazelGenerator.generate(blueprint)
         val expected = """load("@gmaven_rules//:defs.bzl", "gmaven_artifact")
 
@@ -85,6 +85,7 @@ android_library(
     private fun getAndroidBuildBazelBlueprint(
             isApplication: Boolean = false,
             packageName: String = "com.example",
+            targetName: String = "example",
             dependencies: Set<Dependency> = setOf()
     ): AndroidBuildBazelBlueprint {
         val blueprint = mock<AndroidBuildBazelBlueprint>()
@@ -92,6 +93,7 @@ android_library(
         whenever(blueprint.packageName).thenReturn(packageName)
         whenever(blueprint.dependencies).thenReturn(dependencies)
         whenever(blueprint.path).thenReturn("BUILD.bazel")
+        whenever(blueprint.name).thenReturn(targetName)
         return blueprint
     }
 }

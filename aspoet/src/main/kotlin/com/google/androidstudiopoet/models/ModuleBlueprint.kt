@@ -38,6 +38,6 @@ class ModuleBlueprint(name: String,
     }
 
     val buildBazelBlueprint by lazy {
-        ModuleBuildBazelBlueprint(dependencies.toSet(), extraLines, moduleRoot)
+        ModuleBuildBazelBlueprint(dependencies.toSet(), moduleRoot, name)
     }
 }

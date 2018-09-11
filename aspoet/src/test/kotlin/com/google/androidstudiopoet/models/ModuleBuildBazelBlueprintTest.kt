@@ -32,9 +32,9 @@ class ModuleBuildBazelBlueprintTest {
         }
     }
 
-    private fun createModuleBuildBazelBlueprint(moduleRoot: String = "",
-                                                extraLines: List<String>? = null,
-                                                dependencies: Set<ModuleDependency> = setOf()
-    ) = ModuleBuildBazelBlueprint(dependencies, extraLines, moduleRoot)
+    private fun createModuleBuildBazelBlueprint(dependencies: Set<ModuleDependency> = setOf(),
+                                                moduleRoot: String = "",
+                                                name: String = "target_name"
+    ) = ModuleBuildBazelBlueprint(dependencies, moduleRoot, name)
 
 }

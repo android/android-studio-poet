@@ -16,12 +16,12 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators
 
-import com.google.androidstudiopoet.models.ModuleBuildSpecificationBlueprint
+import com.google.androidstudiopoet.models.ModuleBuildBazelBlueprint
 import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.writers.FileWriter
 
 class ModuleBuildBazelGenerator(private val fileWriter: FileWriter) {
-    fun generate(blueprint: ModuleBuildSpecificationBlueprint) {
+    fun generate(blueprint: ModuleBuildBazelBlueprint) {
         val deps: Set<String> = blueprint.dependencies.map {
             when (it) {
                 is ModuleDependency -> "\"//${it.name}\""
@@ -33,7 +33,7 @@ class ModuleBuildBazelGenerator(private val fileWriter: FileWriter) {
         ${deps.joinToString(separator = ",\n        ") { it }}
     ],"""
         val ruleClass = "java_library"
-        val targetName = blueprint.moduleName
+        val targetName = blueprint.targetName
         val ruleDefinition = """$ruleClass(
     name = "$targetName",
     srcs = glob(["src/main/java/**/*.java"]),

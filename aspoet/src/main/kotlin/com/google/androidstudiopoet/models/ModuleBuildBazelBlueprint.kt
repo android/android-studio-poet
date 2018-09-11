@@ -20,15 +20,13 @@ import com.google.androidstudiopoet.utils.joinPath
 
 class ModuleBuildBazelBlueprint(
         additionalDependencies: Set<Dependency>,
-        override val extraLines: List<String>? = null,
-        moduleRoot: String
+        moduleRoot: String,
+        name: String
 ) : ModuleBuildSpecificationBlueprint {
 
-    override val moduleName = moduleRoot.split("/").last()
+    val targetName = name
 
     override val path = moduleRoot.joinPath("BUILD.bazel")
-
-    override val plugins: Set<String> = setOf()
 
     override val dependencies = additionalDependencies
 

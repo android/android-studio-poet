@@ -37,7 +37,7 @@ class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
     multidex = "native","""
 
         val ruleClass = if (bazelBlueprint.isApplication) "android_binary" else "android_library"
-        val targetName = bazelBlueprint.packageName.split(".")[1]
+        val targetName = bazelBlueprint.name
         val ruleDefinition = """load("@gmaven_rules//:defs.bzl", "gmaven_artifact")
 
 $ruleClass(

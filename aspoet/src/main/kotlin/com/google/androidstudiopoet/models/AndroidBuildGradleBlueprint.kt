@@ -24,10 +24,10 @@ import com.google.androidstudiopoet.utils.joinPath
 
 class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
-                                  override val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
+                                  val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
                                   buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>,
                                   pluginConfigs: List<PluginConfig>?) : AndroidModuleBuildSpecificationBlueprint {
-    override val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
+    val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
 

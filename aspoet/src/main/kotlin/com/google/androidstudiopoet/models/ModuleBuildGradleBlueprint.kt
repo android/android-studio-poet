@@ -23,16 +23,14 @@ class ModuleBuildGradleBlueprint(
         additionalDependencies: Set<Dependency>,
         private val enableKotlin: Boolean,
         private val generateTests: Boolean,
-        override val extraLines: List<String>? = null,
+        val extraLines: List<String>? = null,
         moduleRoot: String,
         pluginConfigs: List<PluginConfig>?
 ) : ModuleBuildSpecificationBlueprint {
 
-    override val moduleName = moduleRoot.split("/").last()
-
     override val path = moduleRoot.joinPath("build.gradle")
 
-    override val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
+    val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
 
     override val dependencies = additionalDependencies + createSetOfMandatoryLibraries()
 

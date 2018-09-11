@@ -103,7 +103,7 @@ class AndroidModuleBlueprint(name: String,
     }
 
     val buildBazelBlueprint: AndroidBuildBazelBlueprint by lazy {
-        AndroidBuildBazelBlueprint(hasLaunchActivity, moduleRoot, packageName, extraLines, dependencies)
+        AndroidBuildBazelBlueprint(hasLaunchActivity, moduleRoot, packageName, dependencies, name)
     }
 
     private fun hasButterknifeDependency(): Boolean = buildGradleBlueprint.plugins

@@ -20,11 +20,12 @@ import com.google.androidstudiopoet.gradle.Closure
 import com.google.androidstudiopoet.gradle.Expression
 import com.google.androidstudiopoet.gradle.Statement
 import com.google.androidstudiopoet.gradle.StringStatement
+import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.ModuleBuildSpecificationBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 
 class ModuleBuildGradleGenerator(private val fileWriter: FileWriter) {
-    fun generate(blueprint: ModuleBuildSpecificationBlueprint) {
+    fun generate(blueprint: ModuleBuildGradleBlueprint) {
         val statements = applyPlugins(blueprint.plugins) +
                 dependenciesClosure(blueprint) +
                 codeCompatibilityStatements() +

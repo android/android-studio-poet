@@ -48,7 +48,7 @@ class ModuleBuildBazelGeneratorTest {
 
     private fun getModuleBuildBazelBlueprint(dependencies: Set<Dependency> = setOf()): ModuleBuildBazelBlueprint {
         return mock<ModuleBuildBazelBlueprint>().apply {
-            whenever(this.moduleName).thenReturn("target_name")
+            whenever(this.targetName).thenReturn("target_name")
             whenever(this.dependencies).thenReturn(dependencies)
             whenever(this.path).thenReturn("BUILD.bazel")
         }
