@@ -32,35 +32,15 @@ object ModuleBlueprintFactory {
         buildSystemConfig: BuildSystemConfig?
     ): ModuleBlueprint {
         val dependencies = createDependencies(projectRoot, moduleConfig, configMap, buildSystemConfig)
-        return ModuleBlueprint(
-            moduleConfig.moduleName,
-            projectRoot,
-            moduleConfig.useKotlin,
-            dependencies,
-            moduleConfig.java,
-            moduleConfig.kotlin,
-            moduleConfig.extraLines,
-            moduleConfig.generateTests,
-            moduleConfig.plugins,
-            buildSystemConfig?.generateBazelFiles)
+        return ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, dependencies,
+            moduleConfig.java, moduleConfig.kotlin, moduleConfig.extraLines, moduleConfig.generateTests,
+            moduleConfig.plugins, buildSystemConfig?.generateBazelFiles)
     }
 
-    private fun createWithoutDependencies(
-        moduleConfig: ModuleConfig,
-        projectRoot: String,
-        buildSystemConfig: BuildSystemConfig?
-    ): ModuleBlueprint {
-        return ModuleBlueprint(
-            moduleConfig.moduleName,
-            projectRoot,
-            moduleConfig.useKotlin,
-            setOf(),
-            moduleConfig.java,
-            moduleConfig.kotlin,
-            moduleConfig.extraLines,
-            moduleConfig.generateTests,
-            moduleConfig.plugins,
-            buildSystemConfig?.generateBazelFiles)
+    private fun createWithoutDependencies(moduleConfig: ModuleConfig, projectRoot: String, buildSystemConfig: BuildSystemConfig? ): ModuleBlueprint {
+        return ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, setOf(),
+            moduleConfig.java, moduleConfig.kotlin, moduleConfig.extraLines, moduleConfig.generateTests,
+            moduleConfig.plugins, buildSystemConfig?.generateBazelFiles)
     }
 
     fun createAndroidModule(
@@ -125,10 +105,7 @@ object ModuleBlueprintFactory {
         return (blueprint as AndroidModuleBlueprint).resourcesToReferFromOutside
     }
 
-    private fun getMethodToCall(
-        projectRoot: String,
-        moduleConfig: ModuleConfig,
-        buildSystemConfig: BuildSystemConfig?
+    private fun getMethodToCall(projectRoot: String, moduleConfig: ModuleConfig, buildSystemConfig: BuildSystemConfig?
     ) = getCachedBlueprint(projectRoot, moduleConfig, buildSystemConfig).methodToCallFromOutside
 
     private fun getCachedBlueprint(projectRoot: String, moduleConfig: ModuleConfig, buildSystemConfig: BuildSystemConfig?): AbstractModuleBlueprint {
