@@ -15,7 +15,7 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.utils.joinPath
 
-class BazelWorkspaceBlueprint(projectRoot: String) {
+class BazelWorkspaceBlueprint(val projectRoot: String) {
 
   val workspacePath = projectRoot.joinPath("WORKSPACE")
 
