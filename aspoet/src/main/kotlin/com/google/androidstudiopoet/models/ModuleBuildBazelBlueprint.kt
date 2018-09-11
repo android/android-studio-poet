@@ -22,12 +22,12 @@ class ModuleBuildBazelBlueprint(
         additionalDependencies: Set<Dependency>,
         moduleRoot: String,
         name: String
-) : ModuleBuildSpecificationBlueprint {
+) {
 
     val targetName = name
 
-    override val path = moduleRoot.joinPath("BUILD.bazel")
+    val path = moduleRoot.joinPath("BUILD.bazel")
 
-    override val dependencies = additionalDependencies
+    val dependencies = additionalDependencies
 
 }

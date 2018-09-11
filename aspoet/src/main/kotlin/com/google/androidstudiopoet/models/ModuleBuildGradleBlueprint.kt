@@ -26,13 +26,13 @@ class ModuleBuildGradleBlueprint(
         val extraLines: List<String>? = null,
         moduleRoot: String,
         pluginConfigs: List<PluginConfig>?
-) : ModuleBuildSpecificationBlueprint {
+) {
 
-    override val path = moduleRoot.joinPath("build.gradle")
+    val path = moduleRoot.joinPath("build.gradle")
 
     val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
 
-    override val dependencies = additionalDependencies + createSetOfMandatoryLibraries()
+    val dependencies = additionalDependencies + createSetOfMandatoryLibraries()
 
     private fun createSetOfMandatoryLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf<LibraryDependency>()
