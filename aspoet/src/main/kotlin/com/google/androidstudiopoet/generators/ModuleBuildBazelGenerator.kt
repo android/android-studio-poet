@@ -22,7 +22,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 
 class ModuleBuildBazelGenerator(private val fileWriter: FileWriter) {
     fun generate(blueprint: ModuleBuildSpecificationBlueprint) {
-        val deps: Set<String> = blueprint.dependencies.mapNotNull {
+        val deps: Set<String> = blueprint.dependencies.map {
             when (it) {
                 is ModuleDependency -> "\"//${it.name}\""
                 else -> ""

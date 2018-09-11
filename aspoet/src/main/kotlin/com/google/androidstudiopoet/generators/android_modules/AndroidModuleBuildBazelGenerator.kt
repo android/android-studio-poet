@@ -22,7 +22,7 @@ import com.google.androidstudiopoet.writers.FileWriter
 class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
     fun generate(bazelBlueprint: AndroidBuildBazelBlueprint) {
 
-        val deps: Set<String> = bazelBlueprint.dependencies.mapNotNull {
+        val deps: Set<String> = bazelBlueprint.dependencies.map {
             when (it) {
                 is ModuleDependency -> "\"//${it.name}\""
                 is GmavenBazelDependency -> "gmaven_artifact(\"${it.name}\")"
