@@ -22,12 +22,12 @@ class AndroidBuildBazelBlueprint(val isApplication: Boolean,
                                  moduleRoot: String,
                                  val packageName: String,
                                  additionalDependencies: Set<Dependency>,
-                                 val name: String) : AndroidModuleBuildSpecificationBlueprint {
+                                 val name: String) {
     val libraries: Set<GmavenBazelDependency> = createSetOfLibraries()
 
-    override val dependencies = additionalDependencies + libraries
+    val dependencies = additionalDependencies + libraries
 
-    override val path = moduleRoot.joinPath("BUILD.bazel")
+    val path = moduleRoot.joinPath("BUILD.bazel")
 
     private fun createSetOfLibraries(): Set<GmavenBazelDependency> {
         return mutableSetOf(

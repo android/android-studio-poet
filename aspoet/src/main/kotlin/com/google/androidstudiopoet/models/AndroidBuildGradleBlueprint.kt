@@ -26,14 +26,14 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
                                   moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
                                   val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
                                   buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>,
-                                  pluginConfigs: List<PluginConfig>?) : AndroidModuleBuildSpecificationBlueprint {
+                                  pluginConfigs: List<PluginConfig>?) {
     val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
 
     val libraries: Set<LibraryDependency> = createSetOfLibraries()
 
-    override val dependencies = additionalDependencies + libraries
+    val dependencies = additionalDependencies + libraries
 
-    override val path = moduleRoot.joinPath("build.gradle")
+    val path = moduleRoot.joinPath("build.gradle")
 
     val minSdkVersion = androidBuildConfig.minSdkVersion
     val targetSdkVersion = androidBuildConfig.targetSdkVersion
