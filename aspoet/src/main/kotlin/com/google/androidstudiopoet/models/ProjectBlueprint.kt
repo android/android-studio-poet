@@ -40,6 +40,7 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     val gradleVersion = projectConfig.buildSystemConfig?.buildSystemVersion ?: DEFAULT_GRADLE_VERSION
 
     val generateBazelFiles = projectConfig.buildSystemConfig?.generateBazelFiles
+    val bazelWorkspaceBlueprint = BazelWorkspaceBlueprint(projectRoot)
 
     val moduleBlueprints: List<ModuleBlueprint>
     val androidModuleBlueprints: List<AndroidModuleBlueprint>

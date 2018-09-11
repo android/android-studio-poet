@@ -46,6 +46,7 @@ object Injector {
     private val amBazelBuildGenerator = AndroidModuleBuildBazelGenerator(fileWriter)
     private val buildGradleGenerator = ModuleBuildGradleGenerator(fileWriter)
     private val buildBazelGenerator = ModuleBuildBazelGenerator(fileWriter)
+    private val bazelWorkspaceGenerator = BazelWorkspaceGenerator(fileWriter)
     private val gradleSettingsGenerator = GradleSettingsGenerator(fileWriter)
     private val projectBuildGradleGenerator = ProjectBuildGradleGenerator(fileWriter)
     private val gradlePropertiesGenerator = GradlePropertiesGenerator(fileWriter)
@@ -84,9 +85,18 @@ object Injector {
                     fileWriter)
 
     val modulesWriter =
-            SourceModuleGenerator(buildGradleGenerator, buildBazelGenerator, gradleSettingsGenerator, gradlePropertiesGenerator,
-                    projectBuildGradleGenerator, androidModuleGenerator, packagesGenerator,
-                    dependencyGraphGenerator, jsonConfigGenerator, fileWriter)
+            SourceModuleGenerator(
+                buildGradleGenerator,
+                buildBazelGenerator,
+                bazelWorkspaceGenerator,
+                gradleSettingsGenerator,
+                gradlePropertiesGenerator,
+                projectBuildGradleGenerator,
+                androidModuleGenerator,
+                packagesGenerator,
+                dependencyGraphGenerator,
+                jsonConfigGenerator,
+                fileWriter)
 
 
     private val moduleConfigDeserializer = ModuleConfigDeserializer()

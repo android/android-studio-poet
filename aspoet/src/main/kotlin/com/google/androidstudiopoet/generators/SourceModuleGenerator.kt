@@ -32,6 +32,7 @@ import kotlin.system.measureTimeMillis
 
 class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
                             private val moduleBuildBazelGenerator: ModuleBuildBazelGenerator,
+                            private val bazelWorkspaceGenerator: BazelWorkspaceGenerator,
                             private val gradleSettingsGenerator: GradleSettingsGenerator,
                             private val gradlePropertiesGenerator: GradlePropertiesGenerator,
                             private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
@@ -46,30 +47,14 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         fileWriter.delete(projectBlueprint.projectRoot)
         fileWriter.mkdir(projectBlueprint.projectRoot)
 
-        if (projectBlueprint.generateBazelFiles != null && projectBlueprint.generateBazelFiles) {
-          val bazelWorkspaceContent = """android_sdk_repository(name = "androidsdk")
-# Google Maven Repository
-GMAVEN_TAG = "20180607-1"
-
-http_archive(
-    name = "gmaven_rules",
-    strip_prefix = "gmaven_rules-%s" % GMAVEN_TAG,
-    urls = ["https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz" % GMAVEN_TAG],
-)
-
-load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
-gmaven_rules()
-"""
-
-          fileWriter.writeToFile(
-              bazelWorkspaceContent,
-              projectBlueprint.projectRoot + "/WORKSPACE")
-        }
-
         GradlewGenerator.generateGradleW(projectBlueprint.projectRoot, projectBlueprint)
         projectBuildGradleGenerator.generate(projectBlueprint.buildGradleBlueprint)
         gradleSettingsGenerator.generate(projectBlueprint.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
         gradlePropertiesGenerator.generate(projectBlueprint.gradlePropertiesBlueprint)
+
+        if (projectBlueprint.generateBazelFiles != null && projectBlueprint.generateBazelFiles) {
+            bazelWorkspaceGenerator.generate(projectBlueprint.bazelWorkspaceBlueprint)
+        }
 
         print("Writing modules...")
         val timeSpent = measureTimeMillis {
