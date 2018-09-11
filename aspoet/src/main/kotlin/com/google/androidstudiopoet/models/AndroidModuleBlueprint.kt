@@ -34,9 +34,10 @@ class AndroidModuleBlueprint(name: String,
                              generateTests: Boolean,
                              dataBindingConfig: DataBindingConfig?,
                              val androidBuildConfig: AndroidBuildConfig,
-                             pluginConfigs: List<PluginConfig>?
+                             pluginConfigs: List<PluginConfig>?,
+                             generateBazelFiles: Boolean?
 ) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaConfig, kotlinConfig, extraLines,
-        generateTests) {
+        generateTests, generateBazelFiles) {
 
     val packageName = "com.$name"
     val srcPath = moduleRoot.joinPath("src")

@@ -46,7 +46,7 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         fileWriter.delete(projectBlueprint.projectRoot)
         fileWriter.mkdir(projectBlueprint.projectRoot)
 
-        if (projectBlueprint.generateBazelFiles) {
+        if (projectBlueprint.generateBazelFiles != null && projectBlueprint.generateBazelFiles) {
           val bazelWorkspaceContent = """android_sdk_repository(name = "androidsdk")
 # Google Maven Repository
 GMAVEN_TAG = "20180607-1"
@@ -77,7 +77,7 @@ gmaven_rules()
             val allJobs = mutableListOf<Job>()
             projectBlueprint.moduleBlueprints.asReversed().forEach { blueprint ->
                 val job = launch {
-                    writeModule(blueprint, projectBlueprint.generateBazelFiles)
+                    writeModule(blueprint)
                 }
                 allJobs.add(job)
             }
@@ -85,7 +85,7 @@ gmaven_rules()
             projectBlueprint.androidModuleBlueprints.asReversed().forEach { blueprint ->
                 val random = Random(randomCount++)
                 val job = launch {
-                    androidModuleGenerator.generate(blueprint, random, projectBlueprint.generateBazelFiles)
+                    androidModuleGenerator.generate(blueprint, random)
                 }
                 allJobs.add(job)
             }
@@ -108,14 +108,14 @@ gmaven_rules()
         jsonConfigGenerator.generate(projectBlueprint)
     }
 
-    private fun writeModule(moduleBlueprint: ModuleBlueprint, generateBazelFiles: Boolean) {
+    private fun writeModule(moduleBlueprint: ModuleBlueprint) {
         val moduleRootFile = File(moduleBlueprint.moduleRoot)
         moduleRootFile.mkdir()
 
         writeLibsFolder(moduleRootFile)
         moduleBuildGradleGenerator.generate(moduleBlueprint.buildGradleBlueprint)
 
-        if (generateBazelFiles) {
+        if (moduleBlueprint.generateBazelFiles != null && moduleBlueprint.generateBazelFiles) {
           moduleBuildBazelGenerator.generate(moduleBlueprint.buildBazelBlueprint)
         }
 

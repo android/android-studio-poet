@@ -35,7 +35,7 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
     /**
      *  Generate android module, including module folder
      */
-    fun generate(blueprint: AndroidModuleBlueprint, random: Random, generateBazelFiles: Boolean) {
+    fun generate(blueprint: AndroidModuleBlueprint, random: Random) {
         generateMainFolders(blueprint)
 
         proguardGenerator.generate(blueprint)
@@ -45,7 +45,7 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
         blueprint.activityBlueprints.forEach({ activityGenerator.generate(it) })
         manifestGenerator.generate(blueprint)
 
-        if (generateBazelFiles) {
+        if (blueprint.generateBazelFiles != null && blueprint.generateBazelFiles) {
             buildBazelGenerator.generate(blueprint.buildBazelBlueprint)
         }
     }
