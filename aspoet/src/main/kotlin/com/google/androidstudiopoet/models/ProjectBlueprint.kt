@@ -39,6 +39,9 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
     val useKotlin = projectConfig.moduleConfigs.map { it.useKotlin }.find { it } ?: false
     val gradleVersion = projectConfig.buildSystemConfig?.buildSystemVersion ?: DEFAULT_GRADLE_VERSION
 
+    val generateBazelFiles = projectConfig.buildSystemConfig?.generateBazelFiles
+    val bazelWorkspaceBlueprint = BazelWorkspaceBlueprint(projectRoot)
+
     val moduleBlueprints: List<ModuleBlueprint>
     val androidModuleBlueprints: List<AndroidModuleBlueprint>
     val allModuleBlueprints: List<AbstractModuleBlueprint>
@@ -62,12 +65,12 @@ class ProjectBlueprint(private val projectConfig: ProjectConfig) {
             runBlocking {
                 val deferredModules = projectConfig.pureModuleConfigs.map {
                     async {
-                        ModuleBlueprintFactory.create(it, projectRoot, configMap)
+                        ModuleBlueprintFactory.create(it, projectRoot, configMap, projectConfig.buildSystemConfig)
                     }
                 }
                 val deferredAndroid = projectConfig.androidModuleConfigs.map {
                     async {
-                        ModuleBlueprintFactory.createAndroidModule(projectRoot, it, configMap)
+                        ModuleBlueprintFactory.createAndroidModule(projectRoot, it, configMap, projectConfig.buildSystemConfig)
                     }
                 }
                 temporaryModuleBlueprints = deferredModules.map { it.await() }

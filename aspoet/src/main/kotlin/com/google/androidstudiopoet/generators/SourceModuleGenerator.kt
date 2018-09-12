@@ -31,6 +31,8 @@ import java.util.*
 import kotlin.system.measureTimeMillis
 
 class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
+                            private val moduleBuildBazelGenerator: ModuleBuildBazelGenerator,
+                            private val bazelWorkspaceGenerator: BazelWorkspaceGenerator,
                             private val gradleSettingsGenerator: GradleSettingsGenerator,
                             private val gradlePropertiesGenerator: GradlePropertiesGenerator,
                             private val projectBuildGradleGenerator: ProjectBuildGradleGenerator,
@@ -49,6 +51,10 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         projectBuildGradleGenerator.generate(projectBlueprint.buildGradleBlueprint)
         gradleSettingsGenerator.generate(projectBlueprint.projectName, projectBlueprint.allModulesNames, projectBlueprint.projectRoot)
         gradlePropertiesGenerator.generate(projectBlueprint.gradlePropertiesBlueprint)
+
+        if (projectBlueprint.generateBazelFiles != null && projectBlueprint.generateBazelFiles) {
+            bazelWorkspaceGenerator.generate(projectBlueprint.bazelWorkspaceBlueprint)
+        }
 
         print("Writing modules...")
         val timeSpent = measureTimeMillis {
@@ -93,6 +99,10 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
 
         writeLibsFolder(moduleRootFile)
         moduleBuildGradleGenerator.generate(moduleBlueprint.buildGradleBlueprint)
+
+        if (moduleBlueprint.generateBazelFiles != null && moduleBlueprint.generateBazelFiles) {
+          moduleBuildBazelGenerator.generate(moduleBlueprint.buildBazelBlueprint)
+        }
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
     }

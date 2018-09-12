@@ -1,5 +1,5 @@
 /*
-Copyright 2017 Google Inc.
+Copyright 2018 Google Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,13 +16,18 @@ limitations under the License.
 
 package com.google.androidstudiopoet.models
 
-open class ModuleDependency(val name: String, val methodToCall: MethodToCall, val method: String) : Dependency
+import com.google.androidstudiopoet.utils.joinPath
 
-class AndroidModuleDependency(name: String, methodToCall: MethodToCall, method: String, val resourcesToRefer: ResourcesToRefer)
-    : ModuleDependency(name, methodToCall, method)
+class ModuleBuildBazelBlueprint(
+        additionalDependencies: Set<Dependency>,
+        moduleRoot: String,
+        name: String
+) {
 
-data class LibraryDependency(val method: String, val name: String) : Dependency
+    val targetName = name
 
-data class GmavenBazelDependency(val name: String) : Dependency
+    val path = moduleRoot.joinPath("BUILD.bazel")
 
-interface Dependency
+    val dependencies = additionalDependencies
+
+}

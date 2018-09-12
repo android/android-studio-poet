@@ -23,5 +23,6 @@
     {"from": "module1", "to": "module0"}
   ],
   "buildTypes": 2,
-  "generateTests": true
+  "generateTests": true,
+  "generateBazelFiles": false
 }

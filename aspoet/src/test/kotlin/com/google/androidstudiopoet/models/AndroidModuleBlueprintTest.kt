@@ -94,10 +94,11 @@ class AndroidModuleBlueprintTest {
             generateTests: Boolean = true,
             dataBindingConfig: DataBindingConfig? = null,
             androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
-            pluginConfigs: List<PluginConfig>? = null
+            pluginConfigs: List<PluginConfig>? = null,
+            generateBazelFiles: Boolean? = false
     ) = AndroidModuleBlueprint(name, numOfActivities, resourcesConfig, projectRoot, hasLaunchActivity, useKotlin,
             dependencies, productFlavorConfigs, buildTypeConfigs, javaConfig, kotlinConfig,
-            extraLines, generateTests, dataBindingConfig, androidBuildConfig, pluginConfigs)
+            extraLines, generateTests, dataBindingConfig, androidBuildConfig, pluginConfigs, generateBazelFiles)
 
     private fun defaultCodeConfig() = CodeConfig().apply {
         packages = 1

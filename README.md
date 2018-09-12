@@ -17,6 +17,7 @@ Create a real life complexity Android project that mimics your own and observe t
 * Configurable number of inter module dependencies
 * Android resources (images, strings,activities, layouts)
 * Configurable version of gradle, kotlin, the android gradle plugin
+* Experimental Bazel support
 
 ## Download
 To run, grab the [latest JAR](https://github.com/android/android-studio-poet/releases)

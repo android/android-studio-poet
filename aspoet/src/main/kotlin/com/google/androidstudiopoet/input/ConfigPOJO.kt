@@ -91,6 +91,8 @@ class ConfigPOJO {
 
     var generateTests : Boolean = false
 
+    var generateBazelFiles : Boolean = false
+
     // Will use same data binding configuration for all android modules
     var dataBindingConfig: DataBindingConfig? = null
 

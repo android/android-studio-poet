@@ -1,5 +1,5 @@
 /*
-Copyright 2017 Google Inc.
+Copyright 2018 Google Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,15 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.androidstudiopoet.models
+package com.google.androidstudiopoet.generators
 
-open class ModuleDependency(val name: String, val methodToCall: MethodToCall, val method: String) : Dependency
+import com.google.androidstudiopoet.models.BazelWorkspaceBlueprint
+import com.google.androidstudiopoet.writers.FileWriter
 
-class AndroidModuleDependency(name: String, methodToCall: MethodToCall, method: String, val resourcesToRefer: ResourcesToRefer)
-    : ModuleDependency(name, methodToCall, method)
+class BazelWorkspaceGenerator(private val fileWriter: FileWriter) {
 
-data class LibraryDependency(val method: String, val name: String) : Dependency
+  fun generate(bazelWorkspaceBlueprint: BazelWorkspaceBlueprint) {
+    fileWriter.writeToFile(
+        bazelWorkspaceBlueprint.bazelWorkspaceContent,
+        bazelWorkspaceBlueprint.workspacePath)
+  }
 
-data class GmavenBazelDependency(val name: String) : Dependency
-
-interface Dependency
+}

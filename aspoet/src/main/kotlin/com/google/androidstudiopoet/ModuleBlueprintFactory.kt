@@ -16,10 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet
 
-import com.google.androidstudiopoet.input.AndroidBuildConfig
-import com.google.androidstudiopoet.input.AndroidModuleConfig
-import com.google.androidstudiopoet.input.DependencyConfig
-import com.google.androidstudiopoet.input.ModuleConfig
+import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.models.*
 
 object ModuleBlueprintFactory {
@@ -28,21 +25,31 @@ object ModuleBlueprintFactory {
     // Used to synchronize cache elements (can be one per item since each is independent)
     private val moduleNameLock: MutableMap<String, Any> = mutableMapOf()
 
-    fun create(moduleConfig: ModuleConfig, projectRoot: String, configMap: Map<String, ModuleConfig>): ModuleBlueprint {
-        val dependencies = createDependencies(projectRoot, moduleConfig, configMap)
+    fun create(
+        moduleConfig: ModuleConfig,
+        projectRoot: String,
+        configMap: Map<String, ModuleConfig>,
+        buildSystemConfig: BuildSystemConfig?
+    ): ModuleBlueprint {
+        val dependencies = createDependencies(projectRoot, moduleConfig, configMap, buildSystemConfig)
         return ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, dependencies,
-                moduleConfig.java, moduleConfig.kotlin,
-                moduleConfig.extraLines, moduleConfig.generateTests, moduleConfig.plugins)
+            moduleConfig.java, moduleConfig.kotlin, moduleConfig.extraLines, moduleConfig.generateTests,
+            moduleConfig.plugins, buildSystemConfig?.generateBazelFiles)
     }
 
-    private fun createWithoutDependencies(moduleConfig: ModuleConfig, projectRoot: String): ModuleBlueprint {
+    private fun createWithoutDependencies(moduleConfig: ModuleConfig, projectRoot: String, buildSystemConfig: BuildSystemConfig? ): ModuleBlueprint {
         return ModuleBlueprint(moduleConfig.moduleName, projectRoot, moduleConfig.useKotlin, setOf(),
-                moduleConfig.java, moduleConfig.kotlin,
-                moduleConfig.extraLines, moduleConfig.generateTests, moduleConfig.plugins)
+            moduleConfig.java, moduleConfig.kotlin, moduleConfig.extraLines, moduleConfig.generateTests,
+            moduleConfig.plugins, buildSystemConfig?.generateBazelFiles)
     }
 
-    fun createAndroidModule(projectRoot: String, androidModuleConfig: AndroidModuleConfig, configMap: Map<String, ModuleConfig>): AndroidModuleBlueprint {
-        val dependencies = createDependencies(projectRoot, androidModuleConfig, configMap)
+    fun createAndroidModule(
+        projectRoot: String,
+        androidModuleConfig: AndroidModuleConfig,
+        configMap: Map<String, ModuleConfig>,
+        buildSystemConfig: BuildSystemConfig?
+    ): AndroidModuleBlueprint {
+        val dependencies = createDependencies(projectRoot, androidModuleConfig, configMap, buildSystemConfig)
         return AndroidModuleBlueprint(androidModuleConfig.moduleName,
                 androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
                 projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
@@ -52,10 +59,11 @@ object ModuleBlueprintFactory {
                 androidModuleConfig.generateTests,
                 androidModuleConfig.dataBindingConfig,
                 androidModuleConfig.androidBuildConfig ?: AndroidBuildConfig(),
-                androidModuleConfig.plugins)
+                androidModuleConfig.plugins,
+                buildSystemConfig?.generateBazelFiles)
     }
 
-    private fun createAndroidModuleWithoutDependencies(projectRoot: String, androidModuleConfig: AndroidModuleConfig):
+    private fun createAndroidModuleWithoutDependencies(projectRoot: String, androidModuleConfig: AndroidModuleConfig, buildSystemConfig: BuildSystemConfig?):
             AndroidModuleBlueprint = AndroidModuleBlueprint(androidModuleConfig.moduleName,
                     androidModuleConfig.activityCount, androidModuleConfig.resourcesConfig,
                     projectRoot, androidModuleConfig.hasLaunchActivity, androidModuleConfig.useKotlin,
@@ -65,9 +73,9 @@ object ModuleBlueprintFactory {
                     androidModuleConfig.generateTests,
                     androidModuleConfig.dataBindingConfig,
                     androidModuleConfig.androidBuildConfig ?: AndroidBuildConfig(),
-                    androidModuleConfig.plugins)
+                    androidModuleConfig.plugins, buildSystemConfig?.generateBazelFiles)
 
-    private fun createDependencies(projectRoot: String, moduleConfig: ModuleConfig, configMap: Map<String, ModuleConfig>): Set<Dependency> {
+    private fun createDependencies(projectRoot: String, moduleConfig: ModuleConfig, configMap: Map<String, ModuleConfig>, buildSystemConfig: BuildSystemConfig?): Set<Dependency> {
         val moduleDependencies = moduleConfig.dependencies
                 ?.mapNotNull { dependencyConfig ->
                     when (dependencyConfig) {
@@ -75,12 +83,12 @@ object ModuleBlueprintFactory {
                             val dependencyModuleConfig = configMap[dependencyConfig.moduleName]
                             return@mapNotNull when (dependencyModuleConfig) {
                                 is AndroidModuleConfig -> {
-                                    val methodToCall = getMethodToCall(projectRoot, dependencyModuleConfig)
-                                    val resourcesToRefer = getResourcesToRefer(projectRoot, dependencyModuleConfig)
+                                    val methodToCall = getMethodToCall(projectRoot, dependencyModuleConfig, buildSystemConfig)
+                                    val resourcesToRefer = getResourcesToRefer(projectRoot, dependencyModuleConfig, buildSystemConfig)
                                     AndroidModuleDependency(dependencyConfig.moduleName, methodToCall, dependencyConfig.method.toDependencyMethod(), resourcesToRefer)
                                 }
                                 is ModuleConfig -> {
-                                    val methodToCall = getMethodToCall(projectRoot, dependencyModuleConfig)
+                                    val methodToCall = getMethodToCall(projectRoot, dependencyModuleConfig, buildSystemConfig)
                                     ModuleDependency(dependencyConfig.moduleName, methodToCall, dependencyConfig.method.toDependencyMethod())
                                 }
                                 else -> null
@@ -92,23 +100,23 @@ object ModuleBlueprintFactory {
         return moduleDependencies.toHashSet()
     }
 
-    private fun getResourcesToRefer(projectRoot: String, moduleConfig: ModuleConfig): ResourcesToRefer {
-        val blueprint = getCachedBlueprint(projectRoot, moduleConfig)
+    private fun getResourcesToRefer(projectRoot: String, moduleConfig: ModuleConfig, buildSystemConfig: BuildSystemConfig?): ResourcesToRefer {
+        val blueprint = getCachedBlueprint(projectRoot, moduleConfig, buildSystemConfig)
         return (blueprint as AndroidModuleBlueprint).resourcesToReferFromOutside
     }
 
+    private fun getMethodToCall(projectRoot: String, moduleConfig: ModuleConfig, buildSystemConfig: BuildSystemConfig?
+    ) = getCachedBlueprint(projectRoot, moduleConfig, buildSystemConfig).methodToCallFromOutside
 
-    private fun getMethodToCall(projectRoot: String, moduleConfig: ModuleConfig) = getCachedBlueprint(projectRoot, moduleConfig).methodToCallFromOutside
-
-    private fun getCachedBlueprint(projectRoot: String, moduleConfig: ModuleConfig): AbstractModuleBlueprint {
+    private fun getCachedBlueprint(projectRoot: String, moduleConfig: ModuleConfig, buildSystemConfig: BuildSystemConfig?): AbstractModuleBlueprint {
         synchronized(moduleNameLock.getOrPut(moduleConfig.moduleName, { moduleConfig.moduleName })) {
             var cachedBlueprint = tempBlueprintCache[moduleConfig.moduleName]
             if (cachedBlueprint == null) {
                 cachedBlueprint =
                         if (moduleConfig is AndroidModuleConfig)
-                            createAndroidModuleWithoutDependencies(projectRoot, moduleConfig)
+                            createAndroidModuleWithoutDependencies(projectRoot, moduleConfig, buildSystemConfig)
                         else
-                            createWithoutDependencies(moduleConfig, projectRoot)
+                            createWithoutDependencies(moduleConfig, projectRoot, buildSystemConfig)
                 tempBlueprintCache[moduleConfig.moduleName] = cachedBlueprint
             }
             return cachedBlueprint
