@@ -33,7 +33,7 @@ ${Target(
           RawAttribute("strip_prefix", "\"gmaven_rules-%s\" % GMAVEN_TAG"),
           RawAttribute("urls", "[\"https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz\" % GMAVEN_TAG]")
       ))}
-${LoadStatement("@gmaven_rules//:gmaven.bzl", listOf("gmaven_rules") )}
+${LoadStatement("@gmaven_rules//:gmaven.bzl", listOf("gmaven_rules"))}
 ${Target("gmaven_rules", listOf())}
 """
 
