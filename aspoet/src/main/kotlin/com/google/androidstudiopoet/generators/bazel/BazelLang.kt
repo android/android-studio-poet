@@ -58,13 +58,10 @@ data class Comment(val comment: String) {
  *
  * e.g.
  *
- * android_library(
+ * java_library(
  *     name = "lib_foo",
- *     srcs = glob(["src/**/*.java"]),
- *     deps = [":lib_bar"],
- *     manifest = "AndroidManifest.xml",
- *     custom_package = "com.example.foo",
- *     resource_files = glob(["res/**/*"]),
+ *     srcs = ["Foo.java", "Bar.java"],
+ *     deps = [":lib_baz"],
  * )
  */
 data class Target(val ruleClass: String, val attributes: List<Attribute>) : Statement {
@@ -72,7 +69,7 @@ data class Target(val ruleClass: String, val attributes: List<Attribute>) : Stat
         return when (attributes.size) {
             0 -> "$ruleClass()"
             else -> """$ruleClass(
-$BASE_INDENT${attributes.joinToString(separator = ",\n$BASE_INDENT") { it.toString() }}
+$BASE_INDENT${attributes.joinToString(separator = ",\n$BASE_INDENT") { it.toString() }},
 )"""
         }
     }

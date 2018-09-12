@@ -45,7 +45,7 @@ class BazelLangTest {
     fun `target with one attribute is converted to string correctly`() {
         val target = Target("foo_bar", listOf(RawAttribute("baz", "42")))
         target.toString().assertEquals("""foo_bar(
-    baz = 42
+    baz = 42,
 )""")
     }
 
@@ -59,7 +59,7 @@ class BazelLangTest {
             ))
         target.toString().assertEquals("""foo_bar(
     baz = 42,
-    qux = "foo"
+    qux = "foo",
 )""")
     }
 
