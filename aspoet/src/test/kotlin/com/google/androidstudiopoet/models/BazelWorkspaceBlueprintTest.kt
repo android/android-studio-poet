@@ -16,7 +16,7 @@ class BazelWorkspaceBlueprintTest {
   fun `workspace file content contains android_sdk_repository declaration`() {
     val blueprint = getBazelWorkspaceBlueprint()
     val androidSdkRepositoryDeclaration = """android_sdk_repository(
-    name = "androidsdk"
+    name = "androidsdk",
 )"""
     assert(blueprint.bazelWorkspaceContent.contains(androidSdkRepositoryDeclaration))
   }
