@@ -19,6 +19,8 @@ package com.google.androidstudiopoet.generators.bazel
 /**
  * Bazel uses the Starlark configuration language for BUILD files and .bzl extensions.
  *
+ * Starlark is previously known as Skylark.
+ *
  * https://docs.bazel.build/versions/master/skylark/language.html
  */
 
@@ -106,7 +108,7 @@ interface Attribute {
 }
 
 data class RawAttribute(override val name: String, override val value: String): Attribute {
-    override fun toString() = """$name = $value"""
+    override fun toString() = "$name = $value"
 }
 
 data class StringAttribute(override val name: String, override val value: String): Attribute {
