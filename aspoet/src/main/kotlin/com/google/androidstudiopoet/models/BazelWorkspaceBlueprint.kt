@@ -13,25 +13,28 @@
  */
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.generators.bazel.*
 import com.google.androidstudiopoet.utils.joinPath
 
 class BazelWorkspaceBlueprint(val projectRoot: String) {
 
   val workspacePath = projectRoot.joinPath("WORKSPACE")
 
-  val bazelWorkspaceContent = """android_sdk_repository(name = "androidsdk")
-# Google Maven Repository
-GMAVEN_TAG = "20180607-1"
+  val bazelWorkspaceContent = """${Target(
+      "android_sdk_repository",
+      listOf(StringAttribute("name", "androidsdk")))}
 
-http_archive(
-    name = "gmaven_rules",
-    strip_prefix = "gmaven_rules-%s" % GMAVEN_TAG,
-    urls = ["https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz" % GMAVEN_TAG],
-)
-
-load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
-gmaven_rules()
+${Comment("Google Maven Repository")}
+${AssignmentStatement("GMAVEN_TAG", "\"20180607-1\"")}
+${Target(
+      "http_archive",
+      listOf(
+          StringAttribute("name", "gmaven_rules"),
+          RawAttribute("strip_prefix", "\"gmaven_rules-%s\" % GMAVEN_TAG"),
+          RawAttribute("urls", "[\"https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz\" % GMAVEN_TAG]")
+      ))}
+${LoadStatement("@gmaven_rules//:gmaven.bzl", listOf("gmaven_rules") )}
+${Target("gmaven_rules", listOf())}
 """
 
 }
-
