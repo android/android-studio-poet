@@ -30,7 +30,7 @@ class ModuleBlueprint(name: String,
                       pluginConfigs: List<PluginConfig>?,
                       generateBazelFiles: Boolean?)
     : AbstractModuleBlueprint(name, root, useKotlin, dependencies, javaConfig, kotlinConfig, extraLines,
-        generateTests, generateBazelFiles) {
+        generateTests) {
 
     val buildGradleBlueprint by lazy {
         ModuleBuildGradleBlueprint(dependencies.toSet(), useKotlin, generateTests, extraLines, moduleRoot,
@@ -38,6 +38,9 @@ class ModuleBlueprint(name: String,
     }
 
     val buildBazelBlueprint by lazy {
-        ModuleBuildBazelBlueprint(dependencies.toSet(), moduleRoot, name)
+        when (generateBazelFiles) {
+            true -> ModuleBuildBazelBlueprint(dependencies.toSet(), moduleRoot, name)
+            else -> null
+        }
     }
 }

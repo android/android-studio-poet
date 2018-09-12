@@ -45,8 +45,8 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
         blueprint.activityBlueprints.forEach({ activityGenerator.generate(it) })
         manifestGenerator.generate(blueprint)
 
-        if (blueprint.generateBazelFiles != null && blueprint.generateBazelFiles) {
-            buildBazelGenerator.generate(blueprint.buildBazelBlueprint)
+        blueprint.buildBazelBlueprint?.let {
+            buildBazelGenerator.generate(it)
         }
     }
 

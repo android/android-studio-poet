@@ -100,8 +100,8 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         writeLibsFolder(moduleRootFile)
         moduleBuildGradleGenerator.generate(moduleBlueprint.buildGradleBlueprint)
 
-        if (moduleBlueprint.generateBazelFiles != null && moduleBlueprint.generateBazelFiles) {
-          moduleBuildBazelGenerator.generate(moduleBlueprint.buildBazelBlueprint)
+        moduleBlueprint.buildBazelBlueprint?.let {
+            moduleBuildBazelGenerator.generate(it)
         }
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
