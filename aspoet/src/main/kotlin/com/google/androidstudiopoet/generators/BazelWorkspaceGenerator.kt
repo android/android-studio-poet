@@ -16,15 +16,39 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators
 
+import com.google.androidstudiopoet.generators.bazel.AssignmentStatement
+import com.google.androidstudiopoet.generators.bazel.Comment
+import com.google.androidstudiopoet.generators.bazel.LoadStatement
+import com.google.androidstudiopoet.generators.bazel.RawAttribute
+import com.google.androidstudiopoet.generators.bazel.StringAttribute
+import com.google.androidstudiopoet.generators.bazel.Target
 import com.google.androidstudiopoet.models.BazelWorkspaceBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 
 class BazelWorkspaceGenerator(private val fileWriter: FileWriter) {
 
-  fun generate(bazelWorkspaceBlueprint: BazelWorkspaceBlueprint) {
-    fileWriter.writeToFile(
-        bazelWorkspaceBlueprint.bazelWorkspaceContent,
-        bazelWorkspaceBlueprint.workspacePath)
-  }
+    fun generate(bazelWorkspaceBlueprint: BazelWorkspaceBlueprint) {
+        fileWriter.writeToFile(
+                getBazelWorkspaceContent(bazelWorkspaceBlueprint),
+                bazelWorkspaceBlueprint.workspacePath)
+    }
+
+    fun getBazelWorkspaceContent(blueprint: BazelWorkspaceBlueprint) =
+            """${Target(
+                    "android_sdk_repository",
+                    listOf(StringAttribute("name", "androidsdk")))}
+
+${Comment("Google Maven Repository")}
+${AssignmentStatement("GMAVEN_TAG", "\"${blueprint.gmavenRulesTag}\"")}
+${Target(
+    "http_archive",
+    listOf(
+        StringAttribute("name", "gmaven_rules"),
+        RawAttribute("strip_prefix", "\"gmaven_rules-%s\" % GMAVEN_TAG"),
+        RawAttribute("urls", "[\"https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz\" % GMAVEN_TAG]")
+    ))}
+${LoadStatement("@gmaven_rules//:gmaven.bzl", listOf("gmaven_rules"))}
+${Target("gmaven_rules", listOf())}
+"""
 
 }

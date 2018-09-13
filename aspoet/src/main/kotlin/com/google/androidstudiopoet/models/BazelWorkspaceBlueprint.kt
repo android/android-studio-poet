@@ -20,21 +20,6 @@ class BazelWorkspaceBlueprint(val projectRoot: String) {
 
   val workspacePath = projectRoot.joinPath("WORKSPACE")
 
-  val bazelWorkspaceContent = """${Target(
-      "android_sdk_repository",
-      listOf(StringAttribute("name", "androidsdk")))}
-
-${Comment("Google Maven Repository")}
-${AssignmentStatement("GMAVEN_TAG", "\"20180607-1\"")}
-${Target(
-      "http_archive",
-      listOf(
-          StringAttribute("name", "gmaven_rules"),
-          RawAttribute("strip_prefix", "\"gmaven_rules-%s\" % GMAVEN_TAG"),
-          RawAttribute("urls", "[\"https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz\" % GMAVEN_TAG]")
-      ))}
-${LoadStatement("@gmaven_rules//:gmaven.bzl", listOf("gmaven_rules"))}
-${Target("gmaven_rules", listOf())}
-"""
+  val gmavenRulesTag = "20180607-1"
 
 }

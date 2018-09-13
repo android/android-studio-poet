@@ -24,8 +24,6 @@ class BazelWorkspaceGeneratorTest {
   private fun getBazelWorkspaceBlueprint(): BazelWorkspaceBlueprint {
     val blueprint = mock<BazelWorkspaceBlueprint>()
     whenever(blueprint.workspacePath).thenReturn("WORKSPACE")
-    whenever(blueprint.bazelWorkspaceContent)
-        .thenReturn("android_sdk_repository(name = \"androidsdk\")")
     return blueprint
   }
 
