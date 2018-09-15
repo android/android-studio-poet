@@ -26,8 +26,7 @@ abstract class AbstractModuleBlueprint(val name: String,
                                        javaConfig: CodeConfig?,
                                        kotlinConfig: CodeConfig?,
                                        val extraLines: List<String>?,
-                                       val generateTests : Boolean,
-                                       val generateBazelFiles: Boolean? = false) {
+                                       val generateTests : Boolean) {
 
     val moduleRoot = root.joinPath(name)
     val moduleDependencies by lazy{ dependencies.filterIsInstance<ModuleDependency>()}

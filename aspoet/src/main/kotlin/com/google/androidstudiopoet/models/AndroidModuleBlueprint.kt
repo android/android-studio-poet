@@ -37,7 +37,7 @@ class AndroidModuleBlueprint(name: String,
                              pluginConfigs: List<PluginConfig>?,
                              generateBazelFiles: Boolean?
 ) : AbstractModuleBlueprint(name, projectRoot, useKotlin, dependencies, javaConfig, kotlinConfig, extraLines,
-        generateTests, generateBazelFiles) {
+        generateTests) {
 
     val packageName = "com.$name"
     val srcPath = moduleRoot.joinPath("src")
@@ -102,8 +102,11 @@ class AndroidModuleBlueprint(name: String,
                 packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, pluginConfigs)
     }
 
-    val buildBazelBlueprint: AndroidBuildBazelBlueprint by lazy {
-        AndroidBuildBazelBlueprint(hasLaunchActivity, moduleRoot, packageName, dependencies, name)
+    val buildBazelBlueprint: AndroidBuildBazelBlueprint? by lazy {
+        when (generateBazelFiles) {
+            true -> AndroidBuildBazelBlueprint(hasLaunchActivity, moduleRoot, packageName, dependencies, name)
+            else -> null
+        }
     }
 
     private fun hasButterknifeDependency(): Boolean = buildGradleBlueprint.plugins
