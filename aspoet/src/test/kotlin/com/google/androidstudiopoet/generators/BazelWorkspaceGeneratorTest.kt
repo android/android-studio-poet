@@ -14,16 +14,51 @@ class BazelWorkspaceGeneratorTest {
   private val bazelWorkspaceGenerator= BazelWorkspaceGenerator(fileWriter)
 
   @Test
-  fun `generator generates workspace file with bazelWorkspaceContent`() {
+  fun `generator generates workspace file with correct base content`() {
     val blueprint = getBazelWorkspaceBlueprint()
     bazelWorkspaceGenerator.generate(blueprint)
-    val expected = "android_sdk_repository(name = \"androidsdk\")"
+    val expected = """android_sdk_repository(
+    name = "androidsdk",
+)
+
+# Google Maven Repository
+GMAVEN_TAG = "19700101-1"
+http_archive(
+    name = "gmaven_rules",
+    strip_prefix = "gmaven_rules-%s" % GMAVEN_TAG,
+    urls = ["https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz" % GMAVEN_TAG],
+)
+load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
+gmaven_rules()
+"""
     verify(fileWriter).writeToFile(expected, "WORKSPACE")
   }
 
-  private fun getBazelWorkspaceBlueprint(): BazelWorkspaceBlueprint {
+  @Test
+  fun `generator generates workspace file with correct gmaven rules tag`() {
+    val blueprint = getBazelWorkspaceBlueprint("20001212-42")
+    bazelWorkspaceGenerator.generate(blueprint)
+    val expected = """android_sdk_repository(
+    name = "androidsdk",
+)
+
+# Google Maven Repository
+GMAVEN_TAG = "20001212-42"
+http_archive(
+    name = "gmaven_rules",
+    strip_prefix = "gmaven_rules-%s" % GMAVEN_TAG,
+    urls = ["https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz" % GMAVEN_TAG],
+)
+load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
+gmaven_rules()
+"""
+    verify(fileWriter).writeToFile(expected, "WORKSPACE")
+  }
+
+  private fun getBazelWorkspaceBlueprint(gmavenRulesTag: String = "19700101-1"): BazelWorkspaceBlueprint {
     val blueprint = mock<BazelWorkspaceBlueprint>()
     whenever(blueprint.workspacePath).thenReturn("WORKSPACE")
+    whenever(blueprint.gmavenRulesTag).thenReturn(gmavenRulesTag)
     return blueprint
   }
 
