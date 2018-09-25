@@ -26,19 +26,19 @@ package com.google.androidstudiopoet.generators.bazel
 
 private const val BASE_INDENT = "    "
 
-interface Statement
+sealed class Statement
 
 /**
  * foo = "bar"
  */
-data class AssignmentStatement(val lhs: String, val rhs: String) : Statement {
+data class AssignmentStatement(val lhs: String, val rhs: String) : Statement() {
     override fun toString() = """$lhs = $rhs"""
 }
 
 /**
  * load("@foo//bar:baz.bzl", "symbol_foo", "symbol_bar")
  */
-data class LoadStatement(val module: String, val symbols: List<String>) : Statement {
+data class LoadStatement(val module: String, val symbols: List<String>) : Statement() {
     override fun toString() = """load("$module", ${symbols.map { "\"$it\"" }.joinToString(separator = ", ")})"""
 }
 
@@ -66,7 +66,7 @@ data class Comment(val comment: String) {
  *     deps = [":lib_baz"],
  * )
  */
-data class Target(val ruleClass: String, val attributes: List<Attribute>) : Statement {
+data class Target(val ruleClass: String, val attributes: List<Attribute>) : Statement() {
     override fun toString() : String {
         return when (attributes.size) {
             0 -> "$ruleClass()"
@@ -102,15 +102,15 @@ $BASE_INDENT${attributes.joinToString(separator = ",\n$BASE_INDENT") { it.toStri
  * https://docs.bazel.build/versions/master/skylark/lib/attr.html
  */
 
-interface Attribute {
-    val name: String
-    val value: Any
+sealed class Attribute {
+    abstract val name: String
+    abstract val value: Any
 }
 
-data class RawAttribute(override val name: String, override val value: String): Attribute {
+data class RawAttribute(override val name: String, override val value: String): Attribute() {
     override fun toString() = "$name = $value"
 }
 
-data class StringAttribute(override val name: String, override val value: String): Attribute {
+data class StringAttribute(override val name: String, override val value: String): Attribute() {
     override fun toString() = "$name = \"$value\""
 }
