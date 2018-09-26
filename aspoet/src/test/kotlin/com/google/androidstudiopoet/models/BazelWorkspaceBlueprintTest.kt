@@ -13,15 +13,12 @@ class BazelWorkspaceBlueprintTest {
   }
 
   @Test
-  fun `workspace file content contains android_sdk_repository declaration`() {
+  fun `blueprint stores GMAVEN_TAG in YYYYMMDD-{snapshot num} form`() {
     val blueprint = getBazelWorkspaceBlueprint()
-    val androidSdkRepositoryDeclaration = "android_sdk_repository(name = \"androidsdk\")"
-    assert(blueprint.bazelWorkspaceContent.contains(androidSdkRepositoryDeclaration))
+    assert(blueprint.gmavenRulesTag.contains(Regex("\\d{8}-\\d+")))
   }
 
-  private fun getBazelWorkspaceBlueprint(
-      projectRoot: String = "foo"
-  ) = BazelWorkspaceBlueprint(projectRoot)
+  private fun getBazelWorkspaceBlueprint(projectRoot: String = "foo") = BazelWorkspaceBlueprint(projectRoot)
 
 }
 

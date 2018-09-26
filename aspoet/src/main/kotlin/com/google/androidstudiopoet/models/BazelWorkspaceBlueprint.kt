@@ -13,25 +13,13 @@
  */
 package com.google.androidstudiopoet.models
 
+import com.google.androidstudiopoet.generators.bazel.*
 import com.google.androidstudiopoet.utils.joinPath
 
 class BazelWorkspaceBlueprint(val projectRoot: String) {
 
   val workspacePath = projectRoot.joinPath("WORKSPACE")
 
-  val bazelWorkspaceContent = """android_sdk_repository(name = "androidsdk")
-# Google Maven Repository
-GMAVEN_TAG = "20180607-1"
-
-http_archive(
-    name = "gmaven_rules",
-    strip_prefix = "gmaven_rules-%s" % GMAVEN_TAG,
-    urls = ["https://github.com/bazelbuild/gmaven_rules/archive/%s.tar.gz" % GMAVEN_TAG],
-)
-
-load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
-gmaven_rules()
-"""
+  val gmavenRulesTag = "20180607-1"
 
 }
-
