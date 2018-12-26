@@ -39,6 +39,7 @@ class BazelWorkspaceGenerator(private val fileWriter: FileWriter) {
                     listOf(StringAttribute("name", "androidsdk")))}
 
 ${Comment("Google Maven Repository")}
+${LoadStatement("@bazel_tools//tools/build_defs/repo:http.bzl", listOf("http_archive"))}
 ${AssignmentStatement("GMAVEN_TAG", "\"${blueprint.gmavenRulesTag}\"")}
 ${Target(
     "http_archive",

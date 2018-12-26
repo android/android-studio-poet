@@ -49,12 +49,12 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
 
     private fun createSetOfLibraries(): Set<LibraryDependency> {
         val result = mutableSetOf(
-                LibraryDependency("implementation", "com.android.support:appcompat-v7:26.1.0"),
-                LibraryDependency("implementation", "com.android.support.constraint:constraint-layout:1.0.2"),
+                LibraryDependency("implementation", "com.android.support:appcompat-v7:28.0.0"),
+                LibraryDependency("implementation", "com.android.support.constraint:constraint-layout:1.1.3"),
                 LibraryDependency("testImplementation", "junit:junit:4.12"),
-                LibraryDependency("androidTestImplementation", "com.android.support.test:runner:1.0.1"),
-                LibraryDependency("androidTestImplementation", "com.android.support.test.espresso:espresso-core:3.0.1"),
-                LibraryDependency("implementation", "com.android.support:multidex:1.0.1")
+                LibraryDependency("androidTestImplementation", "com.android.support.test:runner:1.0.2"),
+                LibraryDependency("androidTestImplementation", "com.android.support.test.espresso:espresso-core:3.0.2"),
+                LibraryDependency("implementation", "com.android.support:multidex:1.0.3")
         )
 
         if (enableKotlin) {

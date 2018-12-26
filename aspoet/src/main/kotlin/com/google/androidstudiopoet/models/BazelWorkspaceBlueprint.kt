@@ -20,6 +20,6 @@ class BazelWorkspaceBlueprint(val projectRoot: String) {
 
   val workspacePath = projectRoot.joinPath("WORKSPACE")
 
-  val gmavenRulesTag = "20180607-1"
+  val gmavenRulesTag = "20181212-2"
 
 }
