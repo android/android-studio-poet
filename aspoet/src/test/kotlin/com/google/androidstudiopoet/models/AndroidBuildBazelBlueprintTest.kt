@@ -29,11 +29,11 @@ class AndroidBuildBazelBlueprintTest {
 
         assertOn(blueprint) {
             libraries.assertEquals(setOf(
-                GmavenBazelDependency("com.android.support:appcompat-v7:aar:26.1.0"),
-                GmavenBazelDependency("com.android.support.constraint:constraint-layout:aar:1.0.2"),
-                GmavenBazelDependency("com.android.support:multidex:aar:1.0.1"),
-                GmavenBazelDependency("com.android.support.test:runner:aar:1.0.1"),
-                GmavenBazelDependency("com.android.support.test.espresso:espresso-core:aar:3.0.1")))
+                GmavenBazelDependency("com.android.support:appcompat-v7:aar:28.0.0"),
+                GmavenBazelDependency("com.android.support.constraint:constraint-layout:aar:1.1.3"),
+                GmavenBazelDependency("com.android.support:multidex:aar:1.0.3"),
+                GmavenBazelDependency("com.android.support.test:runner:aar:1.0.2"),
+                GmavenBazelDependency("com.android.support.test.espresso:espresso-core:aar:3.0.2")))
         }
     }
 
