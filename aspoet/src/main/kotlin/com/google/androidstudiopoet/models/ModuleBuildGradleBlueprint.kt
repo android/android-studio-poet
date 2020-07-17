@@ -38,7 +38,7 @@ class ModuleBuildGradleBlueprint(
         val result = mutableSetOf<LibraryDependency>()
 
         if (enableKotlin) {
-            result += LibraryDependency("compile", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version")
+            result += LibraryDependency("compile", "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${'$'}kotlin_version")
         }
 
         if (generateTests) {
