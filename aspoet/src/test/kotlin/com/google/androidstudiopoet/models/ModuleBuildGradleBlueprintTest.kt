@@ -77,7 +77,7 @@ class ModuleBuildGradleBlueprintTest {
         val blueprint = createModuleBuildGradleBlueprint(enableKotlin = true)
 
         assertOn(blueprint) {
-            dependencies.assertContains(LibraryDependency("compile", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version"))
+            dependencies.assertContains(LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version"))
         }
     }
 
@@ -86,7 +86,7 @@ class ModuleBuildGradleBlueprintTest {
         val blueprint = createModuleBuildGradleBlueprint(generateTests = true)
 
         assertOn(blueprint) {
-            dependencies.assertContains(LibraryDependency("testCompile", "junit:junit:4.12"))
+            dependencies.assertContains(LibraryDependency("testImplementation", "junit:junit:4.12"))
         }
     }
 

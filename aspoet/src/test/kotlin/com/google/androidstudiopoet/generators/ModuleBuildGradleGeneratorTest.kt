@@ -37,7 +37,7 @@ class ModuleBuildGradleGeneratorTest {
         val expected = """apply plugin: 'plugin1'
 apply plugin: 'plugin2'
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+
 }
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8""""
@@ -47,14 +47,13 @@ targetCompatibility = "1.8""""
     @Test
     fun `generator applies libraries from the blueprint`() {
         val blueprint = getModuleBuildGradleBlueprint(dependencies = setOf(
-                LibraryDependency("compile", "library1"),
-                LibraryDependency("testCompile", "library2")
+                LibraryDependency("implementation", "library1"),
+                LibraryDependency("testImplementation", "library2")
         ))
         buildGradleGenerator.generate(blueprint)
         val expected = """dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "library1"
-    testCompile "library2"
+    implementation "library1"
+    testImplementation "library2"
 }
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8""""
@@ -64,14 +63,13 @@ targetCompatibility = "1.8""""
     @Test
     fun `generator applies dependencies from the blueprint`() {
         val blueprint = getModuleBuildGradleBlueprint(dependencies = setOf(
-                ModuleDependency("library1", mock(),"compile"),
-                ModuleDependency("library2", mock(),"testCompile")
+                ModuleDependency("library1", mock(),"implementation"),
+                ModuleDependency("library2", mock(),"testImplementation")
         ))
         buildGradleGenerator.generate(blueprint)
         val expected = """dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':library1')
-    testCompile project(':library2')
+    implementation project(':library1')
+    testImplementation project(':library2')
 }
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8""""
@@ -86,7 +84,7 @@ targetCompatibility = "1.8""""
         ))
         buildGradleGenerator.generate(blueprint)
         val expected = """dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+
 }
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"

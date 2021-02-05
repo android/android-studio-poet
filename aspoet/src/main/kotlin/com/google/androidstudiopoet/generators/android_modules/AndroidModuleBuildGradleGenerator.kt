@@ -119,8 +119,7 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     private fun dependenciesClosure(blueprint: AndroidBuildGradleBlueprint): Closure {
         val dependencyExpressions: Set<Statement> = blueprint.dependencies.mapNotNull { it.toExpression() }.toSet()
 
-        val statements = listOf(Expression("implementation", "fileTree(dir: 'libs', include: ['*.jar'])")) +
-                dependencyExpressions
+        val statements = dependencyExpressions.toList()
         return Closure("dependencies", statements)
     }
 

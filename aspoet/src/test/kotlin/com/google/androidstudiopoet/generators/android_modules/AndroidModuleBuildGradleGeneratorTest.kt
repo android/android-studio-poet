@@ -38,7 +38,7 @@ android {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 }"""
         verify(fileWriter).writeToFile(expected, "path")
     }
@@ -69,7 +69,7 @@ dependencies {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 }"""
         verify(fileWriter).writeToFile(expected, "path")
     }
@@ -100,7 +100,7 @@ dependencies {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 }"""
         verify(fileWriter).writeToFile(expected, "path")
     }
@@ -131,7 +131,7 @@ dependencies {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 }"""
         verify(fileWriter).writeToFile(expected, "path")
     }
@@ -166,7 +166,6 @@ dependencies {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "library1"
     testApi "library2"
     kapt "library3"
@@ -211,7 +210,7 @@ dependencies {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 }"""
         verify(fileWriter).writeToFile(expected, "path")
     }
@@ -252,7 +251,7 @@ dependencies {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 }"""
         verify(fileWriter).writeToFile(expected, "path")
     }
@@ -285,7 +284,7 @@ dependencies {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 }
 task1 {
     line1
