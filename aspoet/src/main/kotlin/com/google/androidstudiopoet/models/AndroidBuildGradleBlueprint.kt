@@ -72,7 +72,7 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
         val result = mutableSetOf<String>()
         result += if (isApplication) "com.android.application" else "com.android.library"
         if (enableKotlin) {
-            result += listOf("kotlin-android", "kotlin-android-extensions")
+            result += listOf("kotlin-android")
         }
         if (enableKotlin && enableDataBinding) {
             result += "kotlin-kapt"

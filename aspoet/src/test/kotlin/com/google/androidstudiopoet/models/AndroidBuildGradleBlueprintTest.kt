@@ -49,12 +49,11 @@ class AndroidBuildGradleBlueprintTest {
     }
 
     @Test
-    fun `plugins contain kotlin-android and kotlin-android-extensions when Kotlin is enabled`() {
+    fun `plugins contain kotlin-android when Kotlin is enabled`() {
         val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true)
 
         assertOn(blueprint) {
             plugins.assertContains("kotlin-android")
-            plugins.assertContains("kotlin-android-extensions")
         }
     }
 
