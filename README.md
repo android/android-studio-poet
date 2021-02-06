@@ -1,9 +1,6 @@
 # Android Studio Poet
 
-[![Build Status](https://travis-ci.org/android/android-studio-poet.svg?branch=master)](https://travis-ci.org/android/android-studio-poet)
-
 ![alt text](https://github.com/borisf/java-generator/blob/master/img/generator.png)  
-  
 
 Optimise your Android Studio builds, by creating generated projects. Inspired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate a real life Java and Kotlin Android project to analyze and improve build times.
 
