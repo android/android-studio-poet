@@ -23,9 +23,9 @@ import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerat
 import com.google.androidstudiopoet.models.ModuleBlueprint
 import com.google.androidstudiopoet.models.ProjectBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.util.*
 import kotlin.system.measureTimeMillis

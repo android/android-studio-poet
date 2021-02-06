@@ -24,8 +24,8 @@ import com.google.androidstudiopoet.input.ProjectConfig
 import com.google.androidstudiopoet.utils.decrease
 import com.google.androidstudiopoet.utils.increase
 import com.google.androidstudiopoet.utils.joinPath
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlin.system.measureTimeMillis
 
 class ProjectBlueprint(private val projectConfig: ProjectConfig) {
