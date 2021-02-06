@@ -2,7 +2,7 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.testutils.*
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 
 class AndroidModuleBlueprintTest {

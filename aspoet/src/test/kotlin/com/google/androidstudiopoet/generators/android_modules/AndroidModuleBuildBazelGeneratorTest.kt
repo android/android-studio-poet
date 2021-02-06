@@ -3,7 +3,7 @@ package com.google.androidstudiopoet.generators.android_modules
 import com.google.androidstudiopoet.models.*
 import com.google.androidstudiopoet.testutils.mock
 import com.google.androidstudiopoet.writers.FileWriter
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Test
 
 class AndroidModuleBuildBazelGeneratorTest {

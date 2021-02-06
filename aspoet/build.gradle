@@ -4,14 +4,14 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}"
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.squareup:javapoet:1.10.0'
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
     compile 'junit:junit:4.12'
     compile 'commons-io:commons-io:2.6'
     compile project(':aspoet-input')
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-inline:2.15.0'
-    testCompile 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
+    testCompile 'org.mockito:mockito-inline:3.7.7'
+    testCompile 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
     testCompile "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
 }
 

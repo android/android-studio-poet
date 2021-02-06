@@ -21,7 +21,7 @@ import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.testutils.assertEmpty
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 
 class ConfigPojoToFlavorConfigsConverterTest {

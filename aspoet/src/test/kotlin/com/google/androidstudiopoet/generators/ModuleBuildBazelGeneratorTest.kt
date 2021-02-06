@@ -19,8 +19,8 @@ package com.google.androidstudiopoet.generators
 import com.google.androidstudiopoet.models.*
 import com.google.androidstudiopoet.testutils.mock
 import com.google.androidstudiopoet.writers.FileWriter
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 
 class ModuleBuildBazelGeneratorTest {

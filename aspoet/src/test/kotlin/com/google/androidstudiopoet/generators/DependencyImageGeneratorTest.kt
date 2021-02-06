@@ -19,10 +19,10 @@ package com.google.androidstudiopoet.generators
 import com.google.androidstudiopoet.testutils.*
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.ImageWriter
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.eq
 import org.junit.Test
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockitokotlin2.verify
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 

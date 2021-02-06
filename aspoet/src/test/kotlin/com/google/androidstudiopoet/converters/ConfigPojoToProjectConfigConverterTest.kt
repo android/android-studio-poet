@@ -21,8 +21,8 @@ import com.google.androidstudiopoet.input.ConfigPOJO
 import com.google.androidstudiopoet.testutils.assertEquals
 import com.google.androidstudiopoet.testutils.assertOn
 import com.google.androidstudiopoet.testutils.mock
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
 
