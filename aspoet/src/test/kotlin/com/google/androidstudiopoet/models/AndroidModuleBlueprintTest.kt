@@ -2,6 +2,7 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.testutils.*
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 
@@ -21,15 +22,13 @@ class AndroidModuleBlueprintTest {
 
         val androidModuleBlueprint = getAndroidModuleBlueprint()
 
-        assertOn(androidModuleBlueprint) {
-            activityBlueprints.assertEquals(listOf(ActivityBlueprint(
+        assertThat(androidModuleBlueprint.activityBlueprints).isEqualTo(listOf(ActivityBlueprint(
                     "Activity0",
                     androidModuleBlueprint.resourcesBlueprint!!.layoutBlueprints[0],
                     androidModuleBlueprint.packagePath,
                     androidModuleBlueprint.packageName,
                     androidModuleBlueprint.packagesBlueprint.javaPackageBlueprints[0].classBlueprints[0],
                     listOf(), false)))
-        }
     }
 
     @Test
@@ -76,6 +75,13 @@ class AndroidModuleBlueprintTest {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = -1))
 
         androidModuleBlueprint.hasDataBinding.assertFalse()
+    }
+
+    @Test
+    fun `empty resource config generates null resources blueprint`() {
+      val androidModuleBlueprint = getAndroidModuleBlueprint(resourcesConfig = ResourcesConfig(0, 0, 0))
+
+      androidModuleBlueprint.resourcesBlueprint.assertNull()
     }
 
     private fun getAndroidModuleBlueprint(

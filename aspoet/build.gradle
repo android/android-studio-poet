@@ -1,18 +1,19 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}"
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.squareup:javapoet:1.10.0'
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
-    compile 'junit:junit:4.12'
-    compile 'commons-io:commons-io:2.6'
-    compile project(':aspoet-input')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}"
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup:javapoet:1.10.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+    implementation 'junit:junit:4.12'
+    implementation 'commons-io:commons-io:2.6'
+    implementation project(':aspoet-input')
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-inline:3.7.7'
-    testCompile 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-inline:3.7.7'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
+    testImplementation "com.google.truth:truth:1.1.2"
 }
 
 // java -jar aspoet/build/libs/aspoet-all.jar
@@ -23,6 +24,6 @@ task fatJar(type: Jar) {
         )
     }
     baseName = project.name + '-all'
-    from { configurations.compile.collect { it.directory ? it : zipTree(it) } }
+    from { configurations.implementation.collect { it.directory ? it : zipTree(it) } }
     with jar
 }
