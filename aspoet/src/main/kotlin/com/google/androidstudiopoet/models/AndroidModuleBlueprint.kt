@@ -53,14 +53,20 @@ class AndroidModuleBlueprint(name: String,
                 .fold(ResourcesToRefer(listOf(), listOf(), listOf())) { acc, resourcesToRefer -> resourcesToRefer.combine(acc) }
     }
 
-    val resourcesBlueprint by lazy {
-        when (resourcesConfig) {
-            null -> null
-            else -> ResourcesBlueprint(name, resDirPath, resourcesConfig.stringCount ?: 0,
-                    resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin,
-                    listenerClassesForDataBinding)
-        }
+    val resourcesBlueprint : ResourcesBlueprint? by lazy {
+      when {
+        resourcesConfig == null -> null
+        resourcesConfig.isEmptyConfig() -> null
+        else -> ResourcesBlueprint(
+            name, resDirPath, resourcesConfig.stringCount ?: 0,
+            resourcesConfig.imageCount ?: 0, resourcesConfig.layoutCount ?: 0, resourcesToReferWithin,
+            listenerClassesForDataBinding
+          )
+      }
     }
+
+    private fun ResourcesConfig.isEmptyConfig() =
+     imageCount == 0 && layoutCount == 0 && stringCount == 0
 
     private val layoutBlueprints by lazy {
         resourcesBlueprint?.layoutBlueprints ?: listOf()
