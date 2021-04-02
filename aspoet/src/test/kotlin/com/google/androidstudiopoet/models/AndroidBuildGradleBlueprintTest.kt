@@ -115,7 +115,7 @@ class AndroidBuildGradleBlueprintTest {
         val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true)
 
         assertOn(blueprint) {
-            libraries.assertContains(LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version"))
+            libraries.assertContains(LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${'$'}kotlin_version"))
         }
     }
 
