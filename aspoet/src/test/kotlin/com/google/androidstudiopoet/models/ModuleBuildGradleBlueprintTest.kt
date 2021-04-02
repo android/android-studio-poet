@@ -77,7 +77,7 @@ class ModuleBuildGradleBlueprintTest {
         val blueprint = createModuleBuildGradleBlueprint(enableKotlin = true)
 
         assertOn(blueprint) {
-            dependencies.assertContains(LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jre8:${'$'}kotlin_version"))
+            dependencies.assertContains(LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${'$'}kotlin_version"))
         }
     }
 
