@@ -23,10 +23,11 @@ class GradlePropertiesBlueprint(projectRoot: String, overrideProperties: Map<Str
             "org.gradle.jvmargs"  to "-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError",
             "org.gradle.daemon" to "true",
             "org.gradle.parallel" to "true",
-            "org.gradle.caching" to "true"
+            "org.gradle.caching" to "true",
+            "android.useAndroidX" to "true"
     )
 
     val path = projectRoot.joinPath("gradle.properties")
-    val properties: Map<String, String>? = defaultProperties + (overrideProperties ?: mapOf())
+    val properties: Map<String, String> = defaultProperties + (overrideProperties ?: mapOf())
 
 }

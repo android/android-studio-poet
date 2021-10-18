@@ -103,8 +103,8 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     }
 
     private fun dataBindingClosure(): Closure {
-        return Closure("dataBinding", listOf(
-                StringStatement("enabled = true")
+        return Closure("buildFeatures", listOf(
+                StringStatement("dataBinding true")
         ))
     }
 

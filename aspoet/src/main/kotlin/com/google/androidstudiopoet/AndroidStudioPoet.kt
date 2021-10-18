@@ -49,9 +49,9 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
             {
               "projectName": "GeneratedASProject",
               "root": "./../",
-              "gradleVersion": "4.3.1",
-              "androidGradlePluginVersion": "3.0.1",
-              "kotlinVersion": "1.1.60",
+              "gradleVersion": "7.2",
+              "androidGradlePluginVersion": "7.0.3",
+              "kotlinVersion": "1.5.31",
               "numModules": "2",
               "allMethods": "40",
               "javaPackageCount": "1",
@@ -62,14 +62,17 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
               "androidModules": "2",
               "numActivitiesPerAndroidModule": "2",
               "productFlavors": [
-                  2, 3
-               ],
-               "topologies": [
-                  {"type": "star", "seed": "2"}
-               ],
+                2, 3
+              ],
+              "topologies": [
+                {"type": "star", "seed": "2"}
+              ],
               "dependencies": [
                 {"from": "module1", "to": "module0"}
               ],
+              "dataBindingConfig": {
+                "listenerCount": 0
+              },
               "buildTypes": 2,
               "generateTests": true
             }

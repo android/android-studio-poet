@@ -23,11 +23,23 @@ private const val INCLUDE_LENGTH_LIMIT = 250
 class GradleSettingsGenerator(private val fileWriter: FileWriter) {
 
     fun generate(projectName: String, allModulesNames: List<String>, projectRoot: String) {
-        val buff = StringBuilder()
-        buff.append("rootProject.name = \'$projectName\'\n")
-        buff.append(generateIncludeStatements(allModulesNames))
-
-        fileWriter.writeToFile(buff.toString(), projectRoot.joinPath("settings.gradle"))
+        val settingsGradleContent = buildString {
+            appendLine("""
+              plugins {
+                id "com.gradle.enterprise" version "3.7"
+              }
+              gradleEnterprise {
+                buildScan {
+                  termsOfServiceUrl = "https://gradle.com/terms-of-service"
+                  termsOfServiceAgree = "yes"
+                }
+              }
+            """.trimIndent())
+            appendLine()
+            appendLine("rootProject.name = \'$projectName\'")
+            append(generateIncludeStatements(allModulesNames))
+        }
+        fileWriter.writeToFile(settingsGradleContent, projectRoot.joinPath("settings.gradle"))
     }
 
     private fun generateIncludeStatements(moduleBlueprints: List<String>) =

@@ -26,27 +26,27 @@ class ConfigPojoToAndroidModuleConfigConverter {
             moduleName = config.getAndroidModuleName(index)
 
             java = CodeConfig().apply {
-                packages = config.javaPackageCount!!.toInt()
-                classesPerPackage = config.javaClassCount!!.toInt()
+                packages = config.javaPackageCount?.toInt() ?: 0
+                classesPerPackage = config.javaClassCount?.toInt() ?: 0
                 methodsPerClass = config.javaMethodsPerClass
             }
 
             kotlin = CodeConfig().apply {
-                packages = config.kotlinPackageCount!!.toInt()
-                classesPerPackage = config.kotlinClassCount!!.toInt()
+                packages = config.kotlinPackageCount?.toInt() ?: 0
+                classesPerPackage = config.kotlinClassCount?.toInt() ?: 0
                 methodsPerClass = config.kotlinMethodsPerClass
             }
 
             useKotlin = config.useKotlin
 
-            activityCount = config.numActivitiesPerAndroidModule!!.toInt()
+            activityCount = config.numActivitiesPerAndroidModule?.toInt() ?: 0
 
             generateTests = config.generateTests
             hasLaunchActivity = index == 0
 
             val resolvedDependencies = config.resolvedDependencies[moduleName]?.sortedBy { it.to }
                     ?.map { dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to, dependency.method) } ?: emptyList()
-            dependencies = if (config.libraries != null) resolvedDependencies + config.libraries!! else resolvedDependencies
+            dependencies = config.libraries?.let { resolvedDependencies + it } ?: resolvedDependencies
 
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs

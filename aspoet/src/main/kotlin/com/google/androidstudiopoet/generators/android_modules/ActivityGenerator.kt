@@ -63,7 +63,7 @@ class ActivityGenerator(var fileWriter: FileWriter) {
 
     private fun getDataBindingMethodStatements(layout: String, dataBindingClassName: String,
                                                listenerClasses: List<ClassBlueprint>): List<String> {
-        return listOf("$dataBindingClassName binding = android.databinding.DataBindingUtil.setContentView(this, R.layout.$layout)") +
+        return listOf("$dataBindingClassName binding = androidx.databinding.DataBindingUtil.setContentView(this, R.layout.$layout)") +
         listenerClasses.map { "binding.set${it.className}(new ${it.fullClassName}())" }
     }
 

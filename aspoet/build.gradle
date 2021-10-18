@@ -26,4 +26,5 @@ task fatJar(type: Jar) {
     baseName = project.name + '-all'
     from { configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) } }
     with jar
+    duplicatesStrategy = 'include'
 }

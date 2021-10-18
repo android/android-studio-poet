@@ -14,7 +14,8 @@ class GradlePropertiesBlueprintTest {
                         "org.gradle.jvmargs" to "-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError",
                         "org.gradle.daemon" to "true",
                         "org.gradle.parallel" to "true",
-                        "org.gradle.caching" to "true"
+                        "org.gradle.caching" to "true",
+                        "android.useAndroidX" to "true"
                 ))
 
     }
@@ -30,6 +31,7 @@ class GradlePropertiesBlueprintTest {
                         "org.gradle.daemon" to "false",
                         "org.gradle.parallel" to "true",
                         "org.gradle.caching" to "true",
+                        "android.useAndroidX" to "true",
                         "randomKey" to "randomValue"
                 ))
     }

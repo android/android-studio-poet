@@ -72,10 +72,10 @@ class ProjectBuildGradleBlueprintTest {
     }
 
     @Test
-    fun `repositories should contain google and jcenter`() {
+    fun `repositories should contain google and mavenCentral`() {
         val expectedRepositories = setOf(
                 Repository.Named("google"),
-                Repository.Named("jcenter")
+                Repository.Named("mavenCentral")
         )
 
         val blueprint = getBlueprint()

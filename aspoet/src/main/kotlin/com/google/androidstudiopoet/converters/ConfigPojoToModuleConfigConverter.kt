@@ -25,14 +25,14 @@ class ConfigPojoToModuleConfigConverter {
     fun convert(config: ConfigPOJO, index: Int): ModuleConfig {
         return ModuleConfig().apply {
             java = CodeConfig().apply {
-                packages = config.javaPackageCount!!.toInt()
-                classesPerPackage = config.javaClassCount!!.toInt()
+                packages = config.javaPackageCount?.toInt() ?: 0
+                classesPerPackage = config.javaClassCount?.toInt() ?: 0
                 methodsPerClass = config.javaMethodsPerClass
             }
 
             kotlin = CodeConfig().apply {
-                packages = config.kotlinPackageCount!!.toInt()
-                classesPerPackage = config.kotlinClassCount!!.toInt()
+                packages = config.kotlinPackageCount?.toInt() ?: 0
+                classesPerPackage = config.kotlinClassCount?.toInt() ?: 0
                 methodsPerClass = config.kotlinMethodsPerClass
             }
 
