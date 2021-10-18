@@ -70,7 +70,9 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
         if (enableKotlin) {
             result += listOf("kotlin-android")
         }
-
+        if (enableKotlin && enableDataBinding) {
+            result += "kotlin-kapt"
+        }
         pluginConfigs?.map { it.id }?.forEach { result.add(it) }
 
         return result
