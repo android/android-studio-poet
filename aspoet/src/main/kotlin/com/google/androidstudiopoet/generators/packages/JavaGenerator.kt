@@ -20,7 +20,6 @@ import com.google.androidstudiopoet.models.AnnotationBlueprint
 import com.google.androidstudiopoet.models.ClassBlueprint
 import com.google.androidstudiopoet.models.FieldBlueprint
 import com.google.androidstudiopoet.models.MethodBlueprint
-import com.google.androidstudiopoet.models.MethodToCall
 import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
@@ -59,7 +58,7 @@ class JavaGenerator constructor(fileWriter: FileWriter) : PackageGenerator(fileW
                 .addModifiers(Modifier.PUBLIC)
                 .returns(Void.TYPE)
 
-        blueprint.annotationBlueprints.forEach { it -> method.addAnnotation(it.toJavaSpec()) }
+        blueprint.annotationBlueprints.forEach { method.addAnnotation(it.toJavaSpec()) }
 
         blueprint.statements.forEach { statement -> statement?.let { method.addStatement(it) } }
 

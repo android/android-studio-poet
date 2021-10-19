@@ -57,7 +57,8 @@ object Injector {
             layoutResourcesGenerator, fileWriter)
     private val javaGenerator: JavaGenerator = JavaGenerator(fileWriter)
     private val kotlinGenerator: KotlinGenerator = KotlinGenerator(fileWriter)
-    private val activityGenerator: ActivityGenerator = ActivityGenerator(fileWriter)
+    private val javaActivityGenerator: JavaActivityGenerator = JavaActivityGenerator(fileWriter)
+    private val kotlinActivityGenerator: KotlinActivityGenerator = KotlinActivityGenerator(fileWriter)
     private val manifestGenerator: ManifestGenerator = ManifestGenerator(fileWriter)
     private val proguardGenerator: ProguardGenerator = ProguardGenerator(fileWriter)
     private val packagesGenerator = PackagesGenerator(javaGenerator, kotlinGenerator)
@@ -78,8 +79,10 @@ object Injector {
             AndroidModuleGenerator(
                     resourcesGenerator,
                     packagesGenerator,
-                    activityGenerator,
-                    manifestGenerator, proguardGenerator,
+                    javaActivityGenerator,
+                    kotlinActivityGenerator,
+                    manifestGenerator,
+                    proguardGenerator,
                     amBuildGradleGenerator,
                     amBazelBuildGenerator,
                     fileWriter)
