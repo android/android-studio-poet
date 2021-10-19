@@ -25,7 +25,8 @@ import java.util.*
 
 class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
                              private val packagesGenerator: PackagesGenerator,
-                             private val activityGenerator: ActivityGenerator,
+                             private val javaActivityGenerator: JavaActivityGenerator,
+                             private val kotlinActivityGenerator: KotlinActivityGenerator,
                              private val manifestGenerator: ManifestGenerator,
                              private val proguardGenerator: ProguardGenerator,
                              private val buildGradleGenerator: AndroidModuleBuildGradleGenerator,
@@ -42,7 +43,13 @@ class AndroidModuleGenerator(private val resourcesGenerator: ResourcesGenerator,
         buildGradleGenerator.generate(blueprint.buildGradleBlueprint)
         blueprint.resourcesBlueprint?.let { resourcesGenerator.generate(it, random) }
         packagesGenerator.writePackages(blueprint.packagesBlueprint)
-        blueprint.activityBlueprints.forEach({ activityGenerator.generate(it) })
+        blueprint.activityBlueprints.forEach { activityBlueprint ->
+            if (blueprint.useKotlin) {
+                kotlinActivityGenerator.generate(activityBlueprint)
+            } else {
+                javaActivityGenerator.generate(activityBlueprint)
+            }
+        }
         manifestGenerator.generate(blueprint)
 
         blueprint.buildBazelBlueprint?.let {
