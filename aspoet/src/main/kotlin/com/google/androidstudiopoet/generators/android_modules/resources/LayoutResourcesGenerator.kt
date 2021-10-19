@@ -35,23 +35,23 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
         } else {
             layoutText += generateScrollView(blueprint)
         }
-
-
         fileWriter.writeToFile(layoutText, blueprint.filePath)
     }
 
     private fun generateLayoutTag(blueprint: LayoutBlueprint): String {
-        return """<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    ${generateDataTag(blueprint)}
-    ${generateScrollView(blueprint)}
-</layout>
-            """
+        return """
+            |<layout xmlns:android="http://schemas.android.com/apk/res/android">
+            |    ${generateDataTag(blueprint)}
+            |    ${generateScrollView(blueprint)}
+            |</layout>
+            """.trimMargin()
     }
 
     private fun generateDataTag(blueprint: LayoutBlueprint): String {
-        return """<data>
-${generateVariableTags(blueprint.classesToBind)}
-</data>
+        return """
+            <data>
+                ${generateVariableTags(blueprint.classesToBind)}
+            </data>
             """
     }
 
@@ -89,37 +89,35 @@ ${generateVariableTags(blueprint.classesToBind)}
 
     private fun generateTextViews(textViewBlueprints: List<TextViewBlueprint>): String {
         return textViewBlueprints.map {
-            """<TextView
-        android:id="@+id/${it.id}"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/${it.stringName}"
-        ${if (it.hasAction) "android:onClick=\"@{${it.onClickAction}}\"" else ""}
-/>"""
+            """
+            <TextView
+                android:id="@+id/${it.id}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/${it.stringName}"
+                ${if (it.hasAction) "android:onClick=\"@{${it.onClickAction}}\"" else ""}/>"""
         }.fold()
     }
 
     private fun generateImageViews(imageViewBlueprints: List<ImageViewBlueprint>): String {
         return imageViewBlueprints.map {
-            """<ImageView
-        android:id="@+id/${it.id}"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/${it.imageName}"
-        ${if (it.hasAction) "android:onClick=\"@{${it.onClickAction}}\"" else ""}
-/>
             """
+            <ImageView
+                android:id="@+id/${it.id}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/${it.imageName}"
+                ${if (it.hasAction) "android:onClick=\"@{${it.onClickAction}}\"" else ""}/>"""
         }.fold()
     }
 
     private fun generateIncludeLayoutTags(layoutsToInclude: List<String>): String {
-        return layoutsToInclude.map {
-            //language=XML
-            """<include
-        layout="@layout/$it"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
+        return layoutsToInclude.map { //language=XML
+            """
+            <include
+                layout="@layout/$it"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             """
         }.fold()
     }
