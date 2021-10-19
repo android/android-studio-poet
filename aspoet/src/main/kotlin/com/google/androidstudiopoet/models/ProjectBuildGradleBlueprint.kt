@@ -34,8 +34,14 @@ class ProjectBuildGradleBlueprint(root: String, enableKotlin: Boolean, androidGr
         ).toSet()
     }
 
+    val buildScriptRepositories = setOf(
+        Repository.Named("google"),
+        Repository.Named("mavenCentral"),
+        Repository.Named("gradlePluginPortal")
+    ) + additionalRepositories.orEmpty().map { Repository.Remote(it.url) }.toSet()
+
     val repositories = setOf(
             Repository.Named("google"),
-            Repository.Named("jcenter")
+            Repository.Named("mavenCentral")
     ) + additionalRepositories.orEmpty().map { Repository.Remote(it.url) }.toSet()
 }

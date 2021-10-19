@@ -76,15 +76,6 @@ class AndroidBuildGradleBlueprintTest {
     }
 
     @Test
-    fun `plugins contain kotlin-kapt when Kotlin and data binding are enabled`() {
-        val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true, enableDataBinding = true)
-
-        assertOn(blueprint) {
-            plugins.assertContains("kotlin-kapt")
-        }
-    }
-
-    @Test
     fun `plugins contain id of provided plugin`() {
         val pluginId = "random plugin name"
         val blueprint = createAndroidBuildGradleBlueprint(pluginConfigs = listOf(PluginConfig(id = pluginId)))
@@ -100,12 +91,12 @@ class AndroidBuildGradleBlueprintTest {
 
         assertOn(blueprint) {
             libraries.assertEquals(setOf(
-                    LibraryDependency("implementation", "com.android.support:appcompat-v7:28.0.0"),
-                    LibraryDependency("implementation", "com.android.support.constraint:constraint-layout:1.1.3"),
+                    LibraryDependency("implementation", "androidx.core:core-ktx:1.6.0"),
+                    LibraryDependency("implementation", "androidx.appcompat:appcompat:1.3.1"),
+                    LibraryDependency("implementation", "androidx.constraintlayout:constraintlayout:2.1.0"),
                     LibraryDependency("testImplementation", "junit:junit:4.12"),
-                    LibraryDependency("androidTestImplementation", "com.android.support.test:runner:1.0.2"),
-                    LibraryDependency("androidTestImplementation", "com.android.support.test.espresso:espresso-core:3.0.2"),
-                    LibraryDependency("implementation", "com.android.support:multidex:1.0.3")
+                    LibraryDependency("androidTestImplementation", "androidx.test.ext:junit:1.1.3"),
+                    LibraryDependency("androidTestImplementation", "androidx.test.espresso:espresso-core:3.4.0")
             ))
         }
     }
@@ -125,24 +116,6 @@ class AndroidBuildGradleBlueprintTest {
 
         assertOn(blueprint) {
             libraries.assertNotContains(LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1"))
-        }
-    }
-
-    @Test
-    fun `libraries do not contain data binding compiler when Kotlin is enabled and data binding is disabled`() {
-        val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true, enableDataBinding = false)
-
-        assertOn(blueprint) {
-            libraries.assertNotContains(LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1"))
-        }
-    }
-
-    @Test
-    fun `libraries contain data binding compiler when Kotlin and data binding are enabled`() {
-        val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true, enableDataBinding = true)
-
-        assertOn(blueprint) {
-            libraries.assertContains(LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1"))
         }
     }
 
@@ -213,12 +186,14 @@ class AndroidBuildGradleBlueprintTest {
         val blueprint = createAndroidBuildGradleBlueprint(productFlavorConfigs = listOf(flavorConfig))
 
         assertOn(blueprint) {
-            blueprint.flavorDimensions!!.assertEquals(kotlin.collections.setOf(dimension))
-            blueprint.productFlavors!!.assertEquals(kotlin.collections.setOf(
-                    com.google.androidstudiopoet.models.Flavor(expectedFlavorName0, dimension),
-                    com.google.androidstudiopoet.models.Flavor(expectedFlavorName1, dimension),
-                    com.google.androidstudiopoet.models.Flavor(expectedFlavorName2, dimension)
-            ))
+            blueprint.flavorDimensions!!.assertEquals(setOf(dimension))
+            blueprint.productFlavors!!.assertEquals(
+                setOf(
+                    Flavor(expectedFlavorName0, dimension),
+                    Flavor(expectedFlavorName1, dimension),
+                    Flavor(expectedFlavorName2, dimension)
+                )
+            )
         }
     }
 

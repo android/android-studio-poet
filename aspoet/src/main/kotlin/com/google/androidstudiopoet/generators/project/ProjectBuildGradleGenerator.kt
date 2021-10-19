@@ -28,10 +28,9 @@ class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
 
         val statements = listOf(
                 getBuildscriptClosure(blueprint),
-                getPluginsClosure(),
                 getAllprojectsClosure(blueprint),
-                getCleanTask(),
-                getBuildScanClosure())
+                getCleanTask()
+        )
 
         val gradleText = statements.joinToString(separator = "\n") { it.toGroovy(0) }
 
@@ -41,13 +40,13 @@ class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
     private fun getBuildscriptClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
         return Closure("buildscript", listOfNotNull(
                 blueprint.kotlinExtStatement?.let { StringStatement(it) },
-                getRespositoriesClosure(blueprint),
+            getBuildScriptRepositoriesClosure(blueprint),
                 getClasspathDependenciesClosure(blueprint)
         ))
     }
 
-    private fun getRespositoriesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
-        val repositoriesExpressions = blueprint.repositories.map { it.toExpression() }
+    private fun getBuildScriptRepositoriesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
+        val repositoriesExpressions = blueprint.buildScriptRepositories.map { it.toExpression() }
         return Closure("repositories", repositoriesExpressions)
     }
 
@@ -56,18 +55,12 @@ class ProjectBuildGradleGenerator(val fileWriter: FileWriter) {
     }
 
     private fun getAllprojectsClosure(blueprint: ProjectBuildGradleBlueprint) =
-            Closure("allprojects", listOf(getRespositoriesClosure(blueprint)))
+            Closure("allprojects", listOf(getRepositoriesClosure(blueprint)))
 
-    private fun getBuildScanClosure() = Closure("buildScan", listOf(
-            StringStatement("licenseAgreementUrl = 'https://gradle.com/terms-of-service'"),
-            StringStatement("licenseAgree = 'yes'"),
-            Expression("tag", "'SAMPLE'"),
-            Expression("link", "'GitHub', 'https://github.com/gradle/gradle-build-scan-quickstart'")
-    ))
-
-    private fun getPluginsClosure() = Closure("plugins", listOf(
-            StringStatement("id 'com.gradle.build-scan' version '1.8'")
-    ))
+    private fun getRepositoriesClosure(blueprint: ProjectBuildGradleBlueprint): Closure {
+        val repositoriesExpressions = blueprint.repositories.map { it.toExpression() }
+        return Closure("repositories", repositoriesExpressions)
+    }
 
     private fun getCleanTask() = Task("clean",
             listOf(TaskParameter("type", "Delete")),

@@ -4,9 +4,9 @@
     "projectName": "genny",
     "root": "./modules/",
     "buildSystemConfig": {
-      "buildSystemVersion": "4.7",
-      "agpVersion": "3.0.1",
-      "kotlinVersion": "1.2.41",
+      "buildSystemVersion": "7.2",
+      "agpVersion": "7.0.3",
+      "kotlinVersion": "1.5.31",
       "generateBazelFiles": false
     },
     "moduleConfigs": [

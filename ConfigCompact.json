@@ -1,9 +1,9 @@
 {
   "projectName": "GeneratedASProject",
   "root": "./../",
-  "gradleVersion": "4.3.1",
-  "androidGradlePluginVersion": "3.0.1",
-  "kotlinVersion": "1.1.60",
+  "gradleVersion": "7.2",
+  "androidGradlePluginVersion": "7.0.3",
+  "kotlinVersion": "1.5.31",
   "numModules": "2",
   "allMethods": "40",
   "javaPackageCount": "1",
