@@ -86,16 +86,18 @@ class ConfigPOJO {
 
     var libraries: List<DependencyConfig.LibraryDependencyConfig>? = null
 
-    var extraBuildFileLines : List<String>? = null
+    var extraBuildFileLines: List<String>? = null
 
-    var extraAndroidBuildFileLines : List<String>? = null
+    var extraAndroidBuildFileLines: List<String>? = null
 
-    var generateTests : Boolean = false
+    var generateTests: Boolean = false
 
-    var generateBazelFiles : Boolean = false
+    var generateBazelFiles: Boolean = false
 
     // Will use same data binding configuration for all android modules
     var dataBindingConfig: DataBindingConfig? = null
+
+    var composeConfig: ComposeConfig? = null
 
     override fun toString(): String = toJson()
 

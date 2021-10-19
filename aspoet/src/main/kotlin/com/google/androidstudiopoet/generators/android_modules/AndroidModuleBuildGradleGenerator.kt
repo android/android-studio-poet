@@ -49,7 +49,8 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                 Expression("compileSdkVersion", "${blueprint.compileSdkVersion}"),
                 defaultConfigClosure(blueprint),
                 buildTypesClosure(blueprint),
-                (if (blueprint.enableDataBinding) dataBindingClosure() else null),
+                kotlinOptionsClosure(blueprint),
+                buildFeaturesClosure(blueprint),
                 compileOptionsClosure()
         ) + createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 
@@ -102,10 +103,25 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
         )
     }
 
-    private fun dataBindingClosure(): Closure {
-        return Closure("buildFeatures", listOf(
-                StringStatement("dataBinding true")
-        ))
+    private fun buildFeaturesClosure(blueprint: AndroidBuildGradleBlueprint): Closure? {
+        val statements = mutableListOf<StringStatement>()
+        if (blueprint.enableDataBinding) {
+            statements.add(StringStatement("dataBinding true"))
+        } else if (blueprint.enableCompose) {
+            statements.add(StringStatement("compose true"))
+        }
+        return if (statements.isNotEmpty()) Closure("buildFeatures", statements) else null
+    }
+
+    private fun kotlinOptionsClosure(blueprint: AndroidBuildGradleBlueprint): Closure? {
+        return if (blueprint.enableCompose) {
+            Closure("kotlinOptions", listOf(
+                    StringStatement("jvmTarget = '1.8'"),
+                    StringStatement("useIR = true")
+            ))
+        } else {
+            null
+        }
     }
 
     private fun compileOptionsClosure(): Closure {

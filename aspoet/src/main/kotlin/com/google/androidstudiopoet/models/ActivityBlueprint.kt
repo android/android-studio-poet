@@ -2,10 +2,15 @@ package com.google.androidstudiopoet.models
 
 import com.google.androidstudiopoet.utils.fold
 
-data class ActivityBlueprint(val className: String, val layout: LayoutBlueprint, val where: String, val packageName: String,
-                             val classToReferFromActivity: ClassBlueprint, val listenerClassesForDataBinding: List<ClassBlueprint>,
+data class ActivityBlueprint(val className: String,
+                             val enableCompose: Boolean,
+                             val layout: LayoutBlueprint,
+                             val where: String,
+                             val packageName: String,
+                             val classToReferFromActivity: ClassBlueprint,
+                             val listenerClassesForDataBinding: List<ClassBlueprint>,
                              private val useButterknife: Boolean) {
-    val hasDataBinding = listenerClassesForDataBinding.isNotEmpty()
+    val enableDataBinding = listenerClassesForDataBinding.isNotEmpty()
     val dataBindingClassName = "$packageName.databinding.${layout.name.toDataBindingShortClassName()}"
 
     val fields: Set<FieldBlueprint> =

@@ -1,0 +1,264 @@
+{
+  "inputVersion": "0.1",
+  "projectConfig": {
+    "projectName": "composeProject",
+    "root": "../generated_projects/compose",
+    "buildSystemConfig": {
+      "buildSystemVersion": "7.2",
+      "agpVersion": "7.0.2",
+      "kotlinVersion": "1.5.31"
+    },
+    "moduleConfigs": [
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "applicationModule",
+        "activityCount": 5,
+        "hasLaunchActivity": true,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        },
+        "dependencies": [
+          {
+            "moduleName": "libraryModule"
+          },
+          {
+            "moduleName": "libraryModule1"
+          },
+          {
+            "moduleName": "libraryModule2"
+          },
+          {
+            "moduleName": "libraryModule3"
+          },
+          {
+            "moduleName": "libraryModule4"
+          },
+          {
+            "moduleName": "libraryModule5"
+          },
+          {
+            "moduleName": "libraryModule6"
+          },
+          {
+            "moduleName": "libraryModule7"
+          },
+          {
+            "moduleName": "libraryModule8"
+          }
+        ]
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule1",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule2",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule3",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule4",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule5",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule6",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule7",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      },
+      {
+        "moduleType": "android",
+        "androidBuildConfig": {
+          "minSdkVersion": 24
+        },
+        "kotlin": {
+          "packages": 4,
+          "classesPerPackage": 10,
+          "methodsPerClass": 10
+        },
+        "useKotlin": true,
+        "moduleName": "libraryModule8",
+        "activityCount": 5,
+        "resourcesConfig": {
+          "stringCount": 5,
+          "imageCount": 5,
+          "layoutCount": 5
+        },
+        "composeConfig": {
+          "onClickCount": 5
+        }
+      }
+    ]
+  }
+}

@@ -54,7 +54,7 @@ class JavaActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
         val classBlueprint = blueprint.classToReferFromActivity
         val statements = getMethodStatementFromClassToCall(classBlueprint)?.let { mutableListOf(it) } ?: mutableListOf()
 
-        if (blueprint.hasDataBinding) {
+        if (blueprint.enableDataBinding) {
             statements.addAll(getDataBindingMethodStatements(blueprint.layout.name, blueprint.dataBindingClassName, blueprint.listenerClassesForDataBinding))
         } else {
             statements.add("setContentView(R.layout.${blueprint.layout.name})")

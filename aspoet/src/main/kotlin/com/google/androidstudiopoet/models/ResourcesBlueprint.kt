@@ -20,12 +20,13 @@ import com.google.androidstudiopoet.Blueprint
 import com.google.androidstudiopoet.utils.joinPath
 
 data class ResourcesBlueprint(private val moduleName: String,
+                              private val enableCompose: Boolean,
                               val resDirPath: String,
                               private val stringCount: Int,
                               private val imageCount: Int,
                               private val layoutCount: Int,
                               private val resourcesToReferWithin: ResourcesToRefer,
-                              private val listenerClassesForDataBinding: List<ClassBlueprint>) : Blueprint {
+                              private val onClickClasses: List<ClassBlueprint>) : Blueprint {
     val stringNames = (0 until stringCount).map { "${moduleName}string$it" }
     val imageNames = (0 until imageCount).map { "${moduleName.toLowerCase()}image$it" }
 
@@ -33,29 +34,31 @@ data class ResourcesBlueprint(private val moduleName: String,
 
     val layoutsDir = resDirPath.joinPath("layout")
 
-    private val stringNamesWithDataBindingListeners: List<Pair<String, ClassBlueprint?>> = (stringNames + resourcesToReferWithin.strings)
+    private val textsWithActions: List<Pair<String, ClassBlueprint?>> = (stringNames + resourcesToReferWithin.strings)
             .mapIndexed { index, stringName ->
-                Pair(stringName, listenerClassesForDataBinding.getOrNull(index))
+                Pair(stringName, onClickClasses.getOrNull(index))
             }
 
-    private val imageNamesWithDataBindingListeners: List<Pair<String, ClassBlueprint?>> = (imageNames + resourcesToReferWithin.images)
+    private val imagesWithActions: List<Pair<String, ClassBlueprint?>> = (imageNames + resourcesToReferWithin.images)
             .mapIndexed { index, stringName ->
-                Pair(stringName, listenerClassesForDataBinding.getOrNull(index + stringNamesWithDataBindingListeners.size))
+                Pair(stringName, onClickClasses.getOrNull(index + textsWithActions.size))
             }
 
-    private val stringsWithDataBindingListenersPerLayout by lazy {
-        stringNamesWithDataBindingListeners.splitPerLayout(layoutCount)
+    private val stringsWithActionsPerLayout by lazy {
+        textsWithActions.splitPerLayout(layoutCount)
     }
 
-    private val imagesWithDataBindingListenersPerLayout by lazy {
-        imageNamesWithDataBindingListeners.splitPerLayout(layoutCount)
+    private val imagesWithActionsPerLayout by lazy {
+        imagesWithActions.splitPerLayout(layoutCount)
     }
 
     val layoutBlueprints = layoutNames.mapIndexed { index, layoutName ->
-        LayoutBlueprint(layoutName, layoutsDir,
-                stringsWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
-                imagesWithDataBindingListenersPerLayout.getOrElse(index, { listOf() }),
-                if (index == 0) resourcesToReferWithin.layouts else listOf())
+        LayoutBlueprint(layoutName,
+                layoutsDir,
+                enableCompose,
+                stringsWithActionsPerLayout.getOrElse(index) { emptyList() },
+                imagesWithActionsPerLayout.getOrElse(index) { emptyList() },
+                if (index == 0) resourcesToReferWithin.layouts else emptyList())
     }
 
     val dataBindingListenersPerLayout = layoutBlueprints.map { it.classesToBind }

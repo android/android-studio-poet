@@ -238,6 +238,7 @@ class AndroidBuildGradleBlueprintTest {
 
     private fun createAndroidBuildGradleBlueprint(isApplication: Boolean = false,
                                                   enableKotlin: Boolean = false,
+                                                  enableCompose: Boolean = false,
                                                   enableDataBinding: Boolean = false,
                                                   moduleRoot: String = "",
                                                   androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
@@ -247,6 +248,6 @@ class AndroidBuildGradleBlueprintTest {
                                                   buildTypeConfigs: List<BuildTypeConfig>? = null,
                                                   dependencies: Set<ModuleDependency> = setOf(),
                                                   pluginConfigs: List<PluginConfig>? = null
-    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableDataBinding, moduleRoot, androidBuildConfig,
+    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableCompose, enableDataBinding, moduleRoot, androidBuildConfig,
             packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, pluginConfigs)
 }
