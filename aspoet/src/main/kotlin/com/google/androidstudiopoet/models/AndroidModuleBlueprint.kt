@@ -67,7 +67,7 @@ class AndroidModuleBlueprint(name: String,
                     imageCount = resourcesConfig.imageCount ?: 0,
                     layoutCount = resourcesConfig.layoutCount ?: 0,
                     resourcesToReferWithin = resourcesToReferWithin,
-                    onClickClasses = onClickClasses
+                    actionClasses = actionClasses
             )
         }
     }
@@ -115,8 +115,9 @@ class AndroidModuleBlueprint(name: String,
 
     internal val enableDataBinding: Boolean = dataBindingConfig?.listenerCount?.let { it > 0 } ?: false
     internal val enableCompose: Boolean = composeConfig?.actionCount?.let { it > 0 } ?: false
+    internal val enableKapt: Boolean = dataBindingConfig?.kapt ?: false
 
-    private val onClickClasses: List<ClassBlueprint> by lazy {
+    private val actionClasses: List<ClassBlueprint> by lazy {
         val count = dataBindingConfig?.listenerCount ?: composeConfig?.actionCount ?: 0
         classBlueprintSequence.filter { it.getMethodToCallFromOutside() != null }
                 .take(count).toList()
@@ -128,6 +129,7 @@ class AndroidModuleBlueprint(name: String,
                 enableKotlin = useKotlin,
                 enableCompose = enableCompose,
                 enableDataBinding = enableDataBinding,
+                enableKapt = enableKapt,
                 moduleRoot = moduleRoot,
                 androidBuildConfig = androidBuildConfig,
                 packageName = packageName,

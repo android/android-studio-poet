@@ -51,7 +51,8 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
                 buildTypesClosure(blueprint),
                 kotlinOptionsClosure(blueprint),
                 buildFeaturesClosure(blueprint),
-                compileOptionsClosure()
+                compileOptionsClosure(),
+                composeOptionsClosure(blueprint)
         ) + createFlavorsSection(blueprint.productFlavors, blueprint.flavorDimensions)
 
         return Closure("android", statements)
@@ -127,9 +128,20 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
     private fun compileOptionsClosure(): Closure {
         val expressions = listOf(
                 Expression("targetCompatibility", "1.8"),
-                Expression("sourceCompatibility", "1.8")
+                Expression("sourceCompatibility", "1.8"),
         )
         return Closure("compileOptions", expressions)
+    }
+
+    private fun composeOptionsClosure(blueprint: AndroidBuildGradleBlueprint): Closure? {
+        return if (blueprint.enableCompose) {
+            Closure("composeOptions", listOf(
+                    Expression("kotlinCompilerExtensionVersion", "'1.0.4'"),
+                    Expression("kotlinCompilerVersion", "'1.5.31'"),
+            ))
+        } else {
+            null
+        }
     }
 
     private fun dependenciesClosure(blueprint: AndroidBuildGradleBlueprint): Closure {

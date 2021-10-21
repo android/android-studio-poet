@@ -16,10 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators.android_modules.resources
 
-import com.google.androidstudiopoet.models.ClassBlueprint
-import com.google.androidstudiopoet.models.ImageViewBlueprint
-import com.google.androidstudiopoet.models.LayoutBlueprint
-import com.google.androidstudiopoet.models.TextViewBlueprint
+import com.google.androidstudiopoet.models.*
 import com.google.androidstudiopoet.utils.fold
 import com.google.androidstudiopoet.writers.FileWriter
 
@@ -28,7 +25,9 @@ private const val XML_FILE_PREFIX = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 class LayoutResourcesGenerator(val fileWriter: FileWriter) {
 
     fun generate(blueprint: LayoutBlueprint) {
-
+        if (blueprint.enableCompose) {
+            return
+        }
         var layoutText = XML_FILE_PREFIX
         if (blueprint.hasLayoutTag) {
             layoutText = generateLayoutTag(blueprint)
@@ -95,7 +94,7 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/${it.stringName}"
-                ${if (it.hasAction) "android:onClick=\"@{${it.onClickAction}}\"" else ""}/>"""
+                ${if (it.actionClass!= null) "android:onClick=\"@{${it.actionClass.toDataBindingOnClickAction()}}\"" else ""}/>"""
         }.fold()
     }
 
@@ -107,7 +106,7 @@ class LayoutResourcesGenerator(val fileWriter: FileWriter) {
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/${it.imageName}"
-                ${if (it.hasAction) "android:onClick=\"@{${it.onClickAction}}\"" else ""}/>"""
+                ${if (it.actionClass != null) "android:onClick=\"@{${it.actionClass.toDataBindingOnClickAction()}}\"" else ""}/>"""
         }.fold()
     }
 

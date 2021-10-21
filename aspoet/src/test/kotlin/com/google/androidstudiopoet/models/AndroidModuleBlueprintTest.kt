@@ -79,6 +79,30 @@ class AndroidModuleBlueprintTest {
     }
 
     @Test
+    fun `enableKapt is true when data binding config specifies to be true`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = 1, kapt = true))
+
+        androidModuleBlueprint.enableDataBinding.assertTrue()
+        androidModuleBlueprint.enableKapt.assertTrue()
+    }
+
+    @Test
+    fun `enableKapt is false when data binding config does not specify`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = 1))
+
+        androidModuleBlueprint.enableDataBinding.assertTrue()
+        androidModuleBlueprint.enableKapt.assertFalse()
+    }
+
+    @Test
+    fun `enableKapt is false when data binding config is null`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = null)
+
+        androidModuleBlueprint.enableDataBinding.assertFalse()
+        androidModuleBlueprint.enableKapt.assertFalse()
+    }
+
+    @Test
     fun `enableCompose is false when compose config is null`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(composeConfig = null)
 
