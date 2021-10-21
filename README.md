@@ -2,7 +2,7 @@
 
 ![alt text](https://github.com/borisf/java-generator/blob/master/img/generator.png)  
 
-Optimise your Android Studio builds, by creating generated projects. Inspired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate a real life Java and Kotlin Android project to analyze and improve build times.
+Optimise your Android Studio builds, by creating generated projects. Inspired by [GradleBuildExperiment](https://github.com/NikitaKozlov/GradleBuildExperiment). A tool to generate real life Java and Kotlin Android projects to analyze and improve build times.
 
 Create a real life complexity Android project that mimics your own and observe the build times. If the build times of the generated project are way smaller than yours, it might be worth inspecting deeply your build configs and optimize.
 
@@ -43,13 +43,13 @@ will crawl the folder recursively and execute each config in turn.
 
 * You can have both source and resources inter-module dependencies
 
-This is not an official Google product.
-
 ## UI layer code
 * Specify `dataBindingConfig` for data binding. It has a property `listenerCount` to indicate the number of data variables.
 * Specify `composeConfig` for compose. It has a property `actionCount` to indicate the number of clickable actions.
 * If nothing above is specified, the UI layer code will be traditional XML-based layout.
 * We cannot expect deterministic ordering when more than one configs are specified.
+
+This is not an official Google product.
 
 ### License
 
