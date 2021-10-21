@@ -23,12 +23,13 @@ class AndroidModuleBlueprintTest {
         val androidModuleBlueprint = getAndroidModuleBlueprint()
 
         assertThat(androidModuleBlueprint.activityBlueprints).isEqualTo(listOf(ActivityBlueprint(
-                    "Activity0",
-                    androidModuleBlueprint.resourcesBlueprint!!.layoutBlueprints[0],
-                    androidModuleBlueprint.packagePath,
-                    androidModuleBlueprint.packageName,
-                    androidModuleBlueprint.packagesBlueprint.javaPackageBlueprints[0].classBlueprints[0],
-                    listOf(), false)))
+                "Activity0",
+                false,
+                androidModuleBlueprint.resourcesBlueprint!!.layoutBlueprints[0],
+                androidModuleBlueprint.packagePath,
+                androidModuleBlueprint.packageName,
+                androidModuleBlueprint.packagesBlueprint.javaPackageBlueprints[0].classBlueprints[0],
+                listOf(), false)))
     }
 
     @Test
@@ -50,31 +51,59 @@ class AndroidModuleBlueprintTest {
     }
 
     @Test
-    fun `hasDataBinding is false when data binding config is null`() {
+    fun `enableDataBinding is false when data binding config is null`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = null)
 
-        androidModuleBlueprint.hasDataBinding.assertFalse()
+        androidModuleBlueprint.enableDataBinding.assertFalse()
     }
 
     @Test
-    fun `hasDataBinding is false when data binding config has zero listener count`() {
+    fun `enableDataBinding is false when data binding config has zero listener count`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = 0))
 
-        androidModuleBlueprint.hasDataBinding.assertFalse()
+        androidModuleBlueprint.enableDataBinding.assertFalse()
     }
 
     @Test
-    fun `hasDataBinding is true when data binding config has positive listener count`() {
+    fun `enableDataBinding is true when data binding config has positive listener count`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = 2))
 
-        androidModuleBlueprint.hasDataBinding.assertTrue()
+        androidModuleBlueprint.enableDataBinding.assertTrue()
     }
 
     @Test
-    fun `hasDataBinding is false when data binding config has negative listener count`() {
+    fun `enableDataBinding is false when data binding config has negative listener count`() {
         val androidModuleBlueprint = getAndroidModuleBlueprint(dataBindingConfig = DataBindingConfig(listenerCount = -1))
 
-        androidModuleBlueprint.hasDataBinding.assertFalse()
+        androidModuleBlueprint.enableDataBinding.assertFalse()
+    }
+
+    @Test
+    fun `enableCompose is false when compose config is null`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(composeConfig = null)
+
+        androidModuleBlueprint.enableCompose.assertFalse()
+    }
+
+    @Test
+    fun `enableCompose is false when compose config has zero action count`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(composeConfig = ComposeConfig(actionCount = 0))
+
+        androidModuleBlueprint.enableCompose.assertFalse()
+    }
+
+    @Test
+    fun `enableCompose is true when compose config has positive action count`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(composeConfig = ComposeConfig(actionCount = 2))
+
+        androidModuleBlueprint.enableCompose.assertTrue()
+    }
+
+    @Test
+    fun `enableCompose is false when compose config has negative action count`() {
+        val androidModuleBlueprint = getAndroidModuleBlueprint(composeConfig = ComposeConfig(actionCount = -1))
+
+        androidModuleBlueprint.enableCompose.assertFalse()
     }
 
     @Test
@@ -99,12 +128,13 @@ class AndroidModuleBlueprintTest {
             extraLines: List<String>? = null,
             generateTests: Boolean = true,
             dataBindingConfig: DataBindingConfig? = null,
+            composeConfig: ComposeConfig? = null,
             androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
             pluginConfigs: List<PluginConfig>? = null,
             generateBazelFiles: Boolean? = false
     ) = AndroidModuleBlueprint(name, numOfActivities, resourcesConfig, projectRoot, hasLaunchActivity, useKotlin,
             dependencies, productFlavorConfigs, buildTypeConfigs, javaConfig, kotlinConfig,
-            extraLines, generateTests, dataBindingConfig, androidBuildConfig, pluginConfigs, generateBazelFiles)
+            extraLines, generateTests, dataBindingConfig, composeConfig, androidBuildConfig, pluginConfigs, generateBazelFiles)
 
     private fun defaultCodeConfig() = CodeConfig().apply {
         packages = 1

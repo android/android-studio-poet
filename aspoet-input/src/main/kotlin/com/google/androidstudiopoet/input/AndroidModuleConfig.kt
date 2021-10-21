@@ -18,7 +18,7 @@ package com.google.androidstudiopoet.input
 
 class AndroidModuleConfig : ModuleConfig() {
 
-    var androidBuildConfig: AndroidBuildConfig? = null
+    var androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig()
 
     var activityCount: Int = 0
     var productFlavorConfigs: List<FlavorConfig>? = null
@@ -27,4 +27,5 @@ class AndroidModuleConfig : ModuleConfig() {
 
     var resourcesConfig: ResourcesConfig? = null
     var dataBindingConfig: DataBindingConfig? = null
+    var composeConfig: ComposeConfig? = null
 }

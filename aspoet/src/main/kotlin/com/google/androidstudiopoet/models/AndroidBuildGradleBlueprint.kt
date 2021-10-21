@@ -22,10 +22,17 @@ import com.google.androidstudiopoet.input.FlavorConfig
 import com.google.androidstudiopoet.input.PluginConfig
 import com.google.androidstudiopoet.utils.joinPath
 
-class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enableKotlin: Boolean, val enableDataBinding: Boolean,
-                                  moduleRoot: String, androidBuildConfig: AndroidBuildConfig, val packageName: String,
-                                  val extraLines: List<String>?, productFlavorConfigs: List<FlavorConfig>?,
-                                  buildTypeConfigs: List<BuildTypeConfig>?, additionalDependencies: Set<Dependency>,
+class AndroidBuildGradleBlueprint(val isApplication: Boolean,
+                                  private val enableKotlin: Boolean,
+                                  val enableCompose: Boolean,
+                                  val enableDataBinding: Boolean,
+                                  moduleRoot: String,
+                                  androidBuildConfig: AndroidBuildConfig,
+                                  val packageName: String,
+                                  val extraLines: List<String>?,
+                                  productFlavorConfigs: List<FlavorConfig>?,
+                                  buildTypeConfigs: List<BuildTypeConfig>?,
+                                  additionalDependencies: Set<Dependency>,
                                   pluginConfigs: List<PluginConfig>?) {
     val plugins: Set<String> = createSetOfPlugins(pluginConfigs)
 
@@ -59,6 +66,14 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean, private val enable
 
         if (enableKotlin) {
             result += LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${'$'}kotlin_version")
+        }
+
+        if (enableCompose) {
+            result += LibraryDependency("implementation", "androidx.compose.ui:ui:1.0.4")
+            result += LibraryDependency("implementation", "androidx.compose.material:material:1.0.4")
+            result += LibraryDependency("implementation", "androidx.activity:activity-compose:1.3.1")
+            result += LibraryDependency("androidTestImplementation", "androidx.compose.ui:ui-test-junit4:1.0.4")
+            result += LibraryDependency("debugImplementation", "androidx.compose.ui:ui-tooling:1.0.4")
         }
 
         return result

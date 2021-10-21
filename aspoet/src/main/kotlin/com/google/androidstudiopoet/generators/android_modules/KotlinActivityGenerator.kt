@@ -21,30 +21,35 @@ import com.google.androidstudiopoet.models.AnnotationBlueprint
 import com.google.androidstudiopoet.models.FieldBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.kotlinpoet.*
-import com.squareup.kotlinpoet.MemberName.Companion.member
 
 
 class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
 
     override fun generate(blueprint: ActivityBlueprint) {
 
-        val activityClassBuilder = getClazzSpec(blueprint.className)
+        val activityClassBuilder = blueprint.toClazzSpec()
         blueprint.fields.forEach {
             activityClassBuilder.addProperty(it.toPropertySpec())
         }
         activityClassBuilder.addFunction(blueprint.toOnCreateFunSpec())
+        val fileSpec = FileSpec.builder(blueprint.packageName, blueprint.className)
+                .addType(activityClassBuilder.build())
+        blueprint.toComposeFunc()?.let(fileSpec::addFunction)
         val content = buildString {
-            FileSpec.builder(blueprint.packageName, blueprint.className)
-                    .addType(activityClassBuilder.build())
-                    .build()
-                    .writeTo(this)
+            fileSpec.build().writeTo(this)
         }
         fileWriter.writeToFile(content, "${blueprint.where}/${blueprint.className}.kt")
     }
 
-    private fun getClazzSpec(activityClassName: String) =
-            TypeSpec.classBuilder(activityClassName)
-                    .superclass(ClassName("android.app", "Activity"))
+    private fun ActivityBlueprint.toClazzSpec(): TypeSpec.Builder {
+        val superClass = if (enableCompose) {
+            ClassName("androidx.activity", "ComponentActivity")
+        } else {
+            ClassName("android.app", "Activity")
+        }
+        return TypeSpec.classBuilder(className)
+                .superclass(superClass)
+    }
 
     private fun FieldBlueprint.toPropertySpec(): PropertySpec {
         val propertySpec = PropertySpec.builder(name, ClassName.bestGuess(typeName))
@@ -64,20 +69,73 @@ class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
         return builder.build()
     }
 
+    private fun ActivityBlueprint.toComposeFunc(): FunSpec? {
+        if (enableCompose) {
+            val text = MemberName("androidx.compose.material", "Text")
+            val column = MemberName("androidx.compose.foundation.layout", "Column")
+            val image = MemberName("androidx.compose.foundation", "Image")
+            val rememberScrollableState = MemberName("androidx.compose.foundation", "rememberScrollState")
+            val verticalScroll = MemberName("androidx.compose.foundation", "verticalScroll")
+            val modifier = ClassName("androidx.compose.ui", "Modifier")
+            val painterResource = MemberName("androidx.compose.ui.res", "painterResource")
+            val stringResource = MemberName("androidx.compose.ui.res", "stringResource")
+            val builder = FunSpec.builder("Screen")
+                    .addAnnotation(ClassName("androidx.compose.runtime", "Composable"))
+                    .addModifiers(KModifier.PRIVATE)
+                    .addStatement("val scrollState = %M()", rememberScrollableState)
+                    .beginControlFlow("%M(modifier = %T.%M(scrollState))", column, modifier, verticalScroll)
+            layout.textViewsBlueprints.forEach { textViewBlueprint ->
+                if (textViewBlueprint.onClickAction != null) {
+                    builder.addStatement("%M(text = %M(R.string.%L), modifier = %T.clickable { %L })",
+                            text,
+                            stringResource,
+                            textViewBlueprint.stringName,
+                            modifier,
+                            textViewBlueprint.onClickAction
+                    )
+                } else {
+                    builder.addStatement("%M(text = %M(R.string.%L))", text, stringResource, textViewBlueprint.stringName)
+                }
+            }
+            layout.imageViewsBlueprints.forEach { imageViewBlueprint ->
+                if (imageViewBlueprint.onClickAction != null) {
+                    builder.addStatement("%M(painter = %M(R.drawable.%L), contentDescription = null, modifier = %T.clickable { %L })",
+                            image,
+                            painterResource,
+                            imageViewBlueprint.imageName,
+                            modifier,
+                            imageViewBlueprint.onClickAction
+                    )
+                } else {
+                    builder.addStatement("%M(painter = %M(R.drawable.%L), contentDescription = null)",
+                            image,
+                            painterResource,
+                            imageViewBlueprint.imageName
+                    )
+                }
+            }
+            builder.endControlFlow()
+            return builder.build()
+        } else {
+            return null
+        }
+    }
+
     private fun ActivityBlueprint.toOnCreateFunSpec(): FunSpec {
         val builder = FunSpec.builder("onCreate")
                 .addModifiers(KModifier.OVERRIDE)
-                .returns(Unit::class)
-                .addParameter(
-                        "savedInstanceState",
-                        ClassName("android.os", "Bundle").copy(nullable = true)
-                )
+                .addParameter("savedInstanceState", ClassName("android.os", "Bundle").copy(nullable = true))
                 .addStatement("super.onCreate(savedInstanceState)")
         classToReferFromActivity.getMethodToCallFromOutside()?.let {
             val className = ClassName.bestGuess(it.className)
-            builder.addStatement("%T().%N()", className, className.member(it.methodName))
+            builder.addStatement("%T().%N()", className, it.methodName)
         }
-        if (hasDataBinding) {
+        if (enableCompose) {
+            val setContent = MemberName("androidx.activity.compose", "setContent")
+            builder.beginControlFlow("%M", setContent)
+            builder.addStatement("Screen()")
+            builder.endControlFlow()
+        } else if (enableDataBinding) {
             val bindingClassName = ClassName.bestGuess(dataBindingClassName)
             val dataBindingUtil = ClassName("androidx.databinding", "DataBindingUtil")
             builder.addStatement("val binding: %T = %T.setContentView(this, R.layout.${layout.name})", bindingClassName, dataBindingUtil)

@@ -53,6 +53,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
             extraLines = config.extraAndroidBuildFileLines
             resourcesConfig = ResourcesConfig(activityCount + 2, activityCount + 5, activityCount)
             dataBindingConfig = config.dataBindingConfig
+            composeConfig = config.composeConfig
         }
     }
 }
