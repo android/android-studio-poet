@@ -27,7 +27,7 @@ dependencies {
 }
 
 task runGenerator(type: JavaExec) {
-    main = 'com.google.androidstudiopoet.AndroidStudioPoet'
+    mainClass = 'com.google.androidstudiopoet.AndroidStudioPoet'
     classpath = sourceSets.main.runtimeClasspath
 }
 

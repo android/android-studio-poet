@@ -24,7 +24,7 @@ task fatJar(type: Jar) {
                 'Main-Class': 'com.google.androidstudiopoet.AndroidStudioPoet',
         )
     }
-    baseName = project.name + '-all'
+    archiveBaseName = project.name + '-all'
     from { configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) } }
     with jar
     duplicatesStrategy = 'include'
