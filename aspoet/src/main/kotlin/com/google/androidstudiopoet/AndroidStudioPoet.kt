@@ -210,12 +210,12 @@ class AndroidStudioPoet(private val modulesGenerator: SourceModuleGenerator, pri
 
     private fun createTextArea(jsonText: String): JTextArea {
         return JTextArea().apply {
-            background = Color(46, 48, 50)
-            foreground = Color.CYAN
-            font = Font("Menlo", Font.PLAIN, 18)
+            background = Color(0x07, 0x36, 0x42)
+            foreground = Color(0x93, 0xa1, 0xa1)
+            font = Font("Menlo", Font.PLAIN, 22)
             text = jsonText
             caretPosition = text.length
-            caretColor = Color.YELLOW
+            caretColor = Color(0xd3,0x36, 0x82)
             rows = 30
             columns = 50
         }
