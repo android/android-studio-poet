@@ -12,7 +12,8 @@ Create a real life complexity Android project that mimics your own and observe t
 * Configurable number of packages
 * Configurable number of classes
 * Configurable number of inter module dependencies
-* Android resources (images, strings,activities, layouts)
+* Android resources (images, strings, activities, layouts)
+* Configure how to generate UI layer code
 * Configurable version of gradle, kotlin, the android gradle plugin
 * Experimental Bazel support
 
@@ -43,6 +44,12 @@ will crawl the folder recursively and execute each config in turn.
 * You can have both source and resources inter-module dependencies
 
 This is not an official Google product.
+
+## UI layer code
+* Specify `dataBindingConfig` for data binding. It has a property `listenerCount` to indicate the number of data variables.
+* Specify `composeConfig` for compose. It has a property `actionCount` to indicate the number of clickable actions.
+* If nothing above is specified, the UI layer code will be traditional XML-based layout.
+* We cannot expect deterministic ordering when more than one configs are specified.
 
 ### License
 
