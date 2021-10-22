@@ -25,6 +25,7 @@ class AndroidModuleBlueprintTest {
         assertThat(androidModuleBlueprint.activityBlueprints).isEqualTo(listOf(ActivityBlueprint(
                 "Activity0",
                 false,
+                false,
                 androidModuleBlueprint.resourcesBlueprint!!.layoutBlueprints[0],
                 androidModuleBlueprint.packagePath,
                 androidModuleBlueprint.packageName,
@@ -137,6 +138,30 @@ class AndroidModuleBlueprintTest {
       androidModuleBlueprint.resourcesBlueprint.assertNull()
     }
 
+    @Test(expected = IllegalArgumentException::class)
+    fun `cannot have both compose config and data binding config`() {
+        getAndroidModuleBlueprint(
+                composeConfig = ComposeConfig(),
+                dataBindingConfig = DataBindingConfig()
+        )
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `cannot have both compose config and view binding`() {
+        getAndroidModuleBlueprint(
+                composeConfig = ComposeConfig(),
+                viewBinding = true
+        )
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `cannot have both data binding and view binding`() {
+        getAndroidModuleBlueprint(
+                dataBindingConfig = DataBindingConfig(),
+                viewBinding = true
+        )
+    }
+
     private fun getAndroidModuleBlueprint(
             name: String = "androidAppModule1",
             numOfActivities: Int = 1,
@@ -153,12 +178,13 @@ class AndroidModuleBlueprintTest {
             generateTests: Boolean = true,
             dataBindingConfig: DataBindingConfig? = null,
             composeConfig: ComposeConfig? = null,
+            viewBinding: Boolean = false,
             androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
             pluginConfigs: List<PluginConfig>? = null,
             generateBazelFiles: Boolean? = false
     ) = AndroidModuleBlueprint(name, numOfActivities, resourcesConfig, projectRoot, hasLaunchActivity, useKotlin,
             dependencies, productFlavorConfigs, buildTypeConfigs, javaConfig, kotlinConfig,
-            extraLines, generateTests, dataBindingConfig, composeConfig, androidBuildConfig, pluginConfigs, generateBazelFiles)
+            extraLines, generateTests, dataBindingConfig, composeConfig, viewBinding, androidBuildConfig, pluginConfigs, generateBazelFiles)
 
     private fun defaultCodeConfig() = CodeConfig().apply {
         packages = 1

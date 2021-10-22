@@ -28,4 +28,5 @@ class AndroidModuleConfig : ModuleConfig() {
     var resourcesConfig: ResourcesConfig? = null
     var dataBindingConfig: DataBindingConfig? = null
     var composeConfig: ComposeConfig? = null
+    var viewBinding: Boolean = false
 }

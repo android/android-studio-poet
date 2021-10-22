@@ -111,6 +111,27 @@ class AndroidBuildGradleBlueprintTest {
     }
 
     @Test
+    fun `compose variant contains compose libraries`() {
+        val blueprint = createAndroidBuildGradleBlueprint(enableCompose = true)
+
+        assertOn(blueprint) {
+            libraries.assertEquals(setOf(
+                    LibraryDependency("implementation", "androidx.core:core-ktx:1.6.0"),
+                    LibraryDependency("implementation", "androidx.appcompat:appcompat:1.3.1"),
+                    LibraryDependency("implementation", "androidx.constraintlayout:constraintlayout:2.1.0"),
+                    LibraryDependency("testImplementation", "junit:junit:4.12"),
+                    LibraryDependency("androidTestImplementation", "androidx.test.ext:junit:1.1.3"),
+                    LibraryDependency("androidTestImplementation", "androidx.test.espresso:espresso-core:3.4.0"),
+                    LibraryDependency("implementation", "androidx.compose.ui:ui:1.0.4"),
+                    LibraryDependency("implementation", "androidx.compose.material:material:1.0.4"),
+                    LibraryDependency("implementation", "androidx.activity:activity-compose:1.3.1"),
+                    LibraryDependency("androidTestImplementation", "androidx.compose.ui:ui-test-junit4:1.0.4"),
+                    LibraryDependency("debugImplementation", "androidx.compose.ui:ui-tooling:1.0.4")
+            ))
+        }
+    }
+
+    @Test
     fun `libraries contains kotlin stldlib when kotlin is enabled`() {
         val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true)
 
@@ -241,6 +262,7 @@ class AndroidBuildGradleBlueprintTest {
                                                   enableCompose: Boolean = false,
                                                   enableDataBinding: Boolean = false,
                                                   enableKapt: Boolean = false,
+                                                  enableViewBinding: Boolean = false,
                                                   moduleRoot: String = "",
                                                   androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
                                                   packageName: String = "com.example",
@@ -249,6 +271,20 @@ class AndroidBuildGradleBlueprintTest {
                                                   buildTypeConfigs: List<BuildTypeConfig>? = null,
                                                   dependencies: Set<ModuleDependency> = setOf(),
                                                   pluginConfigs: List<PluginConfig>? = null
-    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableCompose, enableDataBinding, enableKapt, moduleRoot, androidBuildConfig,
-            packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, pluginConfigs)
+    ) = AndroidBuildGradleBlueprint(
+            isApplication,
+            enableKotlin,
+            enableCompose,
+            enableDataBinding,
+            enableKapt,
+            enableViewBinding,
+            moduleRoot,
+            androidBuildConfig,
+            packageName,
+            extraLines,
+            productFlavorConfigs,
+            buildTypeConfigs,
+            dependencies,
+            pluginConfigs
+    )
 }

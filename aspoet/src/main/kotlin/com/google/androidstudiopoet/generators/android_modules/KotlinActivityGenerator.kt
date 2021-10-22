@@ -19,6 +19,7 @@ package com.google.androidstudiopoet.generators.android_modules
 import com.google.androidstudiopoet.models.ActivityBlueprint
 import com.google.androidstudiopoet.models.AnnotationBlueprint
 import com.google.androidstudiopoet.models.FieldBlueprint
+import com.google.androidstudiopoet.models.LayoutBlueprint
 import com.google.androidstudiopoet.writers.FileWriter
 import com.squareup.kotlinpoet.*
 
@@ -148,9 +149,16 @@ class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
             listenerClassesForDataBinding.forEach {
                 builder.addStatement("binding.%N = %T()", it.className.decapitalize(), ClassName.bestGuess(it.fullClassName))
             }
+        } else if (enableViewBinding) {
+            val dataBindingClass = ClassName("$packageName.databinding", layout.findViewBindingClassName())
+            builder.addStatement("val binding = %T.inflate(layoutInflater)", dataBindingClass)
+            builder.addStatement("setContentView(binding.root)")
         } else {
             builder.addStatement("setContentView(R.layout.${layout.name})")
         }
         return builder.build()
     }
 }
+
+private fun LayoutBlueprint.findViewBindingClassName(): String =
+        name.split("_").joinToString(separator = "") { it.capitalize() } + "Binding"

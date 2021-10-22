@@ -4,6 +4,7 @@ import com.google.androidstudiopoet.utils.fold
 
 data class ActivityBlueprint(val className: String,
                              val enableCompose: Boolean,
+                             val enableViewBinding: Boolean,
                              val layout: LayoutBlueprint,
                              val where: String,
                              val packageName: String,

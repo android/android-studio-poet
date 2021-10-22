@@ -19,6 +19,7 @@ package com.google.androidstudiopoet.models
 import com.google.androidstudiopoet.input.*
 import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.utils.joinPaths
+import java.lang.IllegalArgumentException
 
 class AndroidModuleBlueprint(name: String,
                              private val numOfActivities: Int,
@@ -35,6 +36,7 @@ class AndroidModuleBlueprint(name: String,
                              generateTests: Boolean,
                              dataBindingConfig: DataBindingConfig?,
                              composeConfig: ComposeConfig?,
+                             viewBinding: Boolean,
                              val androidBuildConfig: AndroidBuildConfig,
                              pluginConfigs: List<PluginConfig>?,
                              generateBazelFiles: Boolean?
@@ -90,6 +92,7 @@ class AndroidModuleBlueprint(name: String,
             ActivityBlueprint(
                     className = activityNames[it],
                     enableCompose = enableCompose,
+                    enableViewBinding = viewBinding,
                     layout = layoutBlueprints[it],
                     where = packagePath,
                     packageName = packageName,
@@ -113,10 +116,21 @@ class AndroidModuleBlueprint(name: String,
         classBlueprintSequence.first()
     }
 
+    init {
+        if (dataBindingConfig != null && composeConfig != null) {
+            throw IllegalArgumentException("dataBindingConfig and composeConfig can't be both present")
+        }
+        if (composeConfig != null && viewBinding) {
+            throw IllegalArgumentException("composeConfig and viewBinding can't be both present")
+        }
+        if (dataBindingConfig != null && viewBinding) {
+            throw IllegalArgumentException("dataBindingConfig and viewBinding can't be both present")
+        }
+    }
+
     internal val enableDataBinding: Boolean = dataBindingConfig?.listenerCount?.let { it > 0 } ?: false
     internal val enableCompose: Boolean = composeConfig?.actionCount?.let { it > 0 } ?: false
     internal val enableKapt: Boolean = dataBindingConfig?.kapt ?: false
-
     private val actionClasses: List<ClassBlueprint> by lazy {
         val count = dataBindingConfig?.listenerCount ?: composeConfig?.actionCount ?: 0
         classBlueprintSequence.filter { it.getMethodToCallFromOutside() != null }
@@ -130,6 +144,7 @@ class AndroidModuleBlueprint(name: String,
                 enableCompose = enableCompose,
                 enableDataBinding = enableDataBinding,
                 enableKapt = enableKapt,
+                enableViewBinding = viewBinding,
                 moduleRoot = moduleRoot,
                 androidBuildConfig = androidBuildConfig,
                 packageName = packageName,

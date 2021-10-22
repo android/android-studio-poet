@@ -106,10 +106,11 @@ class AndroidModuleBuildGradleGenerator(val fileWriter: FileWriter) {
 
     private fun buildFeaturesClosure(blueprint: AndroidBuildGradleBlueprint): Closure? {
         val statements = mutableListOf<StringStatement>()
-        if (blueprint.enableDataBinding) {
-            statements.add(StringStatement("dataBinding true"))
-        } else if (blueprint.enableCompose) {
-            statements.add(StringStatement("compose true"))
+        when {
+            blueprint.enableCompose -> statements.add(StringStatement("compose true"))
+            blueprint.enableDataBinding -> statements.add(StringStatement("dataBinding true"))
+            blueprint.enableViewBinding -> statements.add(StringStatement("viewBinding true"))
+            else -> {}
         }
         return if (statements.isNotEmpty()) Closure("buildFeatures", statements) else null
     }

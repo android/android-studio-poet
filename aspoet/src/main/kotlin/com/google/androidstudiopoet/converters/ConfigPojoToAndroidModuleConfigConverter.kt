@@ -54,6 +54,7 @@ class ConfigPojoToAndroidModuleConfigConverter {
             resourcesConfig = ResourcesConfig(activityCount + 2, activityCount + 5, activityCount)
             dataBindingConfig = config.dataBindingConfig
             composeConfig = config.composeConfig
+            viewBinding = config.viewBinding
         }
     }
 }

@@ -90,6 +90,7 @@ object ModuleBlueprintFactory {
             androidModuleConfig.generateTests,
             androidModuleConfig.dataBindingConfig,
             androidModuleConfig.composeConfig,
+            androidModuleConfig.viewBinding,
             androidModuleConfig.androidBuildConfig,
             androidModuleConfig.plugins,
             buildSystemConfig?.generateBazelFiles
