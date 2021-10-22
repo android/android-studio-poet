@@ -99,6 +99,8 @@ class ConfigPOJO {
 
     var composeConfig: ComposeConfig? = null
 
+    var viewBinding: Boolean = false
+
     override fun toString(): String = toJson()
 
     private fun toJson(): String {

@@ -47,10 +47,11 @@ will crawl the folder recursively and execute each config in turn.
 * Specify `dataBindingConfig` for data binding
   * It has a property `listenerCount` to indicate the number of data variables.
   * It has a property `kapt` to specify whether we want to use java annotation processor or kapt to process data bindings.
+* Specify `viewBinding` for view binding.
 * Specify `composeConfig` for compose. 
   * It has a property `actionCount` to indicate the number of clickable actions.
 * If nothing above is specified, the UI layer code will be traditional XML-based layout.
-* We cannot expect deterministic ordering when more than one config are specified.
+* Errors will be thrown when two of the above config is specified.
 
 This is not an official Google product.
 
