@@ -43,11 +43,14 @@ will crawl the folder recursively and execute each config in turn.
 
 * You can have both source and resources inter-module dependencies
 
-## UI layer code
-* Specify `dataBindingConfig` for data binding. It has a property `listenerCount` to indicate the number of data variables.
-* Specify `composeConfig` for compose. It has a property `actionCount` to indicate the number of clickable actions.
+## UI layer configurations
+* Specify `dataBindingConfig` for data binding
+  * It has a property `listenerCount` to indicate the number of data variables.
+  * It has a property `kapt` to specify whether we want to use java annotation processor or kapt to process data bindings.
+* Specify `composeConfig` for compose. 
+  * It has a property `actionCount` to indicate the number of clickable actions.
 * If nothing above is specified, the UI layer code will be traditional XML-based layout.
-* We cannot expect deterministic ordering when more than one configs are specified.
+* We cannot expect deterministic ordering when more than one config are specified.
 
 This is not an official Google product.
 

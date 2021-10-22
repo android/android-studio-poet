@@ -20,30 +20,22 @@ import com.google.androidstudiopoet.utils.joinPath
 
 class LayoutBlueprint(val name: String,
                       layoutsDir: String,
-                      private val enableCompose: Boolean,
+                      val enableCompose: Boolean,
                       textsWithActions: List<Pair<String, ClassBlueprint?>>,
                       imagesWithActions: List<Pair<String, ClassBlueprint?>>,
                       val layoutsToInclude: List<String>) {
 
     val filePath = layoutsDir.joinPath(name) + ".xml"
     val textViewsBlueprints = textsWithActions.mapIndexed { index, it ->
-        TextViewBlueprint("$name${it.first}$index", it.first, it.second?.toOnClickAction())
+        TextViewBlueprint("$name${it.first}$index", it.first, it.second)
     }
 
     val imageViewsBlueprints = imagesWithActions.mapIndexed { index, it ->
-        ImageViewBlueprint("$name${it.first}$index", it.first, it.second?.toOnClickAction())
+        ImageViewBlueprint("$name${it.first}$index", it.first, it.second)
     }
 
     val classesToBind
             = (textsWithActions + imagesWithActions).mapNotNull { it.second }
 
     val hasLayoutTag = classesToBind.isNotEmpty()
-
-    private fun ClassBlueprint.toOnClickAction(): String {
-        return if (enableCompose) {
-            "${className}().${getMethodToCallFromOutside()!!.methodName}()"
-        } else {
-            "(view) -> ${className.decapitalize()}.${getMethodToCallFromOutside()!!.methodName}()"
-        }
-    }
 }

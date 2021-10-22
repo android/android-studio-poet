@@ -74,6 +74,7 @@ class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
             val text = MemberName("androidx.compose.material", "Text")
             val column = MemberName("androidx.compose.foundation.layout", "Column")
             val image = MemberName("androidx.compose.foundation", "Image")
+            val clickable = MemberName("androidx.compose.foundation", "clickable")
             val rememberScrollableState = MemberName("androidx.compose.foundation", "rememberScrollState")
             val verticalScroll = MemberName("androidx.compose.foundation", "verticalScroll")
             val modifier = ClassName("androidx.compose.ui", "Modifier")
@@ -85,26 +86,31 @@ class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
                     .addStatement("val scrollState = %M()", rememberScrollableState)
                     .beginControlFlow("%M(modifier = %T.%M(scrollState))", column, modifier, verticalScroll)
             layout.textViewsBlueprints.forEach { textViewBlueprint ->
-                if (textViewBlueprint.onClickAction != null) {
-                    builder.addStatement("%M(text = %M(R.string.%L), modifier = %T.clickable { %L })",
+                if (textViewBlueprint.actionClass != null) {
+                    builder.addStatement("%M(text = %M(R.string.%L), modifier = %T.%M { %T().%L() })",
                             text,
                             stringResource,
                             textViewBlueprint.stringName,
                             modifier,
-                            textViewBlueprint.onClickAction
+                            clickable,
+                            ClassName.bestGuess(textViewBlueprint.actionClass.fullClassName),
+                            textViewBlueprint.actionClass.getMethodToCallFromOutside()!!.methodName
+
                     )
                 } else {
                     builder.addStatement("%M(text = %M(R.string.%L))", text, stringResource, textViewBlueprint.stringName)
                 }
             }
             layout.imageViewsBlueprints.forEach { imageViewBlueprint ->
-                if (imageViewBlueprint.onClickAction != null) {
-                    builder.addStatement("%M(painter = %M(R.drawable.%L), contentDescription = null, modifier = %T.clickable { %L })",
+                if (imageViewBlueprint.actionClass != null) {
+                    builder.addStatement("%M(painter = %M(R.drawable.%L), contentDescription = null, modifier = %T.%M { %T().%L() })",
                             image,
                             painterResource,
                             imageViewBlueprint.imageName,
                             modifier,
-                            imageViewBlueprint.onClickAction
+                            clickable,
+                            ClassName.bestGuess(imageViewBlueprint.actionClass.fullClassName),
+                            imageViewBlueprint.actionClass.getMethodToCallFromOutside()!!.methodName
                     )
                 } else {
                     builder.addStatement("%M(painter = %M(R.drawable.%L), contentDescription = null)",

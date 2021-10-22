@@ -23,3 +23,6 @@ abstract class ClassBlueprint(val packageName: String, val className: String) {
     abstract fun getClassPath(): String
     abstract fun getMethodToCallFromOutside(): MethodToCall?
 }
+
+internal fun ClassBlueprint.toDataBindingOnClickAction(): String =
+    "(view) -> ${className.decapitalize()}.${getMethodToCallFromOutside()!!.methodName}()"

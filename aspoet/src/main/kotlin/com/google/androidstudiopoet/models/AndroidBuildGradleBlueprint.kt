@@ -26,6 +26,7 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean,
                                   private val enableKotlin: Boolean,
                                   val enableCompose: Boolean,
                                   val enableDataBinding: Boolean,
+                                  val enableKapt: Boolean,
                                   moduleRoot: String,
                                   androidBuildConfig: AndroidBuildConfig,
                                   val packageName: String,
@@ -85,7 +86,7 @@ class AndroidBuildGradleBlueprint(val isApplication: Boolean,
         if (enableKotlin) {
             result += listOf("kotlin-android")
         }
-        if (enableKotlin && enableDataBinding) {
+        if (enableKotlin && enableDataBinding && enableKapt) {
             result += "kotlin-kapt"
         }
         pluginConfigs?.map { it.id }?.forEach { result.add(it) }

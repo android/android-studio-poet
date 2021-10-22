@@ -26,7 +26,7 @@ data class ResourcesBlueprint(private val moduleName: String,
                               private val imageCount: Int,
                               private val layoutCount: Int,
                               private val resourcesToReferWithin: ResourcesToRefer,
-                              private val onClickClasses: List<ClassBlueprint>) : Blueprint {
+                              private val actionClasses: List<ClassBlueprint>) : Blueprint {
     val stringNames = (0 until stringCount).map { "${moduleName}string$it" }
     val imageNames = (0 until imageCount).map { "${moduleName.toLowerCase()}image$it" }
 
@@ -36,12 +36,12 @@ data class ResourcesBlueprint(private val moduleName: String,
 
     private val textsWithActions: List<Pair<String, ClassBlueprint?>> = (stringNames + resourcesToReferWithin.strings)
             .mapIndexed { index, stringName ->
-                Pair(stringName, onClickClasses.getOrNull(index))
+                Pair(stringName, actionClasses.getOrNull(index))
             }
 
     private val imagesWithActions: List<Pair<String, ClassBlueprint?>> = (imageNames + resourcesToReferWithin.images)
             .mapIndexed { index, stringName ->
-                Pair(stringName, onClickClasses.getOrNull(index + textsWithActions.size))
+                Pair(stringName, actionClasses.getOrNull(index + textsWithActions.size))
             }
 
     private val stringsWithActionsPerLayout by lazy {

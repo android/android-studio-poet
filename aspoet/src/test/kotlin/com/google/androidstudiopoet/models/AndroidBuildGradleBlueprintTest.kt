@@ -76,6 +76,15 @@ class AndroidBuildGradleBlueprintTest {
     }
 
     @Test
+    fun `plugins contain kotlin-kapt when Kotlin, data binding, and kapt is enabled`() {
+        val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = true, enableDataBinding = true, enableKapt = true)
+
+        assertOn(blueprint) {
+            plugins.assertContains("kotlin-kapt")
+        }
+    }
+
+    @Test
     fun `plugins contain id of provided plugin`() {
         val pluginId = "random plugin name"
         val blueprint = createAndroidBuildGradleBlueprint(pluginConfigs = listOf(PluginConfig(id = pluginId)))
@@ -107,15 +116,6 @@ class AndroidBuildGradleBlueprintTest {
 
         assertOn(blueprint) {
             libraries.assertContains(LibraryDependency("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${'$'}kotlin_version"))
-        }
-    }
-
-    @Test
-    fun `plugins do not contain data binding compiler when Kotlin is disabled and data binding is enabled`() {
-        val blueprint = createAndroidBuildGradleBlueprint(enableKotlin = false, enableDataBinding = true)
-
-        assertOn(blueprint) {
-            libraries.assertNotContains(LibraryDependency("kapt", "com.android.databinding:compiler:3.0.1"))
         }
     }
 
@@ -240,6 +240,7 @@ class AndroidBuildGradleBlueprintTest {
                                                   enableKotlin: Boolean = false,
                                                   enableCompose: Boolean = false,
                                                   enableDataBinding: Boolean = false,
+                                                  enableKapt: Boolean = false,
                                                   moduleRoot: String = "",
                                                   androidBuildConfig: AndroidBuildConfig = AndroidBuildConfig(),
                                                   packageName: String = "com.example",
@@ -248,6 +249,6 @@ class AndroidBuildGradleBlueprintTest {
                                                   buildTypeConfigs: List<BuildTypeConfig>? = null,
                                                   dependencies: Set<ModuleDependency> = setOf(),
                                                   pluginConfigs: List<PluginConfig>? = null
-    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableCompose, enableDataBinding, moduleRoot, androidBuildConfig,
+    ) = AndroidBuildGradleBlueprint(isApplication, enableKotlin, enableCompose, enableDataBinding, enableKapt, moduleRoot, androidBuildConfig,
             packageName, extraLines, productFlavorConfigs, buildTypeConfigs, dependencies, pluginConfigs)
 }

@@ -1,7 +1,7 @@
 {
   "inputVersion": "0.1",
   "projectConfig": {
-    "projectName": "composeProject",
+    "projectName": "dataBindingKaptProject",
     "root": "../generated_projects/compose",
     "buildSystemConfig": {
       "buildSystemVersion": "7.2",
@@ -28,8 +28,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         },
         "dependencies": [
           {
@@ -79,8 +80,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       },
       {
@@ -101,8 +103,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       },
       {
@@ -123,8 +126,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       },
       {
@@ -145,8 +149,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       },
       {
@@ -167,8 +172,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       },
       {
@@ -189,8 +195,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       },
       {
@@ -211,8 +218,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       },
       {
@@ -233,8 +241,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       },
       {
@@ -255,8 +264,9 @@
           "imageCount": 5,
           "layoutCount": 5
         },
-        "composeConfig": {
-          "actionCount": 5
+        "dataBindingConfig": {
+          "listenerCount": 5,
+          "kapt": true
         }
       }
     ]

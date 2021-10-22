@@ -16,4 +16,4 @@ limitations under the License.
 
 package com.google.androidstudiopoet.input
 
-class DataBindingConfig(val listenerCount: Int? = 0)
+class DataBindingConfig(val listenerCount: Int? = 0, val kapt: Boolean = false)
