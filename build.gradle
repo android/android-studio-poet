@@ -26,11 +26,6 @@ dependencies {
     implementation project(':aspoet-input')
 }
 
-task runGenerator(type: JavaExec) {
-    mainClass = 'com.google.androidstudiopoet.AndroidStudioPoet'
-    classpath = sourceSets.main.runtimeClasspath
-}
-
 sourceSets {
     main {
         resources {
