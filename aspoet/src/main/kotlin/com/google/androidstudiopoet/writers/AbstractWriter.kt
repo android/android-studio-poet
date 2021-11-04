@@ -1,7 +1,7 @@
 package com.google.androidstudiopoet.writers
 
-import org.apache.commons.io.FileUtils
 import java.io.File
+import java.nio.file.Files
 
 interface AbstractWriter {
 
@@ -15,7 +15,7 @@ interface AbstractWriter {
 
     fun delete(path: String) {
         val file = File(path)
-        if (!FileUtils.isSymlink(file)) {
+        if (!Files.isSymbolicLink(file.toPath())) {
             file.listFiles()?.forEach { delete(it.absolutePath) }
         }
         file.delete()

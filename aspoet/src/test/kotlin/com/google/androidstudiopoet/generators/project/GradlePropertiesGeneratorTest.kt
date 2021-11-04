@@ -14,15 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-
 package com.google.androidstudiopoet.generators.project
 
 import com.google.androidstudiopoet.models.GradlePropertiesBlueprint
 import com.google.androidstudiopoet.testutils.mock
-import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
