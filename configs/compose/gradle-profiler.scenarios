@@ -1,0 +1,16 @@
+clean_build {
+    tasks = ["assembleDebug"]
+    cleanup-tasks = ["clean"]
+    gradle-args = ["--no-build-cache"]
+}
+
+ui_inc_build {
+    tasks = ["assembleDebug"]
+    apply-android-layout-change-to = "libraryModule/src/main/res/layout/librarymoduleactivity_main4.xml"
+    clear-build-cache-before = SCENARIO
+}
+
+compose_inc_build {
+    tasks = ["assembleDebug"]
+    apply-composable-change-to = "libraryModule/src/main/java/com/libraryModule/Activity4.kt"
+}
