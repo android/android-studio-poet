@@ -121,9 +121,9 @@ class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
                 }
             }
             builder.endControlFlow()
-            layout.layoutsToInclude.forEach { screenFunctionFqcn ->
-                val packageName = screenFunctionFqcn.substring(0, screenFunctionFqcn.lastIndexOf('.'))
-                val functionName = screenFunctionFqcn.substring(1 + screenFunctionFqcn.lastIndexOf('.'))
+            layout.layoutsToInclude.forEach { screenFunctionFullQualifiedName ->
+                val packageName = screenFunctionFullQualifiedName.substring(0, screenFunctionFullQualifiedName.lastIndexOf('.'))
+                val functionName = screenFunctionFullQualifiedName.substring(1 + screenFunctionFullQualifiedName.lastIndexOf('.'))
                 builder.addStatement("%M()", MemberName(packageName, functionName))
             }
             return builder.build()
