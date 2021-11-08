@@ -13,4 +13,5 @@ ui_inc_build {
 compose_inc_build {
     tasks = ["assembleDebug"]
     apply-composable-change-to = "libraryModule/src/main/java/com/libraryModule/Activity4.kt"
+    clear-build-cache-before = SCENARIO
 }
