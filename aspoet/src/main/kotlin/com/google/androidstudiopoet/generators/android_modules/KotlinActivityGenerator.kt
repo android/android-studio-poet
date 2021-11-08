@@ -81,9 +81,8 @@ class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
             val modifier = ClassName("androidx.compose.ui", "Modifier")
             val painterResource = MemberName("androidx.compose.ui.res", "painterResource")
             val stringResource = MemberName("androidx.compose.ui.res", "stringResource")
-            val builder = FunSpec.builder("Screen")
+            val builder = FunSpec.builder("${className}Screen")
                     .addAnnotation(ClassName("androidx.compose.runtime", "Composable"))
-                    .addModifiers(KModifier.PRIVATE)
                     .addStatement("val scrollState = %M()", rememberScrollableState)
                     .beginControlFlow("%M(modifier = %T.%M(scrollState))", column, modifier, verticalScroll)
             layout.textViewsBlueprints.forEach { textViewBlueprint ->
@@ -122,6 +121,11 @@ class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
                 }
             }
             builder.endControlFlow()
+            layout.layoutsToInclude.forEach { screenFunctionFullQualifiedName ->
+                val packageName = screenFunctionFullQualifiedName.substring(0, screenFunctionFullQualifiedName.lastIndexOf('.'))
+                val functionName = screenFunctionFullQualifiedName.substring(1 + screenFunctionFullQualifiedName.lastIndexOf('.'))
+                builder.addStatement("%M()", MemberName(packageName, functionName))
+            }
             return builder.build()
         } else {
             return null
@@ -140,7 +144,7 @@ class KotlinActivityGenerator(var fileWriter: FileWriter): ActivityGenerator {
         if (enableCompose) {
             val setContent = MemberName("androidx.activity.compose", "setContent")
             builder.beginControlFlow("%M", setContent)
-            builder.addStatement("Screen()")
+            builder.addStatement("${className}Screen()")
             builder.endControlFlow()
         } else if (enableDataBinding) {
             val bindingClassName = ClassName.bestGuess(dataBindingClassName)

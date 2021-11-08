@@ -30,7 +30,13 @@ data class ResourcesBlueprint(private val moduleName: String,
     val stringNames = (0 until stringCount).map { "${moduleName}string$it" }
     val imageNames = (0 until imageCount).map { "${moduleName.toLowerCase()}image$it" }
 
-    val layoutNames = (0 until layoutCount).map { "${moduleName.toLowerCase()}activity_main$it" }
+    val layoutNames = (0 until layoutCount).map {
+        if (enableCompose) {
+            "com.${moduleName}.Activity${it}Screen"
+        } else {
+            "${moduleName.toLowerCase()}activity_main$it"
+        }
+    }
 
     val layoutsDir = resDirPath.joinPath("layout")
 
