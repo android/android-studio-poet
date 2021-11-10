@@ -16,6 +16,7 @@ Create a real life complexity Android project that mimics your own and observe t
 * Configure how to generate UI layer code
 * Configurable version of gradle, kotlin, the android gradle plugin
 * Experimental Bazel support
+* [Compose](https://developer.android.com/jetpack/compose) and [DataBinding](https://developer.android.com/topic/libraries/data-binding) support
 
 ## Download
 To run, grab the [latest JAR](https://github.com/android/android-studio-poet/releases)
@@ -58,7 +59,7 @@ This is not an official Google product.
 ### License
 
 ```
-Copyright 2017 Google Inc.
+Copyright 2021 Google Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 in compliance with the License. You may obtain a copy of the License at
