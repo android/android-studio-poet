@@ -19,7 +19,7 @@ Create a real life complexity Android project that mimics your own and observe t
 * [Compose](https://developer.android.com/jetpack/compose) and [DataBinding](https://developer.android.com/topic/libraries/data-binding) support
 
 ## Download & Run
-### IntelliJ/Android Studio
+### IntelliJ IDEA/Android Studio
 1. Clone the project
 2. Open and run in your IDE
 
