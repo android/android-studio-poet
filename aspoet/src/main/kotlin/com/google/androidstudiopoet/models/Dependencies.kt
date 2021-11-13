@@ -23,6 +23,8 @@ class AndroidModuleDependency(name: String, methodToCall: MethodToCall, method: 
 
 data class LibraryDependency(val method: String, val name: String) : Dependency
 
+data class FileTreeDependency(val method: String, val dir: String, val include: String, val count: Int) : Dependency
+
 data class GmavenBazelDependency(val name: String) : Dependency
 
 interface Dependency

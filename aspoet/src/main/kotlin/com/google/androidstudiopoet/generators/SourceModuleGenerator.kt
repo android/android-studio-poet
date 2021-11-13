@@ -20,14 +20,20 @@ import com.google.androidstudiopoet.generators.project.GradlePropertiesGenerator
 import com.google.androidstudiopoet.generators.project.GradleSettingsGenerator
 import com.google.androidstudiopoet.generators.project.GradlewGenerator
 import com.google.androidstudiopoet.generators.project.ProjectBuildGradleGenerator
+import com.google.androidstudiopoet.models.FileTreeDependency
 import com.google.androidstudiopoet.models.ModuleBlueprint
 import com.google.androidstudiopoet.models.ProjectBlueprint
+import com.google.androidstudiopoet.utils.joinPath
 import com.google.androidstudiopoet.writers.FileWriter
+import java.io.BufferedOutputStream
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
+import java.io.FileOutputStream
 import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 import kotlin.system.measureTimeMillis
 
 class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildGradleGenerator,
@@ -105,11 +111,38 @@ class SourceModuleGenerator(private val moduleBuildGradleGenerator: ModuleBuildG
         }
 
         packagesGenerator.writePackages(moduleBlueprint.packagesBlueprint)
-    }
+        moduleBlueprint.dependencies?.mapNotNull { denpendency ->
+          when (denpendency) {
+            is FileTreeDependency -> {
+              // generate the local jar file that can be accessed
+              for (count in 0 until denpendency.count) {
+                val index = denpendency.include.lastIndexOf(".")
+                val suffix = if (index == -1) "" else denpendency.include.substring(index)
+                val uuid = UUID.randomUUID()
+                val jarFileName = "$uuid$suffix"
+                writeLibFile("${
+                  moduleBlueprint.moduleRoot.joinPath(denpendency.dir).joinPath(jarFileName)
+                }")
+              }
+            }
+          }
+        }
+  }
 
     private fun writeLibsFolder(moduleRootFile: File) {
         // write libs
         val libRoot = moduleRootFile.toString() + "/libs/"
         File(libRoot).mkdir()
+    }
+  
+    private fun writeLibFile(path: String, entryName: String="foo.java") {
+      val file = File(path)
+      if (!file.parentFile.exists()) {
+        file.parentFile.mkdirs()
+      }
+      ZipOutputStream(BufferedOutputStream(FileOutputStream(file))).use { out ->
+        val entry = ZipEntry(entryName)
+        out.putNextEntry(entry)
+      }
     }
 }

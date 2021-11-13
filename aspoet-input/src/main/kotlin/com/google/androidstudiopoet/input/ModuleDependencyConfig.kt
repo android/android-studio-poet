@@ -17,6 +17,15 @@ limitations under the License.
 package com.google.androidstudiopoet.input
 
 sealed class DependencyConfig {
-    data class ModuleDependencyConfig(val moduleName: String, val method: String? = null) : DependencyConfig()
-    data class LibraryDependencyConfig(val library: String, val method: String? = null) : DependencyConfig()
+  data class ModuleDependencyConfig(val moduleName: String, val method: String? = null) :
+    DependencyConfig()
+
+  data class LibraryDependencyConfig(val library: String, val method: String? = null) :
+    DependencyConfig()
+
+  data class DummyLocalJarLibsDependencyConfig(
+    val moduleName: String,
+    val count: Int,
+    val method: String? = null,
+  ) : DependencyConfig()
 }

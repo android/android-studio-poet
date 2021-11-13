@@ -116,6 +116,7 @@ object ModuleBlueprintFactory {
                             }
                         }
                         is DependencyConfig.LibraryDependencyConfig -> LibraryDependency(dependencyConfig.method.toDependencyMethod(), dependencyConfig.library)
+                        is DependencyConfig.DummyLocalJarLibsDependencyConfig ->  FileTreeDependency(dependencyConfig.method.toDependencyMethod(), "libs", "*.jar", dependencyConfig.count)
                     }
                 } ?: listOf()
         return moduleDependencies.toHashSet()

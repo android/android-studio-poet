@@ -46,7 +46,8 @@ class ConfigPojoToAndroidModuleConfigConverter {
 
             val resolvedDependencies = config.resolvedDependencies[moduleName]?.sortedBy { it.to }
                     ?.map { dependency -> DependencyConfig.ModuleDependencyConfig(dependency.to, dependency.method) } ?: emptyList()
-            dependencies = config.libraries?.let { resolvedDependencies + it } ?: resolvedDependencies
+            val resolvedDummyLocalJarLibsDependency = config.resolvedDummyLocalJarLibsDependencies[moduleName]?.let { listOf(it) } ?: emptyList()
+            dependencies = (config.libraries?: emptyList()) + resolvedDependencies + resolvedDummyLocalJarLibsDependency
 
             this.buildTypes = buildTypes
             this.productFlavorConfigs = productFlavorConfigs

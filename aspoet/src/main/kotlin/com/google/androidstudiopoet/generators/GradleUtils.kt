@@ -21,12 +21,15 @@ import com.google.androidstudiopoet.gradle.Expression
 import com.google.androidstudiopoet.gradle.StringStatement
 import com.google.androidstudiopoet.models.Dependency
 import com.google.androidstudiopoet.models.LibraryDependency
+import com.google.androidstudiopoet.models.FileTreeDependency
 import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.models.Repository
 
 fun ModuleDependency.toExpression() = Expression(this.method, "project(':${this.name}')")
 
 fun LibraryDependency.toExpression() = Expression(this.method, "\"${this.name}\"")
+
+fun FileTreeDependency.toExpression() = Expression(this.method, "fileTree(dir: '${this.dir}', include: ['${this.include}'])")
 
 fun String.toApplyPluginExpression() = Expression("apply plugin:", "'$this'")
 
@@ -44,5 +47,6 @@ fun Repository.Remote.toExpression() = Closure("maven", listOf(Expression("url",
 fun Dependency.toExpression() = when (this) {
     is ModuleDependency -> this.toExpression()
     is LibraryDependency -> this.toExpression()
+    is FileTreeDependency -> this.toExpression()
     else -> null
 }

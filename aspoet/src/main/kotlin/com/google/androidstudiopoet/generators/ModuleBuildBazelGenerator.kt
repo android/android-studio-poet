@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.androidstudiopoet.generators
 
+import com.google.androidstudiopoet.models.FileTreeDependency
 import com.google.androidstudiopoet.models.ModuleBuildBazelBlueprint
 import com.google.androidstudiopoet.models.ModuleDependency
 import com.google.androidstudiopoet.writers.FileWriter
@@ -25,9 +26,20 @@ class ModuleBuildBazelGenerator(private val fileWriter: FileWriter) {
         val deps: Set<String> = blueprint.dependencies.map {
             when (it) {
                 is ModuleDependency -> "\"//${it.name}\""
+                is FileTreeDependency -> "\":imported\""
                 else -> ""
             }
         }.toSet()
+        var imported = blueprint.dependencies.firstOrNull() {
+          it is FileTreeDependency
+        }?.let { it ->
+          val dep = it as FileTreeDependency
+          """java_import(
+    name = "imported",
+    constraints = ["android"],
+    jars = glob(["${dep.dir}/${dep.include}}"]),
+)"""
+      } ?: ""
         val depsString = """
     deps = [
         ${deps.joinToString(separator = ",\n        ") { it }}
@@ -38,7 +50,8 @@ class ModuleBuildBazelGenerator(private val fileWriter: FileWriter) {
     name = "$targetName",
     srcs = glob(["src/main/java/**/*.java"]),
     visibility = ["//visibility:public"],${if (deps.isNotEmpty()) depsString else ""}
-)"""
+)
+$imported"""
 
         fileWriter.writeToFile(ruleDefinition, blueprint.path)
     }
