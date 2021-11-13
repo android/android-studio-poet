@@ -14,12 +14,17 @@ Create a real life complexity Android project that mimics your own and observe t
 * Configurable number of inter module dependencies
 * Android resources (images, strings, activities, layouts)
 * Configure how to generate UI layer code
-* Configurable version of gradle, kotlin, the android gradle plugin
+* Configurable version of Gradle, Kotlin, the Android Gradle Plugin
 * Experimental Bazel support
 * [Compose](https://developer.android.com/jetpack/compose) and [DataBinding](https://developer.android.com/topic/libraries/data-binding) support
 
-## Download
-To run, grab the [latest JAR](https://github.com/android/android-studio-poet/releases)
+## Download & Run
+### IntelliJ/Android Studio
+1. Clone the project
+2. Open and run in your IDE
+
+### Standalone Jar
+Grab the [latest JAR](https://github.com/android/android-studio-poet/releases)
 and run `java -jar as-poet.jar`.
 
 ## Command line arguments
@@ -45,11 +50,11 @@ will crawl the folder recursively and execute each config in turn.
 * You can have both source and resources inter-module dependencies
 
 ## UI layer configurations
-* Specify `dataBindingConfig` for data binding
+* Specify `dataBindingConfig` for Data Binding
   * It has a property `listenerCount` to indicate the number of data variables.
-  * It has a property `kapt` to specify whether we want to use java annotation processor or kapt to process data bindings.
-* Specify `viewBinding` for view binding.
-* Specify `composeConfig` for compose. 
+  * It has a property `kapt` to specify whether we want to use Java Annotation Processor or Kapt to process data bindings.
+* Specify `viewBinding` for View Binding.
+* Specify `composeConfig` for Compose. 
   * It has a property `actionCount` to indicate the number of clickable actions.
 * If nothing above is specified, the UI layer code will be traditional XML-based layout.
 * Errors will be thrown when two of the above config is specified.
