@@ -42,12 +42,13 @@ class ModuleBuildBazelGeneratorTest {
         "//library1",
         "//library2"
     ],
-)"""
+)
+"""
         verify(fileWriter).writeToFile(expected, "BUILD.bazel")
     }
 
     @Test
-    fun `generator applies dummy dependencies from the blueprint`() {
+    fun `generator applies local dependencies from the blueprint`() {
         val blueprint = getModuleBuildBazelBlueprint(dependencies = setOf(
             FileTreeDependency("implementation", "libs", "*.jar", 1)
         ))

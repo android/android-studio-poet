@@ -33,7 +33,8 @@ android_binary(
         "//library1",
         gmaven_artifact("external:aar:1")
     ],
-)"""
+)
+"""
         verify(fileWriter).writeToFile(expected, "BUILD.bazel")
     }
 
@@ -61,12 +62,13 @@ android_library(
         gmaven_artifact("external:aar:1"),
         gmaven_artifact("external:aar:2")
     ],
-)"""
+)
+"""
         verify(fileWriter).writeToFile(expected, "BUILD.bazel")
     }
 
     @Test
-    fun `generator applies dummy libraries from the blueprint`() {
+    fun `generator applies local libraries from the blueprint`() {
         val blueprint = getAndroidBuildBazelBlueprint(dependencies = setOf(
             FileTreeDependency("implementation","libs", "*.jar", 1),
         ))
@@ -105,7 +107,8 @@ android_library(
     manifest = "src/main/AndroidManifest.xml",
     custom_package = "com.foo",
     visibility = ["//visibility:public"],
-)"""
+)
+"""
         verify(fileWriter).writeToFile(expected, "BUILD.bazel")
     }
 
