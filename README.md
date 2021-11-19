@@ -59,8 +59,8 @@ will crawl the folder recursively and execute each config in turn.
   * It has a property `actionCount` to indicate the number of clickable actions.
 * Sepcify `localJarLibsDependency` for local jar depencencies.
   * It's a list of items that indicate creating local jar depencencies for specific module. For each item,
-    * It has a property `moduleName` to indicate which module the depencies are attached to.
-    * It has a properoty `count` to indicate how many depencies are attached the specified module.
+    * It has a property `moduleName` to indicate the module name that depencies are attached to.
+    * It has a properoty `count` to indicate the number of depencies are attached.
 * If nothing above is specified, the UI layer code will be traditional XML-based layout.
 * Errors will be thrown when two of the above config is specified.
 
