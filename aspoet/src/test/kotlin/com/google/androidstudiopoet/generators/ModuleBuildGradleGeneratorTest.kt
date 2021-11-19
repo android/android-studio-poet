@@ -62,7 +62,7 @@ targetCompatibility = "1.8""""
     }
 
     @Test
-    fun `generator applies dummy libraries from the blueprint`() {
+    fun `generator applies local libraries from the blueprint`() {
       val blueprint = getModuleBuildGradleBlueprint(dependencies = setOf(
         FileTreeDependency("implementation", "libs", "*.jar", 1)
       ))

@@ -86,7 +86,7 @@ class ConfigPOJO {
 
     var libraries: List<DependencyConfig.LibraryDependencyConfig>? = null
 
-    var dummyLocalJarLibsDependency: List<DependencyConfig.DummyLocalJarLibsDependencyConfig>? = null
+    var localJarLibsDependency: List<DependencyConfig.LocalJarLibsDependencyConfig>? = null
 
     var extraBuildFileLines: List<String>? = null
 
@@ -137,8 +137,8 @@ class ConfigPOJO {
         allDependencies
     }
 
-    val resolvedDummyLocalJarLibsDependencies: Map<String, DependencyConfig.DummyLocalJarLibsDependencyConfig> by lazy {
-        val givenDependency = dummyLocalJarLibsDependency
+    val resolvedLocalJarLibsDependencies: Map<String, DependencyConfig.LocalJarLibsDependencyConfig> by lazy {
+        val givenDependency = localJarLibsDependency
         givenDependency?.associateBy({it.moduleName}, {it}) ?: emptyMap()
     }
     private val allModuleNames: List<String> by lazy {

@@ -179,7 +179,7 @@ class AndroidModuleBuildGradleGeneratorTest {
     }
 
   @Test
-  fun `generator applies dummy libraries from the blueprint`() {
+  fun `generator applies local libraries from the blueprint`() {
     val blueprint = getAndroidBuildGradleBlueprint(dependencies = setOf(
       FileTreeDependency("implementation", "libs", "*.jar", 10),
     ))

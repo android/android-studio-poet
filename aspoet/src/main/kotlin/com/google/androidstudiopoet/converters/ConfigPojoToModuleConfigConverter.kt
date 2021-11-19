@@ -44,8 +44,8 @@ class ConfigPojoToModuleConfigConverter {
 
             moduleName = config.getModuleName(index)
 
-            val resolvedDummyFileTreeDependency = config.resolvedDummyLocalJarLibsDependencies[moduleName]?.let { listOf(it) } ?: emptyList()
-            dependencies = (config.resolvedDependencies[moduleName]?.map { DependencyConfig.ModuleDependencyConfig(it.to, it.method) } ?: listOf()) + resolvedDummyFileTreeDependency
+            val resolvedFileTreeDependency = config.resolvedLocalJarLibsDependencies[moduleName]?.let { listOf(it) } ?: emptyList()
+            dependencies = (config.resolvedDependencies[moduleName]?.map { DependencyConfig.ModuleDependencyConfig(it.to, it.method) } ?: listOf()) + resolvedFileTreeDependency
         }
     }
 }
