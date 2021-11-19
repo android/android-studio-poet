@@ -17,6 +17,7 @@ Create a real life complexity Android project that mimics your own and observe t
 * Configurable version of Gradle, Kotlin, the Android Gradle Plugin
 * Experimental Bazel support
 * [Compose](https://developer.android.com/jetpack/compose) and [DataBinding](https://developer.android.com/topic/libraries/data-binding) support
+* Configurable number of local jar library dependencies
 
 ## Download & Run
 ### IntelliJ IDEA/Android Studio
@@ -56,6 +57,10 @@ will crawl the folder recursively and execute each config in turn.
 * Specify `viewBinding` for View Binding.
 * Specify `composeConfig` for Compose. 
   * It has a property `actionCount` to indicate the number of clickable actions.
+* Sepcify `localJarLibsDependency` for local jar depencencies.
+  * It's a list of items that indicate creating local jar depencencies for specific module. For each item,
+    * It has a property `moduleName` to indicate which module the depencies are attached to.
+    * It has a properoty `count` to indicate how many depencies are attached the specified module.
 * If nothing above is specified, the UI layer code will be traditional XML-based layout.
 * Errors will be thrown when two of the above config is specified.
 
