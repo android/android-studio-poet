@@ -43,7 +43,9 @@ class ConfigPojoToModuleConfigConverter {
             generateTests = config.generateTests
 
             moduleName = config.getModuleName(index)
-            dependencies = config.resolvedDependencies[moduleName]?.map { DependencyConfig.ModuleDependencyConfig(it.to, it.method) } ?: listOf()
+
+            val resolvedFileTreeDependency = config.resolvedLocalJarLibsDependencies[moduleName]?.let { listOf(it) } ?: emptyList()
+            dependencies = (config.resolvedDependencies[moduleName]?.map { DependencyConfig.ModuleDependencyConfig(it.to, it.method) } ?: listOf()) + resolvedFileTreeDependency
         }
     }
 }

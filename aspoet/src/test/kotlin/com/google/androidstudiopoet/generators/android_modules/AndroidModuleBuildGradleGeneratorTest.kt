@@ -178,6 +178,40 @@ class AndroidModuleBuildGradleGeneratorTest {
         verify(fileWriter).writeToFile(expected, "path")
     }
 
+  @Test
+  fun `generator applies local libraries from the blueprint`() {
+    val blueprint = getAndroidBuildGradleBlueprint(dependencies = setOf(
+      FileTreeDependency("implementation", "libs", "*.jar", 10),
+    ))
+    androidModuleBuildGradleGenerator.generate(blueprint)
+    val expected = """
+            android {
+                compileSdkVersion 0
+                defaultConfig {
+                    minSdkVersion 0
+                    targetSdkVersion 0
+                    versionCode 1
+                    versionName "1.0"
+                    multiDexEnabled true
+                    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+                }
+                buildTypes {
+                    release {
+                        minifyEnabled false
+                        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                    }
+                }
+                compileOptions {
+                    targetCompatibility 1.8
+                    sourceCompatibility 1.8
+                }
+            }
+            dependencies {
+                implementation fileTree(dir: 'libs', include: ['*.jar'])
+            }""".trimIndent()
+    verify(fileWriter).writeToFile(expected, "path")
+  }
+
     @Test
     fun `generator applies flavors and dimensions from the blueprint`() {
         val blueprint = getAndroidBuildGradleBlueprint(

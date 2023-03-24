@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.androidstudiopoet.generators
 
 import com.google.androidstudiopoet.models.Dependency
+import com.google.androidstudiopoet.models.FileTreeDependency
 import com.google.androidstudiopoet.models.ModuleBuildGradleBlueprint
 import com.google.androidstudiopoet.models.LibraryDependency
 import com.google.androidstudiopoet.models.ModuleDependency
@@ -58,6 +59,20 @@ targetCompatibility = "1.8""""
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8""""
         verify(fileWriter).writeToFile(expected, "path")
+    }
+
+    @Test
+    fun `generator applies local libraries from the blueprint`() {
+      val blueprint = getModuleBuildGradleBlueprint(dependencies = setOf(
+        FileTreeDependency("implementation", "libs", "*.jar", 1)
+      ))
+      buildGradleGenerator.generate(blueprint)
+      val expected = """dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8""""
+      verify(fileWriter).writeToFile(expected, "path")
     }
 
     @Test

@@ -33,7 +33,8 @@ android_binary(
         "//library1",
         gmaven_artifact("external:aar:1")
     ],
-)"""
+)
+"""
         verify(fileWriter).writeToFile(expected, "BUILD.bazel")
     }
 
@@ -61,6 +62,34 @@ android_library(
         gmaven_artifact("external:aar:1"),
         gmaven_artifact("external:aar:2")
     ],
+)
+"""
+        verify(fileWriter).writeToFile(expected, "BUILD.bazel")
+    }
+
+    @Test
+    fun `generator applies local libraries from the blueprint`() {
+        val blueprint = getAndroidBuildBazelBlueprint(dependencies = setOf(
+            FileTreeDependency("implementation","libs", "*.jar", 1),
+        ))
+        androidModuleBuildBazelGenerator.generate(blueprint)
+        val expected = """load("@gmaven_rules//:defs.bzl", "gmaven_artifact")
+
+android_library(
+    name = "example",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resource_files = glob(["src/main/res/**/*"]),
+    manifest = "src/main/AndroidManifest.xml",
+    custom_package = "com.example",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":imported"
+    ],
+)
+java_import(
+    name = "imported",
+    constraints = ["android"],
+    jars = glob(["libs/*.jar}"]),
 )"""
         verify(fileWriter).writeToFile(expected, "BUILD.bazel")
     }
@@ -78,7 +107,8 @@ android_library(
     manifest = "src/main/AndroidManifest.xml",
     custom_package = "com.foo",
     visibility = ["//visibility:public"],
-)"""
+)
+"""
         verify(fileWriter).writeToFile(expected, "BUILD.bazel")
     }
 

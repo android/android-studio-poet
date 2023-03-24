@@ -86,6 +86,8 @@ class ConfigPOJO {
 
     var libraries: List<DependencyConfig.LibraryDependencyConfig>? = null
 
+    var localJarLibsDependency: List<DependencyConfig.LocalJarLibsDependencyConfig>? = null
+
     var extraBuildFileLines: List<String>? = null
 
     var extraAndroidBuildFileLines: List<String>? = null
@@ -135,6 +137,10 @@ class ConfigPOJO {
         allDependencies
     }
 
+    val resolvedLocalJarLibsDependencies: Map<String, DependencyConfig.LocalJarLibsDependencyConfig> by lazy {
+        val givenDependency = localJarLibsDependency
+        givenDependency?.associateBy({it.moduleName}, {it}) ?: emptyMap()
+    }
     private val allModuleNames: List<String> by lazy {
         val moduleNames = mutableListOf<String>()
         (0 until androidModules).mapTo(moduleNames) {getAndroidModuleName(it)}

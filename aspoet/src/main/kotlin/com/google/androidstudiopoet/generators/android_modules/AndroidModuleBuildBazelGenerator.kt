@@ -25,6 +25,7 @@ class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
         val deps: Set<String> = bazelBlueprint.dependencies.map {
             when (it) {
                 is ModuleDependency -> "\"//${it.name}\""
+                is FileTreeDependency -> "\":imported\""
                 is GmavenBazelDependency -> "gmaven_artifact(\"${it.name}\")"
                 else -> ""
             }
@@ -33,6 +34,16 @@ class AndroidModuleBuildBazelGenerator(val fileWriter: FileWriter) {
     deps = [
         ${deps.joinToString(separator = ",\n        ") { it }}
     ],"""
+        var imported = bazelBlueprint.dependencies.firstOrNull() {
+      it is FileTreeDependency
+    }?.let { it ->
+      val dep = it as FileTreeDependency
+      """java_import(
+    name = "imported",
+    constraints = ["android"],
+    jars = glob(["${dep.dir}/${dep.include}}"]),
+)"""
+    } ?: ""
         val multidexString = """
     multidex = "native","""
 
@@ -47,7 +58,8 @@ $ruleClass(
     manifest = "src/main/AndroidManifest.xml",
     custom_package = "${bazelBlueprint.packageName}",
     visibility = ["//visibility:public"],${if (deps.isNotEmpty()) depsString else ""}
-)"""
+)
+$imported"""
 
         fileWriter.writeToFile(ruleDefinition, bazelBlueprint.path)
     }

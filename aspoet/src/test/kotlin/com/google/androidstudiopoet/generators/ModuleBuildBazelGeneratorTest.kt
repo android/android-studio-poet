@@ -42,6 +42,29 @@ class ModuleBuildBazelGeneratorTest {
         "//library1",
         "//library2"
     ],
+)
+"""
+        verify(fileWriter).writeToFile(expected, "BUILD.bazel")
+    }
+
+    @Test
+    fun `generator applies local dependencies from the blueprint`() {
+        val blueprint = getModuleBuildBazelBlueprint(dependencies = setOf(
+            FileTreeDependency("implementation", "libs", "*.jar", 1)
+        ))
+        buildBazelGenerator.generate(blueprint)
+            val expected = """java_library(
+    name = "target_name",
+    srcs = glob(["src/main/java/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":imported"
+    ],
+)
+java_import(
+    name = "imported",
+    constraints = ["android"],
+    jars = glob(["libs/*.jar}"]),
 )"""
         verify(fileWriter).writeToFile(expected, "BUILD.bazel")
     }
